@@ -28,5 +28,11 @@ namespace PostBinary
                 bStart.BackgroundImage = Properties.Resources.bStart;
             }
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            PostBinary.Classes.TestValidator test = new Classes.TestValidator();
+          
+        }
     }
 }

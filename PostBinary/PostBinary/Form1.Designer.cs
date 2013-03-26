@@ -45,6 +45,7 @@
             this.lInfelicity = new System.Windows.Forms.Label();
             this.lResult = new System.Windows.Forms.Label();
             this.bStart = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -198,12 +199,23 @@
             this.bStart.UseVisualStyleBackColor = true;
             this.bStart.EnabledChanged += new System.EventHandler(this.bStart_EnabledChanged);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(784, 128);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 13;
+            this.button1.Text = "validate";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.ClientSize = new System.Drawing.Size(892, 699);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.lResult);
             this.Controls.Add(this.lInfelicity);
             this.Controls.Add(this.tInfelicity);
@@ -245,6 +257,7 @@
         private System.Windows.Forms.TextBox tInfelicity;
         private System.Windows.Forms.Label lInfelicity;
         private System.Windows.Forms.Label lResult;
+        private System.Windows.Forms.Button button1;
     }
 }
 
