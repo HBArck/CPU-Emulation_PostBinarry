@@ -124,4 +124,44 @@
   <data name="bStartGray" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\bStartGray.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="validErEn0" xml:space="preserve">
+    <value>Syntax Error</value>
+    <comment>Базовая ошибка, говорящая о ошибке в выражении</comment>
+  </data>
+  <data name="validErEn1" xml:space="preserve">
+    <value>Missing {0} bracket in expression</value>
+    <comment>"()) ; [][" Ошибка, которая говорит, что в строке отсутствует скобка </comment>
+  </data>
+  <data name="validErEn2" xml:space="preserve">
+    <value>No such operation</value>
+    <comment>"= ; ! ; ~" Если пользователь ввел символ неподдерживаемой операции</comment>
+  </data>
+  <data name="validErEn3" xml:space="preserve">
+    <value>Variable or number missing</value>
+    <comment>"++"  Если пользователь ввел подряд две операции</comment>
+  </data>
+  <data name="validErEn4" xml:space="preserve">
+    <value>Incorrect scientific notation</value>
+    <comment>"3,e ; 3,e-3,9"   Ошибка в научной нотации</comment>
+  </data>
+  <data name="validErEn5" xml:space="preserve">
+    <value>Missing '-' or '+' in expression</value>
+    <comment>"3,0e3"   Отсутствует знак степени для научной нотации</comment>
+  </data>
+  <data name="validErEn6" xml:space="preserve">
+    <value>Only digits allowed to represent array index</value>
+    <comment>"a[a]"   Если пользователь ввел</comment>
+  </data>
+  <data name="validErEn7" xml:space="preserve">
+    <value>Only integers allowed to represent array index</value>
+    <comment>"a[12,3] ; a[1+2]"  Если пользователь ввел вещественное число и\или оператор в качестве индекса массива</comment>
+  </data>
+  <data name="validErEn8" xml:space="preserve">
+    <value>Missing array identifier</value>
+    <comment>"+[x]+" Если пользователь не ввел имя переменной для массива</comment>
+  </data>
+  <data name="validErEn9" xml:space="preserve">
+    <value>Only positive integers should represent array index</value>
+    <comment>"a[-1]"  Если пользователь ввел отрицательный индекс массива</comment>
+  </data>
 </root>

@@ -7,15 +7,32 @@ using System.Threading.Tasks;
 
 namespace PostBinary.Classes
 {
-
+    /// <summary>
+    /// This class makes input validation. 
+    /// It generates response for current input sting.
+    /// </summary>
     class Validator
     {
+        /** DELETE THIS ON IMPLEMINTATION
+         * validErEn0	Syntax Error	Базовая ошибка, говорящая о ошибке в выражении
+         * validErEn1	Missing {0} bracket in expression	"()) ; [][" Ошибка, которая говорит, что в строке отсутствует скобка 
+         * validErEn2	No such operation	"= ; ! ; ~" Если пользователь ввел символ неподдерживаемой операции
+         * validErEn3	Variable or number missing	"++"  Если пользователь ввел подряд две операции
+         * validErEn4	Incorrect scientific notation	"3,e ; 3,e-3,9"   Ошибка в научной нотации
+         * validErEn5	Missing '-' or '+' in expression	"3,0e3"   Отсутствует знак степени для научной нотации
+         * validErEn6	Only digits allowed to represent array index	"a[a]"   Если пользователь ввел
+         * validErEn7	Only integers allowed to represent array index	"a[12,3] ; a[1+2]"  Если пользователь ввел вещественное число и\или оператор в качестве индекса массива
+         * validErEn8	Missing array identifier	"+[x]+" Если пользователь не ввел имя переменной для массива
+         * validErEn9	Only positive integers should represent array index	"a[-1]"  Если пользователь ввел отрицательный индекс массива
+         */
         public String inputStr = "";
-
+        //private ValidatorErrorType errorMessenger;
+        private String currErrorType; 
 
         public Validator()
-        { }
-
+        {
+            //errorMessenger = new ValidatorErrorType();
+        }
 
         public Responce.validationResponce validate(String inStr)
         {
@@ -55,21 +72,25 @@ namespace PostBinary.Classes
                 {
                     case '(':
                         {
+                            currErrorType = "validErEn1";
                             openedSquareBrackets++;
                             break;
                         }
                     case ')':
                         {
+                            currErrorType = "validErEn1";
                             closedSquareBrackets++;
                             break;
                         }
                     case '[':
                         {
+                            currErrorType = "validErEn1";
                             openedRoundBrackets++;
                             break;
                         }
                     case ']':
                         {
+                            currErrorType = "validErEn1";
                             closedRoundBrackets++;
                             break;
                         }
@@ -88,7 +109,7 @@ namespace PostBinary.Classes
                 errorBegin = inStr.LastIndexOf("[");
                 errorEnd = inStr.LastIndexOf("]");
             }
-            response.setValidationResponce(error, errorBegin, errorEnd, new ValidatorErrorType());
+            response.setValidationResponce(error, errorBegin, errorEnd, currErrorType);
             return response;
         }
 
@@ -105,8 +126,9 @@ namespace PostBinary.Classes
                 error = true;
                 errorBegin = 0;
                 errorEnd = 0;
+                currErrorType = "validErEn0";
             }
-            response.setValidationResponce(error, errorBegin, errorEnd, new ValidatorErrorType());
+            response.setValidationResponce(error, errorBegin, errorEnd, currErrorType);
             return response;
         }
         /*
@@ -129,8 +151,10 @@ namespace PostBinary.Classes
                 errorBegin = inStr.IndexOf(mc[0].ToString());
                 String lastError = mc[mc.Count - 1].ToString();
                 errorEnd = inStr.LastIndexOf(lastError) + lastError.Length - 1;
+                currErrorType = "";
             }
-            response.setValidationResponce(error, errorBegin, errorEnd, new ValidatorErrorType());
+
+            response.setValidationResponce(error, errorBegin, errorEnd, currErrorType);
             return response;
         }
     }

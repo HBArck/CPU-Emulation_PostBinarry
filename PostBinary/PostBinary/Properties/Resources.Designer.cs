@@ -79,5 +79,95 @@ namespace PostBinary.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Syntax Error.
+        /// </summary>
+        internal static string validErEn0 {
+            get {
+                return ResourceManager.GetString("validErEn0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Missing {0} bracket in expression.
+        /// </summary>
+        internal static string validErEn1 {
+            get {
+                return ResourceManager.GetString("validErEn1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на No such operation.
+        /// </summary>
+        internal static string validErEn2 {
+            get {
+                return ResourceManager.GetString("validErEn2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Variable or number missing.
+        /// </summary>
+        internal static string validErEn3 {
+            get {
+                return ResourceManager.GetString("validErEn3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Incorrect scientific notation.
+        /// </summary>
+        internal static string validErEn4 {
+            get {
+                return ResourceManager.GetString("validErEn4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Missing &apos;-&apos; or &apos;+&apos; in expression.
+        /// </summary>
+        internal static string validErEn5 {
+            get {
+                return ResourceManager.GetString("validErEn5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Only digits allowed to represent array index.
+        /// </summary>
+        internal static string validErEn6 {
+            get {
+                return ResourceManager.GetString("validErEn6", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Only integers allowed to represent array index.
+        /// </summary>
+        internal static string validErEn7 {
+            get {
+                return ResourceManager.GetString("validErEn7", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Missing array identifier.
+        /// </summary>
+        internal static string validErEn8 {
+            get {
+                return ResourceManager.GetString("validErEn8", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Only positive integers should represent array index.
+        /// </summary>
+        internal static string validErEn9 {
+            get {
+                return ResourceManager.GetString("validErEn9", resourceCulture);
+            }
+        }
     }
 }

@@ -44,11 +44,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\Base.cs" />
-    <Compile Include="Classes\TestValidator.cs" />
-    <Compile Include="Classes\tt.cs" />
+    <Compile Include="Classes\Exceptions.cs" />
+    <Compile Include="Classes\PALU.cs" />
+    <Compile Include="Classes\ProgramCore.cs" />
+    <Compile Include="Classes\Responce.cs" />
+    <Compile Include="Classes\Stack.cs" />
+    <Compile Include="Testers\TestValidator.cs" />
     <Compile Include="Classes\Validator.cs" />
-    <Compile Include="Classes\ValidatorErrorType.cs" />
+    <Compile Include="Classes\Error.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

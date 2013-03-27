@@ -6,16 +6,6 @@ using System.Threading.Tasks;
 
 namespace PostBinary.Classes
 {
-    class Base
-    {
-
-    }
-    public interface IValidationResponce
-    {
-        
-            
-    }
-
     class Responce 
     {
         String input;
@@ -24,11 +14,11 @@ namespace PostBinary.Classes
         public struct validationResponce
         {
             public bool error ;// true - if validator found syntax error in inputStr, else - false
-            public ValidatorErrorType errorType;
+            public String errorType;
             public int positionBegin ;// begin position of error in inputStr; "-1" - means no error
             public int positionEnd ;// end position of error in inputStr; "-1" - means no error
 
-            public void setValidationResponce(bool err, int posBegin, int posEnd, ValidatorErrorType errType)
+            public void setValidationResponce(bool err, int posBegin, int posEnd, String errType)
             {
                 if (posBegin > posEnd)
                 {
