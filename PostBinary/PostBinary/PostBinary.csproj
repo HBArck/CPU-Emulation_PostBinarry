@@ -45,7 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\Base.cs" />
-    <Compile Include="Classes\TestValidator.cs" />    <Compile Include="Classes\tt.cs" />    <Compile Include="Classes\Validator.cs" />
+    <Compile Include="Classes\TestValidator.cs" />
+    <Compile Include="Classes\tt.cs" />
+    <Compile Include="Classes\Validator.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -85,6 +87,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\bStartGray.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CustomTextBox\CustomTextBoxOld.csproj">
+      <Project>{1d81b5d9-5d12-4571-bdf5-0ff780c8e85b}</Project>
+      <Name>CustomTextBoxOld</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

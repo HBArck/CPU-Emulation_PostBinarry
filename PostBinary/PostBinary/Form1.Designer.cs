@@ -37,7 +37,6 @@
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.tResult = new System.Windows.Forms.TextBox();
@@ -46,6 +45,7 @@
             this.lResult = new System.Windows.Forms.Label();
             this.bStart = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.customTextBox1 = new MyControls.CustomTextBox();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -121,17 +121,6 @@
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(24, 20);
             this.toolStripMenuItem1.Text = "?";
-            // 
-            // richTextBox1
-            // 
-            this.richTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.richTextBox1.Location = new System.Drawing.Point(19, 49);
-            this.richTextBox1.Margin = new System.Windows.Forms.Padding(10);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.richTextBox1.Size = new System.Drawing.Size(739, 21);
-            this.richTextBox1.TabIndex = 5;
-            this.richTextBox1.Text = "";
             // 
             // progressBar1
             // 
@@ -209,12 +198,23 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // customTextBox1
+            // 
+            this.customTextBox1.Location = new System.Drawing.Point(19, 55);
+            this.customTextBox1.MaxTextLength = 0;
+            this.customTextBox1.Name = "customTextBox1";
+            this.customTextBox1.Size = new System.Drawing.Size(739, 20);
+            this.customTextBox1.TabIndex = 14;
+            this.customTextBox1.WindowHeight = 0;
+            this.customTextBox1.WindowWidth = 0;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.ClientSize = new System.Drawing.Size(892, 699);
+            this.Controls.Add(this.customTextBox1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.lResult);
             this.Controls.Add(this.lInfelicity);
@@ -224,7 +224,6 @@
             this.Controls.Add(this.bStart);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
@@ -248,7 +247,6 @@
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
-        private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.ToolStripStatusLabel tSSLStatus;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button bStart;
@@ -258,6 +256,7 @@
         private System.Windows.Forms.Label lInfelicity;
         private System.Windows.Forms.Label lResult;
         private System.Windows.Forms.Button button1;
+        private MyControls.CustomTextBox customTextBox1;
     }
 }
 
