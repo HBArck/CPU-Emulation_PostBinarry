@@ -48,6 +48,7 @@
     <Compile Include="Classes\TestValidator.cs" />
     <Compile Include="Classes\tt.cs" />
     <Compile Include="Classes\Validator.cs" />
+    <Compile Include="Classes\ValidatorErrorType.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -43,33 +43,64 @@ namespace PostBinary.Classes
             int errorEnd = -1;
             Responce.validationResponce response = new Responce.validationResponce();
 
-            int openedBrackets = 0;
-            int closedBrackets = 0;
+            int openedSquareBrackets = 0;
+            int closedSquareBrackets = 0;
+            int openedRoundBrackets = 0;
+            int closedRoundBrackets = 0;
 
             CharEnumerator ce = inStr.GetEnumerator();
             while (ce.MoveNext())
             {
-                if ('(' == ce.Current) { openedBrackets++; }
-                else if (')' == ce.Current) { closedBrackets++; }
+                switch (ce.Current)
+                {
+                    case '(':
+                        {
+                            openedSquareBrackets++;
+                            break;
+                        }
+                    case ')':
+                        {
+                            closedSquareBrackets++;
+                            break;
+                        }
+                    case '[':
+                        {
+                            openedRoundBrackets++;
+                            break;
+                        }
+                    case ']':
+                        {
+                            closedRoundBrackets++;
+                            break;
+                        }
+                }
+
             }
-            if (openedBrackets != closedBrackets)
+            if (openedSquareBrackets != closedSquareBrackets)
             {
                 error = true;
                 errorBegin = inStr.LastIndexOf("(");
                 errorEnd = inStr.LastIndexOf(")");
             }
+            else if (openedRoundBrackets != closedRoundBrackets)
+            {
+                error = true;
+                errorBegin = inStr.LastIndexOf("[");
+                errorEnd = inStr.LastIndexOf("]");
+            }
             response.setValidationResponce(error, errorBegin, errorEnd, new ValidatorErrorType());
             return response;
         }
+
         private Responce.validationResponce vCharacters(String inStr)
         {
             bool error = false;
             int errorBegin = -1;
             int errorEnd = -1;
             Responce.validationResponce response = new Responce.validationResponce();
-            Regex rgx = new Regex(@"[*+^\-/a-zA-Z\d\(\)]+");
+            Regex rgx = new Regex(@"[*+^\-/a-df-zA-DF-Z\d\(\)\[\]]+");
             MatchCollection mc = rgx.Matches(inStr);
-            if (mc.Count == 0)
+            if (mc.Count != 1)
             {
                 error = true;
                 errorBegin = 0;

@@ -47,13 +47,6 @@ namespace PostBinary.Classes
     }
 
     /* 
-     * Errors 
-     */
-    class ValidatorErrorType 
-    { 
-
-    }
-    /* 
      * Exceptions
      */
 }

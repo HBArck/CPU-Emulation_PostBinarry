@@ -8,13 +8,28 @@ namespace PostBinary.Classes
 {
     class TestValidator
     {
+        int numberOfCalls = 0;
         Validator validator;
         public TestValidator() { 
-            String str = "Вася";
+            runValidator("abcde");
+        }
+        private void runValidator(String str){
             validator = new Validator();
             Responce.validationResponce response = validator.validate(str);
-            Console.WriteLine("error: " + response.error + "(" + response.errorType + ")" + "   from: " + response.positionBegin + ", to: " + response.positionEnd); 
+            if (!response.error) 
+            {
+                Console.WriteLine("test#" + numberOfCalls +
+                                   "\n     done");
+            }
+            else
+            {
+                Console.WriteLine("test#" + numberOfCalls +
+                                    "\n     error: " + response.error +
+                                    "(" + response.errorType + ")" +
+                                    " from: " + response.positionBegin + ", to: " + response.positionEnd +
+                                    "\n     in the string:\n     " + str + "\n");
+            }
+            ++numberOfCalls;
         }
-        
     }
 }
