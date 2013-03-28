@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\Exceptions.cs" />
+    <Compile Include="Classes\Logger.cs" />
     <Compile Include="Classes\PALU.cs" />
     <Compile Include="Classes\ProgramCore.cs" />
     <Compile Include="Classes\Responce.cs" />

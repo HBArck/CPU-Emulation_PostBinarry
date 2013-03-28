@@ -63,7 +63,7 @@ namespace PostBinary.Classes
                 }
                 catch (Exception ex2)
                 {
-                    throw new ErrorTypeException("Type ");
+                    throw new ErrorTypeException("Error Type Exception ["+ex2.Message+"]");
                 }
                 
             }

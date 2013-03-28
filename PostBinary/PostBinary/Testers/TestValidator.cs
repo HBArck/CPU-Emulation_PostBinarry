@@ -10,23 +10,30 @@ namespace PostBinary.Classes
     {
         int numberOfCalls = 0;
         Validator validator;
-        public TestValidator() { 
-            runValidator("abcde");
+        String[] arrayForValidator = {"abcde", "123", "e123", "[123]]", "(12)a(442)" };
+        public TestValidator() 
+        {
+            for (int i = 0; i < arrayForValidator.Length; i++)
+            {
+                runValidator(arrayForValidator[i]);
+            }
         }
-        private void runValidator(String str){
+
+        private void runValidator(String str)
+        {
             validator = new Validator();
-            Responce.validationResponce response = validator.validate(str);
-            if (!response.error) 
+            ValidationResponce response = validator.validate(str);
+            if (!response.Error) 
             {
                 Console.WriteLine("test#" + numberOfCalls +
-                                   "\n     done");
+                                   "\n     done\n");
             }
             else
             {
                 Console.WriteLine("test#" + numberOfCalls +
-                                    "\n     error: " + response.error +
-                                    "(" + response.errorType + ")" +
-                                    " from: " + response.positionBegin + ", to: " + response.positionEnd +
+                                    "\n     error: " + response.Error +
+                                    "(" + response.ErrorType + ")" +
+                                    " from: " + response.PositionBegin + ", to: " + response.PositionEnd +
                                     "\n     in the string:\n     " + str + "\n");
             }
             ++numberOfCalls;

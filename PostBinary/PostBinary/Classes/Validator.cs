@@ -14,17 +14,18 @@ namespace PostBinary.Classes
     class Validator
     {
         /** DELETE THIS ON IMPLEMINTATION
-         * validErEn0	Syntax Error	Базовая ошибка, говорящая о ошибке в выражении
-         * validErEn1	Missing {0} bracket in expression	"()) ; [][" Ошибка, которая говорит, что в строке отсутствует скобка 
-         * validErEn2	No such operation	"= ; ! ; ~" Если пользователь ввел символ неподдерживаемой операции
-         * validErEn3	Variable or number missing	"++"  Если пользователь ввел подряд две операции
-         * validErEn4	Incorrect scientific notation	"3,e ; 3,e-3,9"   Ошибка в научной нотации
-         * validErEn5	Missing '-' or '+' in expression	"3,0e3"   Отсутствует знак степени для научной нотации
-         * validErEn6	Only digits allowed to represent array index	"a[a]"   Если пользователь ввел
-         * validErEn7	Only integers allowed to represent array index	"a[12,3] ; a[1+2]"  Если пользователь ввел вещественное число и\или оператор в качестве индекса массива
-         * validErEn8	Missing array identifier	"+[x]+" Если пользователь не ввел имя переменной для массива
-         * validErEn9	Only positive integers should represent array index	"a[-1]"  Если пользователь ввел отрицательный индекс массива
-         * [errorName]+[localization]+[# - number]
+         * validEr0	Syntax Error	Базовая ошибка, говорящая о ошибке в выражении
+         * validEr1	Missing {0} bracket in expression	"()) ; [][" Ошибка, которая говорит, что в строке отсутствует скобка 
+         * validEr2	No such operation	"= ; ! ; ~" Если пользователь ввел символ неподдерживаемой операции
+         * validEr3	Variable or number missing	"++"  Если пользователь ввел подряд две операции
+         * validEr4	Incorrect scientific notation	"3,e ; 3,e-3,9"   Ошибка в научной нотации
+         * validEr5	Missing '-' or '+' in expression	"3,0e3"   Отсутствует знак степени для научной нотации
+         * validEr6	Only digits allowed to represent array index	"a[a]"   Если пользователь ввел
+         * validEr7	Only integers allowed to represent array index	"a[12,3] ; a[1+2]"  Если пользователь ввел вещественное число и\или оператор в качестве индекса массива
+         * validEr8	Missing array identifier	"+[x]+" Если пользователь не ввел имя переменной для массива
+         * validEr9	Only positive integers should represent array index	"a[-1]"  Если пользователь ввел отрицательный индекс массива
+         * 
+         * [errorName]+[localization]+[# - number]  - localization adds in Error.cs
          * example of Syntax error for English user will be "validErEn0" , and for Russian - "validErRu0"
          */
         public String inputStr = "";

@@ -25,7 +25,7 @@ namespace PostBinary.Classes
     /// </summary>
     public class ValidationResponce 
     {
-       public static struct resp{
+       public struct resp{
             public bool error;// true - if validator found syntax error in inputStr, else - false
             public String errorType;
             public int positionBegin;// begin position of error in inputStr; "-1" - means no error
@@ -55,7 +55,21 @@ namespace PostBinary.Classes
             get { return responce.error; }
             set { responce.error = value; }
         }
-
+        public String ErrorType
+        {
+            get { return responce.errorType; }
+            set { responce.errorType = value; }
+        }
+        public int PositionBegin
+        {
+            get { return responce.positionBegin; }
+            set { responce.positionBegin = value; }
+        }
+        public int PositionEnd
+        {
+            get { return responce.positionEnd; }
+            set { responce.positionEnd = value; }
+        }
     }
 
 }
