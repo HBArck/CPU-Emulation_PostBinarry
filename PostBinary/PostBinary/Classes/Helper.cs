@@ -7,14 +7,12 @@ using System.Threading.Tasks;
 namespace PostBinary.Classes
 {
     /// <summary>
-    /// This class stores all information of programm state for
-    /// current moment
+    /// Helper should show examples for different expressions
     /// </summary>
-    class ProgramCore
+    class Helper
     {
-        // Errors
-        // Exceptions
-        // Steps 
-
+        // Scientific notation
+        // Constants
+        // Rump polynom, etc.
     }
 }

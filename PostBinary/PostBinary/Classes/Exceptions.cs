@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace PostBinary.Classes
 {
+    /* VALIDATOR EXCEPTIONS BEGIN*/
     class ErrorTypeException: Exception
     {
          public ErrorTypeException()
@@ -65,5 +66,10 @@ namespace PostBinary.Classes
         {
         }
     }
+    /* VALIDATOR EXCEPTIONS END*/
 
+
+    /* PALU EXCEPTIONS BEGIN*/
+
+    /* PALU EXCEPTIONS END*/
 }
