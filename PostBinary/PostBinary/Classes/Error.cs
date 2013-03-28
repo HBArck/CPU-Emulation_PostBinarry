@@ -30,17 +30,37 @@ namespace PostBinary.Classes
             set {
                 try
                 {
-                    if (Properties.Resources.ResourceManager.GetObject(value) != null)
+                    if (value != "")
                     {
-                        type = value;
+                        int NumPos = -1; // There is no number for this message
+                        String currErrorTypeName = value;
+                        for (int i = 1; i < 10; i++)
+                        {
+                            if (value.Contains(i.ToString()))
+                            {
+                                NumPos = i;
+                            }
+                        }
+
+                        if (NumPos == -1)
+                        {
+                            throw new ErrorTypeNumberMissingException("Missing error type number in name.");
+                        }
+
+                        currErrorTypeName.Insert( NumPos - 1, getLocalization());
+                        if (Properties.Resources.ResourceManager.GetObject(currErrorTypeName) != null) 
+                        {
+                            type = currErrorTypeName;
+                        }
+                        else
+                            throw new NoSuchErrorTypeException("There is no such message in resource file.");
                     }
                     else
-                        throw new NoSuchErrorTypeException("There is no such message in resource file");
+                    {
+                        throw new EmptyErrorTypeException("Message name is empty.");
+                    }
+
                 }
-               // catch (NoSuchErrorTypeException ex1)
-               // {
-               //throw new ArgumentException
-               // }
                 catch (Exception ex2)
                 {
                     throw new ErrorTypeException("Type ");
@@ -78,6 +98,10 @@ namespace PostBinary.Classes
         { 
         }
 
+        public String getLocalization()
+        {
+            return "En";
+        }
     }
 
     class ValidatorErrorType : Error

@@ -24,6 +24,8 @@ namespace PostBinary.Classes
          * validErEn7	Only integers allowed to represent array index	"a[12,3] ; a[1+2]"  Если пользователь ввел вещественное число и\или оператор в качестве индекса массива
          * validErEn8	Missing array identifier	"+[x]+" Если пользователь не ввел имя переменной для массива
          * validErEn9	Only positive integers should represent array index	"a[-1]"  Если пользователь ввел отрицательный индекс массива
+         * [errorName]+[localization]+[# - number]
+         * example of Syntax error for English user will be "validErEn0" , and for Russian - "validErRu0"
          */
         public String inputStr = "";
         //private ValidatorErrorType errorMessenger;
@@ -34,15 +36,15 @@ namespace PostBinary.Classes
             //errorMessenger = new ValidatorErrorType();
         }
 
-        public Responce.validationResponce validate(String inStr)
+        public ValidationResponce validate(String inStr)
         {
-            Responce.validationResponce response = new Responce.validationResponce();
+            ValidationResponce response = new ValidationResponce();
 
             response = vCharacters(inStr);
-            if (!response.error)
+            if (!response.Error)
             {
                 response = vSequenceOfNumVar(inStr);
-                if (!response.error)
+                if (!response.Error)
                 {
                     response = vBreckets(inStr);
                 }
@@ -53,12 +55,12 @@ namespace PostBinary.Classes
         /*
          * validate number of brackets
          */
-        private Responce.validationResponce vBreckets(String inStr)
+        private ValidationResponce vBreckets(String inStr)
         {
             bool error = false;
             int errorBegin = -1;
             int errorEnd = -1;
-            Responce.validationResponce response = new Responce.validationResponce();
+            ValidationResponce response = new ValidationResponce();
 
             int openedSquareBrackets = 0;
             int closedSquareBrackets = 0;
@@ -72,25 +74,25 @@ namespace PostBinary.Classes
                 {
                     case '(':
                         {
-                            currErrorType = "validErEn1";
+                            currErrorType = "validEr1";
                             openedSquareBrackets++;
                             break;
                         }
                     case ')':
                         {
-                            currErrorType = "validErEn1";
+                            currErrorType = "validEr1";
                             closedSquareBrackets++;
                             break;
                         }
                     case '[':
                         {
-                            currErrorType = "validErEn1";
+                            currErrorType = "validEr1";
                             openedRoundBrackets++;
                             break;
                         }
                     case ']':
                         {
-                            currErrorType = "validErEn1";
+                            currErrorType = "validEr1";
                             closedRoundBrackets++;
                             break;
                         }
@@ -109,16 +111,16 @@ namespace PostBinary.Classes
                 errorBegin = inStr.LastIndexOf("[");
                 errorEnd = inStr.LastIndexOf("]");
             }
-            response.setValidationResponce(error, errorBegin, errorEnd, currErrorType);
+            response.setResponce(error, errorBegin, errorEnd, currErrorType);
             return response;
         }
 
-        private Responce.validationResponce vCharacters(String inStr)
+        private ValidationResponce vCharacters(String inStr)
         {
             bool error = false;
             int errorBegin = -1;
             int errorEnd = -1;
-            Responce.validationResponce response = new Responce.validationResponce();
+            ValidationResponce response = new ValidationResponce();
             Regex rgx = new Regex(@"[*+^\-/a-df-zA-DF-Z\d\(\)\[\]]+");
             MatchCollection mc = rgx.Matches(inStr);
             if (mc.Count != 1)
@@ -126,20 +128,20 @@ namespace PostBinary.Classes
                 error = true;
                 errorBegin = 0;
                 errorEnd = 0;
-                currErrorType = "validErEn0";
+                currErrorType = "validEr0";
             }
-            response.setValidationResponce(error, errorBegin, errorEnd, currErrorType);
+            response.setResponce(error, errorBegin, errorEnd, currErrorType);
             return response;
         }
         /*
          * validate sequence of numbers and variables 
          */
-        private Responce.validationResponce vSequenceOfNumVar(String inStr)
+        private ValidationResponce vSequenceOfNumVar(String inStr)
         {
             bool error = false;
             int errorBegin = -1;
             int errorEnd = -1;
-            Responce.validationResponce response = new Responce.validationResponce();
+            ValidationResponce response = new ValidationResponce();
 
             Regex rgx = new Regex(@"[*+^\-/]{2}");
 
@@ -154,7 +156,7 @@ namespace PostBinary.Classes
                 currErrorType = "";
             }
 
-            response.setValidationResponce(error, errorBegin, errorEnd, currErrorType);
+            response.setResponce(error, errorBegin, errorEnd, currErrorType);
             return response;
         }
     }

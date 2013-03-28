@@ -35,4 +35,35 @@ namespace PostBinary.Classes
         {
         }
     }
+
+    class EmptyErrorTypeException : Exception
+    {
+        public EmptyErrorTypeException()
+        {
+        }
+        public EmptyErrorTypeException(string message)
+            : base(message)
+        {
+        }
+        public EmptyErrorTypeException(string message, Exception inner)
+            : base(message, inner)
+        {
+        }
+    }
+
+    class ErrorTypeNumberMissingException : Exception
+    {
+        public ErrorTypeNumberMissingException()
+        {
+        }
+        public ErrorTypeNumberMissingException(string message)
+            : base(message)
+        {
+        }
+        public ErrorTypeNumberMissingException(string message, Exception inner)
+            : base(message, inner)
+        {
+        }
+    }
+
 }
