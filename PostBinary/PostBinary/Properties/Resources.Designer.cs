@@ -169,5 +169,95 @@ namespace PostBinary.Properties {
                 return ResourceManager.GetString("validErEn9", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Синтаксическая ошибка в выражении.
+        /// </summary>
+        internal static string validErRu0 {
+            get {
+                return ResourceManager.GetString("validErRu0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не хватает скобки {0} в выражении.
+        /// </summary>
+        internal static string validErRu1 {
+            get {
+                return ResourceManager.GetString("validErRu1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Такой операции не существует.
+        /// </summary>
+        internal static string validErRu2 {
+            get {
+                return ResourceManager.GetString("validErRu2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отсутствует переменная или число.
+        /// </summary>
+        internal static string validErRu3 {
+            get {
+                return ResourceManager.GetString("validErRu3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ошибка в научной нотации.
+        /// </summary>
+        internal static string validErRu4 {
+            get {
+                return ResourceManager.GetString("validErRu4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не хватает знака &apos;-&apos; или &apos;+&apos; в выражении.
+        /// </summary>
+        internal static string validErRu5 {
+            get {
+                return ResourceManager.GetString("validErRu5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Только числа допустимы в качестве индекса.
+        /// </summary>
+        internal static string validErRu6 {
+            get {
+                return ResourceManager.GetString("validErRu6", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Только целые числа допустимы в качестве индекса.
+        /// </summary>
+        internal static string validErRu7 {
+            get {
+                return ResourceManager.GetString("validErRu7", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Имя переменной отсутствует.
+        /// </summary>
+        internal static string validErRu8 {
+            get {
+                return ResourceManager.GetString("validErRu8", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Только положительные числа допустимы в качестве индекса.
+        /// </summary>
+        internal static string validErRu9 {
+            get {
+                return ResourceManager.GetString("validErRu9", resourceCulture);
+            }
+        }
     }
 }

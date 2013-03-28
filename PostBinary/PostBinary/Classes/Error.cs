@@ -34,7 +34,7 @@ namespace PostBinary.Classes
                     {
                         int NumPos = -1; // There is no number for this message
                         String currErrorTypeName = value;
-                        for (int i = 1; i < 10; i++)
+                        for (int i = 0; i < 10; i++)
                         {
                             if (value.Contains(i.ToString()))
                             {

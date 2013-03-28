@@ -150,7 +150,7 @@
   </data>
   <data name="validErEn6" xml:space="preserve">
     <value>Only digits allowed to represent array index</value>
-    <comment>"a[a]"   Если пользователь ввел</comment>
+    <comment>"a[a]"   Если пользователь ввел имя переменной в качестве индекса</comment>
   </data>
   <data name="validErEn7" xml:space="preserve">
     <value>Only integers allowed to represent array index</value>
@@ -163,5 +163,35 @@
   <data name="validErEn9" xml:space="preserve">
     <value>Only positive integers should represent array index</value>
     <comment>"a[-1]"  Если пользователь ввел отрицательный индекс массива</comment>
+  </data>
+  <data name="validErRu0" xml:space="preserve">
+    <value>Синтаксическая ошибка в выражении</value>
+  </data>
+  <data name="validErRu1" xml:space="preserve">
+    <value>Не хватает скобки {0} в выражении</value>
+  </data>
+  <data name="validErRu2" xml:space="preserve">
+    <value>Такой операции не существует</value>
+  </data>
+  <data name="validErRu3" xml:space="preserve">
+    <value>Отсутствует переменная или число</value>
+  </data>
+  <data name="validErRu4" xml:space="preserve">
+    <value>Ошибка в научной нотации</value>
+  </data>
+  <data name="validErRu5" xml:space="preserve">
+    <value>Не хватает знака '-' или '+' в выражении</value>
+  </data>
+  <data name="validErRu6" xml:space="preserve">
+    <value>Только числа допустимы в качестве индекса</value>
+  </data>
+  <data name="validErRu7" xml:space="preserve">
+    <value>Только целые числа допустимы в качестве индекса</value>
+  </data>
+  <data name="validErRu8" xml:space="preserve">
+    <value>Имя переменной отсутствует</value>
+  </data>
+  <data name="validErRu9" xml:space="preserve">
+    <value>Только положительные числа допустимы в качестве индекса</value>
   </data>
 </root>
