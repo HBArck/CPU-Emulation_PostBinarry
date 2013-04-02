@@ -6,6 +6,54 @@ using System.Threading.Tasks;
 
 namespace PostBinary.Classes
 {
+    /* Program Core Exceptions BEGIN */
+    public class FCCoreGeneralException : System.Exception
+    {
+        public FCCoreGeneralException()
+        {
+        }
+        public FCCoreGeneralException(string message)
+            : base(message)
+        {
+        }
+        public FCCoreGeneralException(string message, Exception inner)
+            : base(message, inner)
+        {
+        }
+    }
+    
+    public class FCCoreArithmeticException : System.Exception
+    {
+        public FCCoreArithmeticException()
+        {
+        }
+        public FCCoreArithmeticException(string message)
+            : base(message)
+        {
+        }
+        public FCCoreArithmeticException(string message, Exception inner)
+            : base(message, inner)
+        {
+        }
+    }
+    
+    public class FCCoreFunctionException : System.Exception
+    {
+        public FCCoreFunctionException()
+        {
+        }
+        public FCCoreFunctionException(string message)
+            : base(message)
+        {
+        }
+        public FCCoreFunctionException(string message, Exception inner)
+            : base(message, inner)
+        {
+        }
+    }
+    /* Program Core Exceptions END */
+
+
     /* VALIDATOR EXCEPTIONS BEGIN*/
     class ErrorTypeException: Exception
     {
@@ -70,6 +118,21 @@ namespace PostBinary.Classes
 
 
     /* PALU EXCEPTIONS BEGIN*/
-
+    class IncorrectSignException : FCCoreArithmeticException
+    {
+        public IncorrectSignException()
+        {
+        }
+        public IncorrectSignException(string message)
+            : base(message)
+        {
+        }
+        public IncorrectSignException(string message, Exception inner)
+            : base(message, inner)
+        {
+        }
+    }
     /* PALU EXCEPTIONS END*/
+
+
 }

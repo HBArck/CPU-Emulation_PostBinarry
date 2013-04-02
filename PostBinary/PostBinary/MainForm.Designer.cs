@@ -1,6 +1,6 @@
 ﻿namespace PostBinary
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// Требуется переменная конструктора.
@@ -203,10 +203,11 @@
             this.customTextBox1.Location = new System.Drawing.Point(19, 55);
             this.customTextBox1.MaxTextLength = 0;
             this.customTextBox1.Name = "customTextBox1";
-            this.customTextBox1.Size = new System.Drawing.Size(739, 20);
+            this.customTextBox1.Size = new System.Drawing.Size(740, 20);
             this.customTextBox1.TabIndex = 14;
             this.customTextBox1.WindowHeight = 0;
-            this.customTextBox1.WindowWidth = 0;
+            this.customTextBox1.WindowSize = new System.Drawing.Size(0, 0);
+            this.customTextBox1.WindowWidth = 500;
             // 
             // Form1
             // 

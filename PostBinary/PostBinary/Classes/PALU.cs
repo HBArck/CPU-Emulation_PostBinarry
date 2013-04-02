@@ -11,5 +11,6 @@ namespace PostBinary.Classes
     /// </summary>
     class PALU
     {
+
     }
 }

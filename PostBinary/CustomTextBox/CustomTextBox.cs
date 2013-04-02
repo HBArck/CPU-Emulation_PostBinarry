@@ -18,7 +18,7 @@ namespace MyControls
         private int startPosition = 0;
         private int endPosition = 0;
         private bool displayError = false;
-
+        private float displayableLettersNumber;
         /*
         private String text;
         [Category("Отображение"), Description("Текст, отображаемый в элементе управления"), DisplayName("Text")]
@@ -31,6 +31,7 @@ namespace MyControls
                 text = value; 
             }
         }*/
+        
         private int length;
         [Category("Отображение"), Description("Текущее количество символов"), DisplayName("TextLength")]
         [DefaultValue(0)]
@@ -134,6 +135,14 @@ namespace MyControls
         }
         //private Color forecolor;
 
+        private Size windowSize;
+        public Size WindowSize
+        {
+            get { return windowSize; }
+            set {
+                windowSize = value;
+            }
+        }
         private int currCaretPos = 0; 
         // FLAGS BEGIN
         [DefaultValue(false)]
@@ -189,15 +198,37 @@ namespace MyControls
         {
             base.OnEnter(e);
             Entered = true;
+            ClientSize = new Size(740, 200);
+            Select();
             Invalidate();
             caretTimer.Start();
         }
 
+        protected override bool IsInputKey(Keys keyData)
+        {
+            switch (keyData)
+            {
+                case Keys.Right:
+                case Keys.Left:
+                case Keys.Up:
+                case Keys.Down:
+                    return true;
+                case Keys.Shift | Keys.Right:
+                case Keys.Shift | Keys.Left:
+                case Keys.Shift | Keys.Up:
+                case Keys.Shift | Keys.Down:
+                    return true;
+            }
+            return base.IsInputKey(keyData);
+        }
+      
         protected override void OnLeave(EventArgs e)
         {
-            base.OnLeave(e);
+            base.OnLeave(e);            
+            Console.WriteLine("OnLeave");
             Entered = false;
             caretTimer.Stop();
+            ClientSize = new Size(ClientSize.Width, 20);
             drawCaret = false;
             Invalidate();
         }
@@ -223,46 +254,102 @@ namespace MyControls
             base.OnMouseLeave(e);
             this.Cursor = Cursors.Arrow;
         }
-        
+
+        protected override bool ProcessKeyPreview(ref Message m)
+        {
+            return base.ProcessKeyPreview(ref m);
+        }
+
+        protected override void OnTabIndexChanged(EventArgs e)
+        {
+            Console.WriteLine("OnTabIndexChanged");
+            base.OnTabIndexChanged(e);
+        }
+        protected override void OnTabStopChanged(EventArgs e)
+        {
+            Console.WriteLine("OnTabStopChanged");
+            base.OnTabStopChanged(e);
+        }
         protected override void OnKeyDown(KeyEventArgs e)
         {
+            Console.WriteLine("OnKeyDown["+Text+"]");
+            //Console.WriteLine(e.KeyCode);
+            //Console.WriteLine(e.KeyData);
+            Console.WriteLine(e.KeyValue);
+            //base.OnKeyDown(e);
+              
             base.OnKeyDown(e);
+            switch (e.KeyCode)
+            {
+                case Keys.Left:
+                case Keys.Right:
+                case Keys.Up:
+                case Keys.Down:
+                    
+                    if (e.Shift)
+                    {
+
+                    }
+                    else
+                    {
+                    }
+                    break;
+            }
+            if (Text.Length != 0)
+            {
+                if ((e.KeyCode == Keys.Left) && (currCaretPos > 0))
+                {
+                    if (currCaretPos > 0)
+                        currCaretPos--; //e.KeyChar = '\0';
+                    //flag = false;
+                    e.SuppressKeyPress = true;
+                }
+                if ((e.KeyCode == Keys.Right) && (currCaretPos < 30)) // count Width CORRECTLY
+                {
+                    if (currCaretPos < Text.Length)
+                        currCaretPos++;
+                    //flag = false;
+                    e.SuppressKeyPress = true;
+                }
+            }
             if (Length + 1 >= maxTextLength)
                 return;
         }
         
         protected override void OnKeyPress(KeyPressEventArgs e)
         {
-            base.OnKeyPress(e);
+            // LEFT = 37
+            // UP = 38
+            // RIGHT = 39
+            // UP = 40
+            Console.WriteLine("OnKeyPress[" + Text + "]");
+            if ((e.KeyChar == 37) || (e.KeyChar == 38) || (e.KeyChar == 38) || (e.KeyChar == 40))
+                e.KeyChar = '\0';
+            
+           // base.OnKeyPress(e);
 
            // if (Length + 1 >= maxTextLength)
             //    e.KeyChar = '\0';
-            
+            Console.WriteLine(e.KeyChar);
             //Text = Text + e.KeyChar;
             //Length++;
-            Invalidate();
+            //Invalidate();
         }
         protected override void OnKeyUp(KeyEventArgs e)
         {
             base.OnKeyUp(e);
             bool flag = true;
-            if ((e.KeyCode== Keys.Left) && (currCaretPos > 0))
-            {
-                currCaretPos--; //e.KeyChar = '\0';
-                flag = false; Invalidate(); return;
-            }
-            if ((e.KeyCode == Keys.Right) && (currCaretPos < 30)) // count Width CORRECTLY
-            {
-                currCaretPos++;
-                flag = false;  return;
-            }
+            Console.WriteLine("OnKeyUp[" + Text + "]");
             if (flag)
             {
+                if ( (e.KeyCode != Keys.Left) && (e.KeyCode != Keys.Right) && (e.KeyCode != Keys.Up) && (e.KeyCode != Keys.Down) )
+                {   
                 String tempText = Text.Substring(0, currCaretPos);
                 tempText = String.Concat(tempText, ((char)(e.KeyValue)).ToString());
                 Text = tempText + Text.Substring(currCaretPos);
                 //this.Text += (char)(e.KeyValue);
                 currCaretPos++;
+                }
             }
             //base.OnTextChanged(e);
 
@@ -295,7 +382,12 @@ namespace MyControls
             { 
              
             }
-            
+
+            /*
+            if (Focus())
+                ClientSize = WindowSize;
+            else
+                ClientSize = ClientRectangle.Size;*/
             // Paint usual TextBox
             System.Drawing.Pen borderTop;
             System.Drawing.Pen borderLRB;
@@ -332,7 +424,7 @@ namespace MyControls
                     currCaretPos = Text.Length;
                 float x = e.Graphics.MeasureString(Text.Substring(0, currCaretPos), fnt).Width;
                 float y = e.Graphics.MeasureString("0", fnt).Height ;
-                e.Graphics.DrawLine(pCaret, 3 + x , 4, 3 + x , y); // Top  Border
+                e.Graphics.DrawLine(pCaret, 4 + x , 4, 4 + x , y); // Top  Border
                 //e.Graphics.DrawLine(pCaret, new Point(4, 3), new Point(19, ClientSize.Height - 2)); // Top  Border
                 pCaret.Dispose(); fnt.Dispose();
             }
@@ -341,11 +433,12 @@ namespace MyControls
             { 
                 System.Drawing.Font fnt = new System.Drawing.Font(FontFamily.GenericSansSerif, fontSize);
                 //for (int i = 0; i< 10 || i < this.Text.Length ; i++) //(260 - textPadding * 2)/9
-                {
+                
                     //if ((this.Text[i] != '\n') || (this.Text[i] != '\b') || (this.Text[i] != '\r'))
                 e.Graphics.DrawString(Text.Substring(0, Text.Length), fnt, new SolidBrush(Color.Black), 4 , 2);
-                e.Graphics.DrawString(Text.Substring(0, Text.Length), fnt, new SolidBrush(Color.Red), e.Graphics.MeasureString(Text.Substring(0, Text.Length), fnt).Width, 2);
-                }
+                //if (Text.Length>2)
+                //e.Graphics.DrawString(Text.Substring(Text.Length / 2, Text.Length), fnt, new SolidBrush(Color.Red), e.Graphics.MeasureString(Text.Substring(Text.Length/2, Text.Length), fnt).Width, 2);
+                
                 fnt.Dispose();
             }
 
@@ -372,6 +465,10 @@ namespace MyControls
             caretTimer.Tick +=new EventHandler(caretTimer_Tick);
             maxTextLength = Text.Length;
             InitializeComponent();
+            // How much space fill letter
+            Graphics g = this.CreateGraphics();
+            System.Drawing.Font fnt = new System.Drawing.Font(FontFamily.GenericSansSerif, fontSize);
+            displayableLettersNumber = g.MeasureString("1", fnt).Width;
         }
 
         
