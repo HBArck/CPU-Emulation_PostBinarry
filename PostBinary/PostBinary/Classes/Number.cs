@@ -8,12 +8,13 @@ namespace PostBinary.Classes
 {
     public struct exponent
     {
+        /*
         private static bool isempty;
         public static bool isEmpty
         {
             get { return isempty; }
         }
-
+        */
         private String leftPart;
         public String LeftPart
         {
@@ -163,6 +164,12 @@ namespace PostBinary.Classes
 
     class Number : BaseNumber
     {
+        private Number32 num32;
+        public Number32 Num32
+        {
+            get { return num32; }
+            set { num32 = value; }
+        }
 
         public Number pb32()
         {

@@ -46,6 +46,7 @@
             this.bStart = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.customTextBox1 = new MyControls.CustomTextBox();
+            this.helperToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -103,7 +104,8 @@
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.preferencesToolStripMenuItem});
+            this.preferencesToolStripMenuItem,
+            this.helperToolStripMenuItem});
             this.optionsToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
@@ -112,7 +114,7 @@
             // preferencesToolStripMenuItem
             // 
             this.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem";
-            this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.preferencesToolStripMenuItem.Text = "Preferences";
             // 
             // toolStripMenuItem1
@@ -207,9 +209,16 @@
             this.customTextBox1.TabIndex = 14;
             this.customTextBox1.WindowHeight = 0;
             this.customTextBox1.WindowSize = new System.Drawing.Size(0, 0);
-            this.customTextBox1.WindowWidth = 500;
+            this.customTextBox1.WindowWidth = 740;
             // 
-            // Form1
+            // helperToolStripMenuItem
+            // 
+            this.helperToolStripMenuItem.Name = "helperToolStripMenuItem";
+            this.helperToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.helperToolStripMenuItem.Text = "Helper";
+            this.helperToolStripMenuItem.Click += new System.EventHandler(this.helperToolStripMenuItem_Click);
+            // 
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -227,7 +236,7 @@
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "Form1";
+            this.Name = "MainForm";
             this.Text = "PostBinary";
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
@@ -258,6 +267,7 @@
         private System.Windows.Forms.Label lResult;
         private System.Windows.Forms.Button button1;
         private MyControls.CustomTextBox customTextBox1;
+        private System.Windows.Forms.ToolStripMenuItem helperToolStripMenuItem;
     }
 }
 

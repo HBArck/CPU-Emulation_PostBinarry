@@ -34,5 +34,11 @@ namespace PostBinary
             PostBinary.Classes.TestValidator test = new Classes.TestValidator();
           
         }
+
+        private void helperToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Forms.HelperForm helper = new Forms.HelperForm();
+            helper.ShowDialog();
+        }
     }
 }
