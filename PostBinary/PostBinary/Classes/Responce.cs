@@ -61,6 +61,7 @@ namespace PostBinary.Classes
             responce.errorType = errType;
             responce.positionBegin = posBegin;
             responce.positionEnd = posEnd;
+ 
         }
         public bool Error
         {
@@ -82,6 +83,8 @@ namespace PostBinary.Classes
             get { return responce.positionEnd; }
             set { responce.positionEnd = value; }
         }
+
+       
     }
 
     /// <summary>

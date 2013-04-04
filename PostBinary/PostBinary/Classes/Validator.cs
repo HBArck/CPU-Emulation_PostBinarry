@@ -16,21 +16,18 @@ namespace PostBinary.Classes
         /** DELETE THIS ON IMPLEMINTATION
          * validEr0	Syntax Error	Базовая ошибка, говорящая о ошибке в выражении
          * validEr1	Missing {0} bracket in expression	"()) ; [][" Ошибка, которая говорит, что в строке отсутствует скобка 
-         * validEr2	No such operation	"= ; ! ; ~" Если пользователь ввел символ неподдерживаемой операции
          * validEr3	Variable or number missing	"++"  Если пользователь ввел подряд две операции
          * validEr4	Incorrect scientific notation	"3,e ; 3,e-3,9"   Ошибка в научной нотации
          * validEr5	Missing '-' or '+' in expression	"3,0e3"   Отсутствует знак степени для научной нотации
-         * validEr6	Only digits allowed to represent array index	"a[a]"   Если пользователь ввел
-         * validEr7	Only integers allowed to represent array index	"a[12,3] ; a[1+2]"  Если пользователь ввел вещественное число и\или оператор в качестве индекса массива
-         * validEr8	Missing array identifier	"+[x]+" Если пользователь не ввел имя переменной для массива
-         * validEr9	Only positive integers should represent array index	"a[-1]"  Если пользователь ввел отрицательный индекс массива
+         * validEr6	Only digits allowed to represent array index	"a[a]" ; "a[12,3] ; a[1+2]"  Если пользователь ввел
+         * validEr7	Missing array identifier	"+[x]+" Если пользователь не ввел имя переменной для массива
          * 
          * [errorName]+[localization]+[# - number]  - localization adds in Error.cs
          * example of Syntax error for English user will be "validErEn0" , and for Russian - "validErRu0"
          */
         public String inputStr = "";
         //private ValidatorErrorType errorMessenger;
-        private String currErrorType; 
+        private String currErrorType;
 
         public Validator()
         {
@@ -48,6 +45,18 @@ namespace PostBinary.Classes
                 if (!response.Error)
                 {
                     response = vBreckets(inStr);
+                    if (!response.Error)
+                    {
+                        response = vInsideBreckets(inStr);
+                        if (!response.Error)
+                        {
+                            response = vNameOfArray(inStr);
+                            if (!response.Error)
+                            {
+                                response = vScientificNotation(inStr);
+                            }
+                        }
+                    }
                 }
             }
             return response;
@@ -62,7 +71,7 @@ namespace PostBinary.Classes
             int errorBegin = -1;
             int errorEnd = -1;
             ValidationResponce response = new ValidationResponce();
-
+            String[] args;
             int openedSquareBrackets = 0;
             int closedSquareBrackets = 0;
             int openedRoundBrackets = 0;
@@ -100,6 +109,7 @@ namespace PostBinary.Classes
                 }
 
             }
+            //  args = new String[] { ce.Current.ToString() };
             if (openedSquareBrackets != closedSquareBrackets)
             {
                 error = true;
@@ -118,11 +128,14 @@ namespace PostBinary.Classes
 
         private ValidationResponce vCharacters(String inStr)
         {
+            /*
+             * TODO: find and fill errorBegin / errorEnd 
+             */
             bool error = false;
             int errorBegin = -1;
             int errorEnd = -1;
             ValidationResponce response = new ValidationResponce();
-            Regex rgx = new Regex(@"[*+^\-/a-df-zA-DF-Z\d\(\)\[\]]+");
+            Regex rgx = new Regex(@"[*+^\-/a-zA-Z\d\(\)\[\]\.,]+");
             MatchCollection mc = rgx.Matches(inStr);
             if (mc.Count != 1)
             {
@@ -154,9 +167,114 @@ namespace PostBinary.Classes
                 errorBegin = inStr.IndexOf(mc[0].ToString());
                 String lastError = mc[mc.Count - 1].ToString();
                 errorEnd = inStr.LastIndexOf(lastError) + lastError.Length - 1;
-                currErrorType = "";
+                currErrorType = "validEr3";
             }
 
+            response.setResponce(error, errorBegin, errorEnd, currErrorType);
+            return response;
+        }
+        /*
+        * validate number of brackets
+        */
+        private ValidationResponce vInsideBreckets(String inStr)
+        {
+            /*
+             * TODO: find and fill errorBegin / errorEnd 
+             */
+            bool error = false;
+            int errorBegin = -1;
+            int errorEnd = -1;
+
+            ValidationResponce response = new ValidationResponce();
+            Regex rgx = new Regex(@"(\[[*+^\-/a-zA-Z\(\)\[\]]+\])");
+            MatchCollection mc = rgx.Matches(inStr);
+            if (mc.Count > 0)
+            {
+                error = true;
+                errorBegin = 0;
+                errorEnd = 0;
+                currErrorType = "validEr6";
+            }
+            response.setResponce(error, errorBegin, errorEnd, currErrorType);
+            return response;
+        }
+        /*
+        * validate number of brackets
+        */
+        private ValidationResponce vNameOfArray(String inStr)
+        {
+            /*
+             * TODO: find and fill errorBegin / errorEnd 
+             */
+            bool error = false;
+            int errorBegin = -1;
+            int errorEnd = -1;
+
+            ValidationResponce response = new ValidationResponce();
+            Regex rgx = new Regex(@"([*+^\-/eE\d\(\)\[\]]\[)");
+            MatchCollection mc = rgx.Matches(inStr);
+            if (mc.Count > 0)
+            {
+                error = true;
+                errorBegin = 0;
+                errorEnd = 0;
+                currErrorType = "validEr7";
+            }
+            response.setResponce(error, errorBegin, errorEnd, currErrorType);
+            return response;
+        }
+        /*
+        * validate number of brackets
+        */
+        private ValidationResponce vScientificNotation(String inStr)
+        {
+            /*
+             * TODO: find and fill errorBegin / errorEnd 
+             */
+
+
+          //  "3,e ; 3,e-3,9"  
+        //"3,0e3"
+
+            bool error = false;
+            int errorBegin = -1;
+            int errorEnd = -1;
+
+            ValidationResponce response = new ValidationResponce();
+            Regex rgx = new Regex(@"(e[*^/a-zA-Z\d\(\)\[\]\.,])");
+            MatchCollection mc = rgx.Matches(inStr);
+            if (mc.Count > 0)
+            {
+                error = true;
+                errorBegin = 0;
+                errorEnd = 0;
+                currErrorType = "validEr4";
+            }
+            if (!error) {
+                char check = 'e';
+                int count = 0;
+                CharEnumerator ce = inStr.GetEnumerator();
+                while (ce.MoveNext())
+                {
+                    if (check == ce.Current)
+                    {
+                        count++;
+                    }
+                }
+
+                Regex regexScientificNotation = new Regex(@"(\d+[+\-\d+]\d+[,.]e[+\-]\d+)");
+                              
+                MatchCollection mcScientificNotation = rgx.Matches(inStr);
+                Console.WriteLine(count +"|"+ mcScientificNotation.Count + "  "+ inStr);
+                if (count != mcScientificNotation.Count) {
+                    error = true;
+                    errorBegin = 0;
+                    errorEnd = 0;
+                    currErrorType = "validEr4.1";
+                }
+            }
+            
+            
             response.setResponce(error, errorBegin, errorEnd, currErrorType);
             return response;
         }
