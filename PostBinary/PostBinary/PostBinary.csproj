@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\Asm\FPU.cs" />
     <Compile Include="Classes\Exceptions.cs" />
     <Compile Include="Classes\Helper.cs" />
     <Compile Include="Classes\Logger.cs" />

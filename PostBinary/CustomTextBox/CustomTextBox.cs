@@ -344,11 +344,11 @@ namespace MyControls
             {
                 if ( (e.KeyCode != Keys.Left) && (e.KeyCode != Keys.Right) && (e.KeyCode != Keys.Up) && (e.KeyCode != Keys.Down) )
                 {   
-                String tempText = Text.Substring(0, currCaretPos);
-                tempText = String.Concat(tempText, ((char)(e.KeyValue)).ToString());
-                Text = tempText + Text.Substring(currCaretPos);
-                //this.Text += (char)(e.KeyValue);
-                currCaretPos++;
+                    String tempText = Text.Substring(0, currCaretPos);
+                    tempText = String.Concat(tempText, ((char)(e.KeyValue)).ToString());
+                    Text = tempText + Text.Substring(currCaretPos);
+                    //this.Text += (char)(e.KeyValue);
+                    currCaretPos++;
                 }
             }
             //base.OnTextChanged(e);
