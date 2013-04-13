@@ -36,6 +36,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helperToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.listBox1 = new System.Windows.Forms.ListBox();
@@ -46,7 +47,9 @@
             this.bStart = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.customTextBox1 = new MyControls.CustomTextBox();
-            this.helperToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.VarList = new System.Windows.Forms.ListBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -114,8 +117,15 @@
             // preferencesToolStripMenuItem
             // 
             this.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem";
-            this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.preferencesToolStripMenuItem.Text = "Preferences";
+            // 
+            // helperToolStripMenuItem
+            // 
+            this.helperToolStripMenuItem.Name = "helperToolStripMenuItem";
+            this.helperToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.helperToolStripMenuItem.Text = "Helper";
+            this.helperToolStripMenuItem.Click += new System.EventHandler(this.helperToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
@@ -133,26 +143,28 @@
             // 
             // listBox1
             // 
+            this.listBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 16;
             this.listBox1.Location = new System.Drawing.Point(19, 83);
             this.listBox1.Margin = new System.Windows.Forms.Padding(5);
             this.listBox1.Name = "listBox1";
             this.listBox1.ScrollAlwaysVisible = true;
-            this.listBox1.Size = new System.Drawing.Size(739, 238);
+            this.listBox1.Size = new System.Drawing.Size(695, 356);
             this.listBox1.TabIndex = 8;
             // 
             // tResult
             // 
             this.tResult.Location = new System.Drawing.Point(90, 617);
             this.tResult.Name = "tResult";
-            this.tResult.Size = new System.Drawing.Size(668, 20);
+            this.tResult.Size = new System.Drawing.Size(624, 20);
             this.tResult.TabIndex = 9;
             // 
             // tInfelicity
             // 
             this.tInfelicity.Location = new System.Drawing.Point(90, 565);
             this.tInfelicity.Name = "tInfelicity";
-            this.tInfelicity.Size = new System.Drawing.Size(668, 20);
+            this.tInfelicity.Size = new System.Drawing.Size(624, 20);
             this.tInfelicity.TabIndex = 10;
             // 
             // lInfelicity
@@ -183,7 +195,7 @@
             this.bStart.FlatAppearance.BorderSize = 0;
             this.bStart.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.bStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.bStart.Location = new System.Drawing.Point(806, 41);
+            this.bStart.Location = new System.Drawing.Point(720, 36);
             this.bStart.Name = "bStart";
             this.bStart.Size = new System.Drawing.Size(39, 39);
             this.bStart.TabIndex = 7;
@@ -192,7 +204,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(784, 128);
+            this.button1.Location = new System.Drawing.Point(765, 52);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 13;
@@ -205,18 +217,37 @@
             this.customTextBox1.Location = new System.Drawing.Point(19, 55);
             this.customTextBox1.MaxTextLength = 0;
             this.customTextBox1.Name = "customTextBox1";
-            this.customTextBox1.Size = new System.Drawing.Size(740, 20);
+            this.customTextBox1.Size = new System.Drawing.Size(695, 20);
             this.customTextBox1.TabIndex = 14;
-            this.customTextBox1.WindowHeight = 0;
             this.customTextBox1.WindowSize = new System.Drawing.Size(0, 0);
-            this.customTextBox1.WindowWidth = 740;
             // 
-            // helperToolStripMenuItem
+            // VarList
             // 
-            this.helperToolStripMenuItem.Name = "helperToolStripMenuItem";
-            this.helperToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.helperToolStripMenuItem.Text = "Helper";
-            this.helperToolStripMenuItem.Click += new System.EventHandler(this.helperToolStripMenuItem_Click);
+            this.VarList.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.VarList.ItemHeight = 16;
+            this.VarList.Location = new System.Drawing.Point(732, 99);
+            this.VarList.Name = "VarList";
+            this.VarList.Size = new System.Drawing.Size(148, 340);
+            this.VarList.TabIndex = 15;
+            this.VarList.DoubleClick += new System.EventHandler(this.listBox2_DoubleClick);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(736, 83);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(23, 13);
+            this.label1.TabIndex = 17;
+            this.label1.Text = "Var";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(789, 83);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(34, 13);
+            this.label2.TabIndex = 18;
+            this.label2.Text = "Value";
             // 
             // MainForm
             // 
@@ -224,6 +255,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.ClientSize = new System.Drawing.Size(892, 699);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.VarList);
             this.Controls.Add(this.customTextBox1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.lResult);
@@ -236,8 +270,11 @@
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
+            this.MaximumSize = new System.Drawing.Size(908, 737);
+            this.MinimumSize = new System.Drawing.Size(908, 737);
             this.Name = "MainForm";
             this.Text = "PostBinary";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
@@ -268,6 +305,9 @@
         private System.Windows.Forms.Button button1;
         private MyControls.CustomTextBox customTextBox1;
         private System.Windows.Forms.ToolStripMenuItem helperToolStripMenuItem;
+        private System.Windows.Forms.ListBox VarList;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
     }
 }
 

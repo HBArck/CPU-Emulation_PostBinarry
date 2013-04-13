@@ -79,62 +79,7 @@ namespace MyControls
             }
         }
 
-        /*
-        private Size size;
-        [Category("Отображение"), Description("Размер поля"), DisplayName("Size")]
-        [DefaultValue(typeof(Size),"Size(260,20)")]
-        public Size Size 
-        {
-            get { return size; }
-            set {
-                if (value.Width < 260)
-                    size.Width = 260;
-                if (value.Height < 20)
-                    size.Height = 20;
-            }
-        }
-
-        protected override void OnSizeChanged(EventArgs e)
-        {
-            Size s = new Size(260, 20);
-            if (Size.Width < s.Width)
-                Size.Width = s.Width;
-            if (Size.Width > 260)
-                Size.Width = 260;
-            base.OnSizeChanged(e);
-        }*/
-
-        private int windowH;
-        [Category("Отображение"), Description("Высота выпадающего окна"), DisplayName("WindowHeight")]
-        [DefaultValue(200)]
-        public int WindowHeight
-        {
-            get { return windowH; }
-            set { 
-                if (value < 19)
-                    windowH = value;
-                if (value > 500)
-                    windowH = 500;
-            }
-        }
-
-        private int windowW;
-        [Category("Отображение"), Description("Ширина выпадающего окна"), DisplayName("WindowWidth")]
-        [DefaultValue(260)]
-        public int WindowWidth
-        {
-            get { return windowW; }
-            set
-            {
-                
-                if (value < ClientSize.Width)
-                    windowW = ClientSize.Width;
-                if (value > 500)
-                    windowW = 500;
-            }
-        }
-        //private Color forecolor;
-
+       
         private Size windowSize;
         public Size WindowSize
         {
@@ -234,15 +179,19 @@ namespace MyControls
         }
         protected override void OnClick(EventArgs e)
         {
+            Console.WriteLine("OnClick");
             base.OnClick(e);
             Entered = true;
             //currCaretPosition 
-            
+            Console.WriteLine("OnClick");
             Focus();
             caretTimer.Start();
             Invalidate();
         }
-
+        protected override void OnMouseClick(MouseEventArgs e)
+        {
+            base.OnMouseClick(e);
+        }
         protected override void OnMouseHover(EventArgs e)
         {
             base.OnMouseHover(e);
@@ -442,12 +391,10 @@ namespace MyControls
                 fnt.Dispose();
             }
 
-             
         }
 
         private void caretTimer_Tick(System.Object sender, System.EventArgs e)
         {
-            
             if (!drawCaret)
                 drawCaret = true;
             else
@@ -475,3 +422,62 @@ namespace MyControls
 
     }
 }
+
+
+/*UNUSED*/
+/*
+       private Size size;
+       [Category("Отображение"), Description("Размер поля"), DisplayName("Size")]
+       [DefaultValue(typeof(Size),"Size(260,20)")]
+       public Size Size 
+       {
+           get { return size; }
+           set {
+               if (value.Width < 260)
+                   size.Width = 260;
+               if (value.Height < 20)
+                   size.Height = 20;
+           }
+       }
+
+       protected override void OnSizeChanged(EventArgs e)
+       {
+           Size s = new Size(260, 20);
+           if (Size.Width < s.Width)
+               Size.Width = s.Width;
+           if (Size.Width > 260)
+               Size.Width = 260;
+           base.OnSizeChanged(e);
+       }
+
+       private int windowH;
+       [Category("Отображение"), Description("Высота выпадающего окна"), DisplayName("WindowHeight")]
+       [DefaultValue(200)]
+       public int WindowHeight
+       {
+           get { return windowH; }
+           set { 
+               if (value < 19)
+                   windowH = value;
+               if (value > 500)
+                   windowH = 500;
+           }
+       }
+
+       private int windowW;
+       [Category("Отображение"), Description("Ширина выпадающего окна"), DisplayName("WindowWidth")]
+       [DefaultValue(260)]
+       public int WindowWidth
+       {
+           get { return windowW; }
+           set
+           {
+                
+               if (value < ClientSize.Width)
+                   windowW = ClientSize.Width;
+               if (value > 500)
+                   windowW = 500;
+           }
+       }
+       //private Color forecolor;
+       */

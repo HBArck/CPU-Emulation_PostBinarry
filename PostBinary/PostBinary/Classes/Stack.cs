@@ -6,10 +6,14 @@ using System.Threading.Tasks;
 
 namespace PostBinary.Classes
 {
+    
+        
 
-   
     class Command
     {
+        public enum commVals { Load, Add, Sub, Mul, Div, Exp, Mem };
+        public String[] commNames = { "LOAD", "ADD", "SUB", "MUL", "DIV", "EXP", "M{0}" };
+        /*public System.Collections.Hashtable commands = new System.Collections.Hashtable();*/
         private int Code;
         private Number leftOperand;
         private Number rightOperand;
@@ -21,6 +25,18 @@ namespace PostBinary.Classes
                 return result;
             }
             set{}
+        }
+
+        public Command()
+        {
+            /*
+            commands.Add("Load","LOAD");
+            commands.Add("Add", "ADD");
+            commands.Add("Sub", "SUB");
+            commands.Add("Mul", "MUL");
+            commands.Add("Div", "DIV");
+            commands.Add("Exp", "EXP");
+            commands.Add("Mem", "M{0}");*/
         }
         
     }
