@@ -12,16 +12,29 @@ namespace PostBinary
 {
     public partial class MainForm : Form
     {
+        #region VarList
         // VarList Global Variables for control interconnection
-        int index;
-        int pos;
-        TextBox tmpBox;
+        int selectedListIndex;        
+        /// <summary>
+        /// Dynamic moving TextBox component for change selected item text of VarList
+        /// </summary>
+        TextBox dynamicTextBox; // this TextBox Should appear 
+        /// <summary>
+        /// Name of variable in VarList component
+        /// </summary>
         String varName;
-        bool fCommaEntered;
-        // VarList END
 
+        /// <summary>
+        /// Selected item Text in VarList component before changing
+        /// </summary>
+        String prevText; 
+        
+        #endregion
+
+        #region MainCore
         //Main Core
         Classes.ProgramCore ProgCore;
+        #endregion
 
         public MainForm()
         {
@@ -61,60 +74,77 @@ namespace PostBinary
         private void listBox2_DoubleClick(object sender, EventArgs e)
         {
             // Create input on item position
-            index = VarList.SelectedIndex;
-            pos = VarList.Items[index].ToString().IndexOf('=');
+            selectedListIndex = VarList.SelectedIndex;
+
+            // Save previous text
+            prevText = VarList.Items[selectedListIndex].ToString();
+
+            /// <summary>
+            /// Position of "=" symbol to copy correctly name and value of selected item
+            /// </summary>
+            int pos = VarList.Items[selectedListIndex].ToString().IndexOf('=');
+
+            // Size of item
             int ItemHeight = VarList.ItemHeight;
             int ItemWidth = VarList.Width;
-            
-            varName = VarList.Items[index].ToString().Substring(0, pos + 1);
-            tmpBox = new TextBox();
-            tmpBox.Location = new Point(VarList.Location.X, VarList.Location.Y + index * ItemHeight);
-            tmpBox.Height = ItemHeight;
-            tmpBox.Width = ItemWidth;
+
+            // Copied variable name  
+            varName = VarList.Items[selectedListIndex].ToString().Substring(0, pos + 1);
+            dynamicTextBox = new TextBox();
+            dynamicTextBox.Location = new Point(VarList.Location.X, VarList.Location.Y + selectedListIndex * ItemHeight);
+            dynamicTextBox.Height = ItemHeight;
+            dynamicTextBox.Width = ItemWidth;
+
             // copy only value part of item
-            tmpBox.Text = VarList.Items[index].ToString().Substring(pos + 1);
+            dynamicTextBox.Text = VarList.Items[selectedListIndex].ToString().Substring(pos + 1);
+
             // Add it to form
-            this.Controls.Add(this.tmpBox);
-            tmpBox.BringToFront();
+            this.Controls.Add(this.dynamicTextBox);
+            dynamicTextBox.BringToFront();
 
             //events 
-            tmpBox.KeyPress += new KeyPressEventHandler(tmpBox_KeyPress);
-            tmpBox.Show();
+            dynamicTextBox.KeyPress += new KeyPressEventHandler(dynamicTextBox_KeyPress);
+            dynamicTextBox.Show();
         }
-        private void tmpBox_KeyPress(Object sender, KeyPressEventArgs e)
+        private void dynamicTextBox_KeyPress(Object sender, KeyPressEventArgs e)
         {
 
-            if ((e.KeyChar >= '0') && (e.KeyChar <= '9') || (e.KeyChar == '\r') || (e.KeyChar == '\b') || (e.KeyChar == ','))
+            if ((e.KeyChar >= '0') && (e.KeyChar <= '9') || (e.KeyChar == ',') || (e.KeyChar == '-') || (e.KeyChar == '\r') || (e.KeyChar == '\b') 
+                || (e.KeyChar == 27))
             {
                 switch (e.KeyChar)
                 {
                     case '\r':
                         // If text is Empty Fill it 
-                        if (tmpBox.Text.Length == 0)
-                            tmpBox.Text= "0";
+                        if (dynamicTextBox.Text.Length == 0)
+                            dynamicTextBox.Text = "0";
                         // Validate Test First
-                        if (ProgCore.ValidatorTool)
+                        if (ProgCore.ValidatorTool.validateNumber(dynamicTextBox.Text))
                         {
                             // copy value to selected item
-                            VarList.Items[index] = varName + tmpBox.Text;
-                            fCommaEntered = false;
-                            tmpBox.Hide();
-                            tmpBox.Dispose();
+                            VarList.Items[selectedListIndex] = varName + dynamicTextBox.Text;
+                            dynamicTextBox.Hide();
+                            dynamicTextBox.Dispose();
                         }
                         break;
 
                     case ',':
-                        if ( (e.KeyChar == ',') && (tmpBox.Text.IndexOf(',') == -1) )
-                        {
-                            fCommaEntered = true;
-                        }
-                        else
+                        if (dynamicTextBox.Text.IndexOf(',') != -1)
                             e.KeyChar = '\0';
                         break;
 
                     case '\b':
                         
                         break;
+
+                    case '-':
+                        if (dynamicTextBox.Text.IndexOf(',') != -1)
+                            e.KeyChar = '\0';    
+                        break;
+                    case (char)27: // Esc
+                        VarList.Items[selectedListIndex] = varName + prevText;
+                        break;
+
                 }
                    
             }

@@ -34,6 +34,11 @@ namespace PostBinary.Classes
             //errorMessenger = new ValidatorErrorType();
         }
 
+        public bool validateNumber(String inNumber)
+        {
+            return false;
+        }
+
         public ValidationResponce validate(String inStr)
         {
             ValidationResponce response = new ValidationResponce();

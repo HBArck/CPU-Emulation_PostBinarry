@@ -47,6 +47,7 @@ namespace PostBinary.Classes
     class Stack 
     {
         public ProgramCore ProgramCoreInstance;
+
         private Stack<Command> commandStack;
         public Stack<Command> CommandStack
         {
