@@ -36,7 +36,7 @@ namespace PostBinary.Classes
 
         public bool validateNumber(String inNumber)
         {
-            return false;
+            return true;
         }
 
         public ValidationResponce validate(String inStr)

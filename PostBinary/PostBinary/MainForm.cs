@@ -66,13 +66,28 @@ namespace PostBinary
         }
 
 
+        #region VarList Funcs
         public void addVariable(String varname, String varValue)
         {
-            VarList.Items.Add(varname+"   ="+" "+varValue);
+            VarList.Items.Add("      " + varname + "         = " + varValue);
         }
 
         private void listBox2_DoubleClick(object sender, EventArgs e)
         {
+            // before create new textBox make sure last closed 
+            if (dynamicTextBox.Modified)
+            {
+                if (dynamicTextBox.Text.Length == 0)
+                    dynamicTextBox.Text = "0";
+                // Validate Test First
+                if (ProgCore.ValidatorTool.validateNumber(dynamicTextBox.Text))
+                {
+                    // copy value to selected item
+                    VarList.Items[selectedListIndex] = varName + " " + dynamicTextBox.Text;
+                    dynamicTextBox.Hide();
+                }
+                dynamicTextBox.Modified = false;
+            }
             // Create input on item position
             selectedListIndex = VarList.SelectedIndex;
 
@@ -90,27 +105,22 @@ namespace PostBinary
 
             // Copied variable name  
             varName = VarList.Items[selectedListIndex].ToString().Substring(0, pos + 1);
-            dynamicTextBox = new TextBox();
+           
             dynamicTextBox.Location = new Point(VarList.Location.X, VarList.Location.Y + selectedListIndex * ItemHeight);
             dynamicTextBox.Height = ItemHeight;
             dynamicTextBox.Width = ItemWidth;
 
             // copy only value part of item
-            dynamicTextBox.Text = VarList.Items[selectedListIndex].ToString().Substring(pos + 1);
-
-            // Add it to form
-            this.Controls.Add(this.dynamicTextBox);
+            dynamicTextBox.Text = VarList.Items[selectedListIndex].ToString().Substring(pos + 2);
             dynamicTextBox.BringToFront();
-
-            //events 
-            dynamicTextBox.KeyPress += new KeyPressEventHandler(dynamicTextBox_KeyPress);
             dynamicTextBox.Show();
+            dynamicTextBox.Focus();
         }
         private void dynamicTextBox_KeyPress(Object sender, KeyPressEventArgs e)
         {
 
-            if ((e.KeyChar >= '0') && (e.KeyChar <= '9') || (e.KeyChar == ',') || (e.KeyChar == '-') || (e.KeyChar == '\r') || (e.KeyChar == '\b') 
-                || (e.KeyChar == 27))
+            if (Char.IsDigit(e.KeyChar) || e.KeyChar == ',' || e.KeyChar == '.' || e.KeyChar == '-' || e.KeyChar == '\r' || e.KeyChar == '\b' 
+                || e.KeyChar == 27)
             {
                 switch (e.KeyChar)
                 {
@@ -122,15 +132,36 @@ namespace PostBinary
                         if (ProgCore.ValidatorTool.validateNumber(dynamicTextBox.Text))
                         {
                             // copy value to selected item
-                            VarList.Items[selectedListIndex] = varName + dynamicTextBox.Text;
+                            VarList.Items[selectedListIndex] = varName +" "+ dynamicTextBox.Text;
                             dynamicTextBox.Hide();
-                            dynamicTextBox.Dispose();
                         }
                         break;
 
+                    case '.':
+                        if (dynamicTextBox.Text.IndexOf(',') != -1)
+                            e.KeyChar = '\0';
+                        else
+                        {
+                            if (dynamicTextBox.Text.Length == 0)
+                            {
+                                dynamicTextBox.Text += "0,";
+                                e.KeyChar = '\0';
+                            }
+                            else
+                                e.KeyChar = ',';
+                        }
+                        break;
                     case ',':
                         if (dynamicTextBox.Text.IndexOf(',') != -1)
                             e.KeyChar = '\0';
+                        else 
+                        {
+                            if (dynamicTextBox.Text.Length == 0)
+                            {
+                                dynamicTextBox.Text += "0,";
+                                e.KeyChar = '\0';
+                            }
+                        }
                         break;
 
                     case '\b':
@@ -138,12 +169,25 @@ namespace PostBinary
                         break;
 
                     case '-':
-                        if (dynamicTextBox.Text.IndexOf(',') != -1)
+                        if (dynamicTextBox.Text.Length==0)
+                        {
+                            dynamicTextBox.Text = "-" + dynamicTextBox.Text;
+                            e.KeyChar = '\0';
+                        }
+                        if (dynamicTextBox.Text[0] != '-')
+                        {
+                            dynamicTextBox.Text = "-" + dynamicTextBox.Text;
+                            e.KeyChar = '\0';
+                        }
+                        if (dynamicTextBox.Text.IndexOf('-') != -1)
                             e.KeyChar = '\0';    
                         break;
                     case (char)27: // Esc
-                        VarList.Items[selectedListIndex] = varName + prevText;
+                        VarList.Items[selectedListIndex] = prevText;
+                        dynamicTextBox.Hide();
+                        VarList.Focus();
                         break;
+                    
 
                 }
                    
@@ -151,13 +195,48 @@ namespace PostBinary
             else
                 e.KeyChar = '\0';
         }
+        private void dynamicTextBox_LostFocus(object sender, EventArgs e)
+        {
+            if (dynamicTextBox.Modified)
+            {
+                if (dynamicTextBox.Text.Length == 0)
+                    dynamicTextBox.Text = "0";
+                // Validate Test First
+                if (ProgCore.ValidatorTool.validateNumber(dynamicTextBox.Text))
+                {
+                    // copy value to selected item
+                    VarList.Items[selectedListIndex] = varName + " " + dynamicTextBox.Text;
+                    dynamicTextBox.Hide();
+                }
+                dynamicTextBox.Modified = false;
+                dynamicTextBox.Hide();
+            }
+            else
+            {
+                VarList.Items[selectedListIndex] = prevText;
+                dynamicTextBox.Hide();
+                VarList.Focus();
+            }
+        }
+        #endregion
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            #region Init
             //
             ProgCore = new Classes.ProgramCore();
 
-            
+            //Create textBox for VarList Component
+            dynamicTextBox = new TextBox();
+
+            // Add it to form
+            this.Controls.Add(this.dynamicTextBox);
+
+            //events 
+            dynamicTextBox.KeyPress += new KeyPressEventHandler(dynamicTextBox_KeyPress);
+            dynamicTextBox.LostFocus += new EventHandler(dynamicTextBox_LostFocus);
+            #endregion
+
             // DEBUG 
             String[] vars = { "a", "b", "c", "d", "e" };
             String[] varVals = { "123", "234", "345", "456", "567" };
@@ -166,5 +245,17 @@ namespace PostBinary
                 addVariable(vars[i], varVals[i]);
             }
         }
+
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+
+        }
+
+        private void textBox1_Leave(object sender, EventArgs e)
+        {
+
+        }
+
+      
     }
 }
