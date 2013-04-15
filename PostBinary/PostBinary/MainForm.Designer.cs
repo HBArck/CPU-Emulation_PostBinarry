@@ -160,14 +160,14 @@
             // 
             // tResult
             // 
-            this.tResult.Location = new System.Drawing.Point(104, 589);
+            this.tResult.Location = new System.Drawing.Point(101, 589);
             this.tResult.Name = "tResult";
             this.tResult.Size = new System.Drawing.Size(541, 20);
             this.tResult.TabIndex = 9;
             // 
             // tInfelicity
             // 
-            this.tInfelicity.Location = new System.Drawing.Point(104, 565);
+            this.tInfelicity.Location = new System.Drawing.Point(101, 563);
             this.tInfelicity.Name = "tInfelicity";
             this.tInfelicity.Size = new System.Drawing.Size(541, 20);
             this.tInfelicity.TabIndex = 10;
@@ -180,9 +180,9 @@
             this.bStart.FlatAppearance.BorderSize = 0;
             this.bStart.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.bStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.bStart.Location = new System.Drawing.Point(653, 33);
+            this.bStart.Location = new System.Drawing.Point(655, 33);
             this.bStart.Name = "bStart";
-            this.bStart.Size = new System.Drawing.Size(61, 39);
+            this.bStart.Size = new System.Drawing.Size(46, 39);
             this.bStart.TabIndex = 7;
             this.bStart.UseVisualStyleBackColor = true;
             this.bStart.EnabledChanged += new System.EventHandler(this.bStart_EnabledChanged);
@@ -195,11 +195,12 @@
             this.button1.TabIndex = 13;
             this.button1.Text = "validate";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // customTextBox1
             // 
-            this.customTextBox1.Location = new System.Drawing.Point(19, 36);
+            this.customTextBox1.Location = new System.Drawing.Point(19, 44);
             this.customTextBox1.MaxTextLength = 0;
             this.customTextBox1.Name = "customTextBox1";
             this.customTextBox1.Size = new System.Drawing.Size(626, 20);
@@ -278,10 +279,9 @@
             this.textBox7.Font = new System.Drawing.Font("Meiryo UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBox7.Location = new System.Drawing.Point(19, 561);
             this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(79, 24);
+            this.textBox7.Size = new System.Drawing.Size(626, 24);
             this.textBox7.TabIndex = 26;
             this.textBox7.Text = "Infelicity";
-            this.textBox7.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // textBox8
             // 
@@ -290,14 +290,13 @@
             this.textBox8.Font = new System.Drawing.Font("Meiryo UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBox8.Location = new System.Drawing.Point(19, 587);
             this.textBox8.Name = "textBox8";
-            this.textBox8.Size = new System.Drawing.Size(79, 24);
+            this.textBox8.Size = new System.Drawing.Size(626, 24);
             this.textBox8.TabIndex = 27;
             this.textBox8.Text = "Result";
-            this.textBox8.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // textBox9
             // 
-            this.textBox9.Location = new System.Drawing.Point(680, 565);
+            this.textBox9.Location = new System.Drawing.Point(678, 563);
             this.textBox9.Name = "textBox9";
             this.textBox9.Size = new System.Drawing.Size(200, 20);
             this.textBox9.TabIndex = 28;
@@ -309,10 +308,9 @@
             this.textBox10.Font = new System.Drawing.Font("Meiryo UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBox10.Location = new System.Drawing.Point(651, 561);
             this.textBox10.Name = "textBox10";
-            this.textBox10.Size = new System.Drawing.Size(23, 24);
+            this.textBox10.Size = new System.Drawing.Size(229, 24);
             this.textBox10.TabIndex = 29;
             this.textBox10.Text = "%";
-            this.textBox10.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // MainForm
             // 
@@ -320,10 +318,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.ClientSize = new System.Drawing.Size(892, 699);
-            this.Controls.Add(this.textBox10);
             this.Controls.Add(this.textBox9);
-            this.Controls.Add(this.textBox8);
-            this.Controls.Add(this.textBox7);
             this.Controls.Add(this.textBox5);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.textBox3);
@@ -339,6 +334,9 @@
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.textBox7);
+            this.Controls.Add(this.textBox8);
+            this.Controls.Add(this.textBox10);
             this.MainMenuStrip = this.menuStrip1;
             this.MaximumSize = new System.Drawing.Size(908, 737);
             this.MinimumSize = new System.Drawing.Size(908, 737);

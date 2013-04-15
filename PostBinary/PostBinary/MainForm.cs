@@ -79,11 +79,14 @@ namespace PostBinary
             {
                 if (dynamicTextBox.Text.Length == 0)
                     dynamicTextBox.Text = "0";
+
+
                 // Validate Test First
-                if (ProgCore.ValidatorTool.validateNumber(dynamicTextBox.Text))
+                Classes.Responce tmpResp = ProgCore.ValidatorTool.validateNumber(dynamicTextBox.Text);
+                if (!tmpResp.Error)
                 {
                     // copy value to selected item
-                    VarList.Items[selectedListIndex] = varName + " " + dynamicTextBox.Text;
+                    VarList.Items[selectedListIndex] = varName + " " + tmpResp.Result;//dynamicTextBox.Text;
                     dynamicTextBox.Hide();
                 }
                 dynamicTextBox.Modified = false;
@@ -128,11 +131,13 @@ namespace PostBinary
                         // If text is Empty Fill it 
                         if (dynamicTextBox.Text.Length == 0)
                             dynamicTextBox.Text = "0";
+
                         // Validate Test First
-                        if (ProgCore.ValidatorTool.validateNumber(dynamicTextBox.Text))
+                        Classes.Responce tmpResp = ProgCore.ValidatorTool.validateNumber(dynamicTextBox.Text);
+                        if (!tmpResp.Error)
                         {
                             // copy value to selected item
-                            VarList.Items[selectedListIndex] = varName +" "+ dynamicTextBox.Text;
+                            VarList.Items[selectedListIndex] = varName + " " + tmpResp.Result;//dynamicTextBox.Text;
                             dynamicTextBox.Hide();
                         }
                         break;
@@ -201,11 +206,13 @@ namespace PostBinary
             {
                 if (dynamicTextBox.Text.Length == 0)
                     dynamicTextBox.Text = "0";
+
                 // Validate Test First
-                if (ProgCore.ValidatorTool.validateNumber(dynamicTextBox.Text))
+                Classes.Responce tmpResp = ProgCore.ValidatorTool.validateNumber(dynamicTextBox.Text);
+                if (!tmpResp.Error)
                 {
                     // copy value to selected item
-                    VarList.Items[selectedListIndex] = varName + " " + dynamicTextBox.Text;
+                    VarList.Items[selectedListIndex] = varName + " " + tmpResp.Result;//dynamicTextBox.Text;
                     dynamicTextBox.Hide();
                 }
                 dynamicTextBox.Modified = false;

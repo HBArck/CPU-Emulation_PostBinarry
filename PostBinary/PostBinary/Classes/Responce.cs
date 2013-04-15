@@ -6,19 +6,46 @@ using System.Threading.Tasks;
 
 namespace PostBinary.Classes
 {
+
+    /*
+    struct responce
+    {
+        public bool error; // false - no error
+        public Object value; // value of object
+    }*/
+
     /// <summary>
     /// Basic class for responces in program
     /// </summary>
     public class Responce 
     {
-        String input;
-        String validation;
-        String stack;
-        struct resp
-        {
-            
-        }
         
+        /*String input;
+        String validation;
+        String stack;*/
+        private bool error; // false - no error
+        public bool Error
+        {
+            get { return error;}
+            set { error = value; }
+        }  
+        private Object result; // value of object  
+        public Object Result
+        {
+            get { return result; }
+            set { result = value;}
+        }  
+        
+        public Responce(){ }
+        public Responce(bool err)
+        {
+            this.error = err;
+        }
+        public Responce(bool err, Object val)
+        {
+            this.error = err;
+            this.result = val;
+        }
     }
 
     /// <summary>

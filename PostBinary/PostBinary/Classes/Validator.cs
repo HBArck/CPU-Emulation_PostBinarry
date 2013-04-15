@@ -34,9 +34,18 @@ namespace PostBinary.Classes
             //errorMessenger = new ValidatorErrorType();
         }
 
-        public bool validateNumber(String inNumber)
+        /// <summary>
+        /// Validates float number 
+        /// </summary>
+        /// <param name="inNumber">Float number to verify.</param>
+        /// <returns></returns>
+        public Responce validateNumber(String inNumber)
         {
-            return true;
+            Responce resp = new Responce();
+            resp.Error = false;
+            resp.Result = inNumber;
+
+            return resp;
         }
 
         public ValidationResponce validate(String inStr)
