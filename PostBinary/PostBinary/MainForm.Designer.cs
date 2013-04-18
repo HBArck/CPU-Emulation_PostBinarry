@@ -44,7 +44,6 @@
             this.tInfelicity = new System.Windows.Forms.TextBox();
             this.bStart = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.customTextBox1 = new MyControls.CustomTextBox();
             this.VarList = new System.Windows.Forms.ListBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
@@ -55,6 +54,7 @@
             this.textBox8 = new System.Windows.Forms.TextBox();
             this.textBox9 = new System.Windows.Forms.TextBox();
             this.textBox10 = new System.Windows.Forms.TextBox();
+            this.customTextBox1 = new MyControls.CustomTextBox();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -92,7 +92,7 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.startToolStripMenuItem,
             this.exitToolStripMenuItem});
-            this.fileToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.fileToolStripMenuItem.ForeColor = System.Drawing.SystemColors.WindowText;
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -114,7 +114,7 @@
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.preferencesToolStripMenuItem,
             this.helperToolStripMenuItem});
-            this.optionsToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.optionsToolStripMenuItem.ForeColor = System.Drawing.SystemColors.WindowText;
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.optionsToolStripMenuItem.Text = "Options";
@@ -134,7 +134,7 @@
             // 
             // toolStripMenuItem1
             // 
-            this.toolStripMenuItem1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.toolStripMenuItem1.ForeColor = System.Drawing.SystemColors.MenuHighlight;
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(24, 20);
             this.toolStripMenuItem1.Text = "?";
@@ -151,7 +151,7 @@
             this.listBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 16;
-            this.listBox1.Location = new System.Drawing.Point(19, 97);
+            this.listBox1.Location = new System.Drawing.Point(20, 97);
             this.listBox1.Margin = new System.Windows.Forms.Padding(5);
             this.listBox1.Name = "listBox1";
             this.listBox1.ScrollAlwaysVisible = true;
@@ -198,15 +198,6 @@
             this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // customTextBox1
-            // 
-            this.customTextBox1.Location = new System.Drawing.Point(19, 44);
-            this.customTextBox1.MaxTextLength = 0;
-            this.customTextBox1.Name = "customTextBox1";
-            this.customTextBox1.Size = new System.Drawing.Size(626, 20);
-            this.customTextBox1.TabIndex = 14;
-            this.customTextBox1.WindowSize = new System.Drawing.Size(0, 0);
-            // 
             // VarList
             // 
             this.VarList.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -221,9 +212,9 @@
             // 
             this.textBox3.BackColor = System.Drawing.SystemColors.MenuBar;
             this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox3.Location = new System.Drawing.Point(379, 78);
+            this.textBox3.Location = new System.Drawing.Point(108, 78);
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(266, 20);
+            this.textBox3.Size = new System.Drawing.Size(538, 20);
             this.textBox3.TabIndex = 22;
             this.textBox3.Text = "Value";
             this.textBox3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -234,7 +225,7 @@
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox2.Location = new System.Drawing.Point(49, 78);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(331, 20);
+            this.textBox2.Size = new System.Drawing.Size(60, 20);
             this.textBox2.TabIndex = 21;
             this.textBox2.Text = "Operation";
             this.textBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -243,9 +234,9 @@
             // 
             this.textBox4.BackColor = System.Drawing.SystemColors.MenuBar;
             this.textBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox4.Location = new System.Drawing.Point(19, 78);
+            this.textBox4.Location = new System.Drawing.Point(20, 78);
             this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(31, 20);
+            this.textBox4.Size = new System.Drawing.Size(30, 20);
             this.textBox4.TabIndex = 20;
             this.textBox4.Text = "№";
             this.textBox4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -312,6 +303,15 @@
             this.textBox10.TabIndex = 29;
             this.textBox10.Text = "%";
             // 
+            // customTextBox1
+            // 
+            this.customTextBox1.Location = new System.Drawing.Point(19, 44);
+            this.customTextBox1.MaxTextLength = 0;
+            this.customTextBox1.Name = "customTextBox1";
+            this.customTextBox1.Size = new System.Drawing.Size(626, 20);
+            this.customTextBox1.TabIndex = 14;
+            this.customTextBox1.WindowSize = new System.Drawing.Size(0, 0);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -321,9 +321,6 @@
             this.Controls.Add(this.textBox9);
             this.Controls.Add(this.textBox5);
             this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox4);
             this.Controls.Add(this.VarList);
             this.Controls.Add(this.customTextBox1);
             this.Controls.Add(this.button1);
@@ -337,6 +334,9 @@
             this.Controls.Add(this.textBox7);
             this.Controls.Add(this.textBox8);
             this.Controls.Add(this.textBox10);
+            this.Controls.Add(this.textBox3);
+            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.textBox4);
             this.MainMenuStrip = this.menuStrip1;
             this.MaximumSize = new System.Drawing.Size(908, 737);
             this.MinimumSize = new System.Drawing.Size(908, 737);

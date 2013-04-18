@@ -13,7 +13,7 @@ using System.Windows.Forms.Design;
 namespace MyControls
 {
     //public interface ITest { int testAttr(); }
-    public partial class CustomTextBox : Control//TextBox,ITest
+    public partial class CustomTextBox : UserControl//TextBox,ITest
     {
         private int startPosition = 0;
         private int endPosition = 0;
@@ -143,7 +143,7 @@ namespace MyControls
         {
             base.OnEnter(e);
             Entered = true;
-            ClientSize = new Size(740, 200);
+            ClientSize = new Size(Size.Width, 200);
             Select();
             Invalidate();
             caretTimer.Start();
@@ -173,7 +173,7 @@ namespace MyControls
             Console.WriteLine("OnLeave");
             Entered = false;
             caretTimer.Stop();
-            ClientSize = new Size(ClientSize.Width, 20);
+            ClientSize = new Size(Size.Width, 20);
             drawCaret = false;
             Invalidate();
         }
@@ -337,6 +337,7 @@ namespace MyControls
                 ClientSize = WindowSize;
             else
                 ClientSize = ClientRectangle.Size;*/
+
             // Paint usual TextBox
             System.Drawing.Pen borderTop;
             System.Drawing.Pen borderLRB;
@@ -368,14 +369,13 @@ namespace MyControls
             if (drawCaret)
             {
                 System.Drawing.Pen pCaret = new Pen(System.Drawing.Color.FromArgb(0, 0, 0));
-                System.Drawing.Font fnt = new System.Drawing.Font(FontFamily.GenericSansSerif, fontSize);
                 if (currCaretPos > Text.Length)
                     currCaretPos = Text.Length;
-                float x = e.Graphics.MeasureString(Text.Substring(0, currCaretPos), fnt).Width;
-                float y = e.Graphics.MeasureString("0", fnt).Height ;
+                float x = e.Graphics.MeasureString(Text.Substring(0, currCaretPos), this.Font).Width;
+                float y = e.Graphics.MeasureString("0", Font).Height ;
                 e.Graphics.DrawLine(pCaret, 4 + x , 4, 4 + x , y); // Top  Border
                 //e.Graphics.DrawLine(pCaret, new Point(4, 3), new Point(19, ClientSize.Height - 2)); // Top  Border
-                pCaret.Dispose(); fnt.Dispose();
+                pCaret.Dispose(); 
             }
             
             if (Text.Length > 0)

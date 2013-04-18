@@ -28,7 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            this.SuspendLayout();
+            // 
+            // CustomTextBox
+            // 
+            this.Name = "CustomTextBox";
+            this.Size = new System.Drawing.Size(620, 20);
+            this.ResumeLayout(false);
+
         }
 
         #endregion
