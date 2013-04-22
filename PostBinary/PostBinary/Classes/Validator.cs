@@ -13,22 +13,10 @@ namespace PostBinary.Classes
     /// </summary>
     class Validator
     {
-        /** DELETE THIS ON IMPLEMINTATION
-         * validEr0	Syntax Error	Базовая ошибка, говорящая о ошибке в выражении
-         * validEr1	Missing {0} bracket in expression	"()) ; [][" Ошибка, которая говорит, что в строке отсутствует скобка 
-         * validEr3	Variable or number missing	"++"  Если пользователь ввел подряд две операции
-         * validEr4	Incorrect scientific notation	"3,e ; 3,e-3,9"   Ошибка в научной нотации
-         * validEr5	Missing '-' or '+' in expression	"3,0e3"   Отсутствует знак степени для научной нотации
-         * validEr6	Only digits allowed to represent array index	"a[a]" ; "a[12,3] ; a[1+2]"  Если пользователь ввел
-         * validEr7	Missing array identifier	"+[x]+" Если пользователь не ввел имя переменной для массива
-         * 
-         * [errorName]+[localization]+[# - number]  - localization adds in Error.cs
-         * example of Syntax error for English user will be "validErEn0" , and for Russian - "validErRu0"
-         */
         public String inputStr = "";
         //private ValidatorErrorType errorMessenger;
         private String currErrorType;
-
+        public delegate ValidationResponce func1(String inStr);
         public Validator()
         {
             //errorMessenger = new ValidatorErrorType();
@@ -41,17 +29,84 @@ namespace PostBinary.Classes
         /// <returns></returns>
         public Responce validateNumber(String inNumber)
         {
-            Responce resp = new Responce();
-            resp.Error = false;
-            resp.Result = inNumber;
 
+            /*
+           * TODO: find and fill errorBegin / errorEnd 
+           */
+            Responce resp = new Responce();
+
+            if ((inNumber[0] != '-') && (inNumber[0] != '+'))
+                inNumber = "+" + inNumber;
+
+            inNumber = inNumber.Replace('.', ',');
+
+            if (inNumber.IndexOf(',') == -1)
+                inNumber += ",0";
+
+            if (inNumber[1] == ',')
+                inNumber = inNumber[0] + "0" + inNumber.Substring(1);
+
+            if (inNumber[inNumber.Length - 1] == ',')
+                inNumber += "0";
+
+            inNumber = deleteZero(inNumber);
+
+            Regex rgx = new Regex(@"[\+\-]\d+,\d+");
+            MatchCollection mc = rgx.Matches(inNumber);
+            resp.Error = (mc.Count != 1);
+            resp.Result = inNumber;
             return resp;
         }
+        private String deleteZero(String inNumber)
+        {
+            char sign = inNumber[0];
+            inNumber = inNumber.Substring(1);
 
+            int firstZeroPosition = inNumber.IndexOf('0');
+
+            if (firstZeroPosition != 0)
+                return sign + inNumber;
+
+            int commaPosition = inNumber.IndexOf(',');
+            int lastZeroPosition = inNumber.Remove(commaPosition).LastIndexOf('0');
+            //int firstNonZeroPosition = inNumber.Substring(commaPosition).LastIndexOf('0');
+
+          
+
+            if (lastZeroPosition > firstZeroPosition - 1)
+                for (var i = 0; i < lastZeroPosition; i++)
+                {
+                    if (inNumber[i] == '0')
+                    {
+                        inNumber = inNumber.Substring(1);
+                        if (inNumber[i + 1] == ',')
+                            break;
+                        --i;
+                          
+                    }
+                    else
+                        break;
+                }
+
+            return sign + inNumber;
+        }
         public ValidationResponce validate(String inStr)
         {
             ValidationResponce response = new ValidationResponce();
+            Delegate[] delGreet = new Delegate[6] {
+                new func1(vCharacters),
+                new func1(vSequenceOfNumVar),
+                new func1(vBreckets),
+                new func1(vInsideBreckets),
+                new func1(vNameOfArray),
+                new func1(vScientificNotation)
+            };
 
+            foreach (func1 del in delGreet)
+            {
+                response = del(inStr);
+            }
+            /*
             response = vCharacters(inStr);
             if (!response.Error)
             {
@@ -72,7 +127,7 @@ namespace PostBinary.Classes
                         }
                     }
                 }
-            }
+            }*/
             return response;
 
         }
@@ -86,6 +141,7 @@ namespace PostBinary.Classes
             int errorEnd = -1;
             ValidationResponce response = new ValidationResponce();
             String[] args;
+            String currErrorType = "";
             int openedSquareBrackets = 0;
             int closedSquareBrackets = 0;
             int openedRoundBrackets = 0;
@@ -98,25 +154,25 @@ namespace PostBinary.Classes
                 {
                     case '(':
                         {
-                            currErrorType = "validEr1";
+                            //   currErrorType = "validEr1";
                             openedSquareBrackets++;
                             break;
                         }
                     case ')':
                         {
-                            currErrorType = "validEr1";
+                            //       currErrorType = "validEr1";
                             closedSquareBrackets++;
                             break;
                         }
                     case '[':
                         {
-                            currErrorType = "validEr1";
+                            //    currErrorType = "validEr1";
                             openedRoundBrackets++;
                             break;
                         }
                     case ']':
                         {
-                            currErrorType = "validEr1";
+                            //   currErrorType = "validEr1";
                             closedRoundBrackets++;
                             break;
                         }
@@ -247,8 +303,8 @@ namespace PostBinary.Classes
              */
 
 
-          //  "3,e ; 3,e-3,9"  
-        //"3,0e3"
+            //  "3,e ; 3,e-3,9"  
+            //"3,0e3"
 
             bool error = false;
             int errorBegin = -1;
@@ -264,7 +320,8 @@ namespace PostBinary.Classes
                 errorEnd = 0;
                 currErrorType = "validEr4";
             }
-            if (!error) {
+            if (!error)
+            {
                 char check = 'e';
                 int count = 0;
                 CharEnumerator ce = inStr.GetEnumerator();
@@ -277,18 +334,19 @@ namespace PostBinary.Classes
                 }
 
                 Regex regexScientificNotation = new Regex(@"(\d+[+\-\d+]\d+[,.]e[+\-]\d+)");
-                              
+
                 MatchCollection mcScientificNotation = rgx.Matches(inStr);
-                Console.WriteLine(count +"|"+ mcScientificNotation.Count + "  "+ inStr);
-                if (count != mcScientificNotation.Count) {
+                Console.WriteLine(count + "|" + mcScientificNotation.Count + "  " + inStr);
+                if (count != mcScientificNotation.Count)
+                {
                     error = true;
                     errorBegin = 0;
                     errorEnd = 0;
                     currErrorType = "validEr4.1";
                 }
             }
-            
-            
+
+
             response.setResponce(error, errorBegin, errorEnd, currErrorType);
             return response;
         }

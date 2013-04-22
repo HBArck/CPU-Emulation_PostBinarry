@@ -18,7 +18,6 @@ namespace PostBinary.Classes
                 runValidator(arrayForValidator[i]);
             }
         }
-
         private void runValidator(String str)
         {
             validator = new Validator();

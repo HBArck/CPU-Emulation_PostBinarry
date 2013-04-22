@@ -72,6 +72,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Testers\TestVariableValidator.cs" />
     <EmbeddedResource Include="Forms\HelperForm.resx">
       <DependentUpon>HelperForm.cs</DependentUpon>
     </EmbeddedResource>

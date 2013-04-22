@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using PostBinary.Classes;
 namespace PostBinary
 {
     public partial class MainForm : Form
@@ -260,6 +261,17 @@ namespace PostBinary
 
         private void textBox1_Leave(object sender, EventArgs e)
         {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            TestValidator test = new TestValidator();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            TestVariableValidator test = new TestVariableValidator();
 
         }
 
