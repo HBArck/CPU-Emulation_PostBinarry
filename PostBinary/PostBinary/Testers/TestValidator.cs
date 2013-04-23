@@ -10,7 +10,7 @@ namespace PostBinary.Classes
     {
         int numberOfCalls = 0;
         Validator validator;
-        String[] arrayForValidator = {"abcde", "123", "e123", "[123]]", "(12)a(442)", "1+a[s]","a[2]", "33e-4" };
+        String[] arrayForValidator = {"abПcde", "123", "e123", "[123]]", "(12)a(442)", "1+a[s]","a[2]", "33e-4" };
         public TestValidator() 
         {
             for (int i = 0; i < arrayForValidator.Length; i++)
@@ -24,8 +24,7 @@ namespace PostBinary.Classes
             ValidationResponce response = validator.validate(str);
             if (!response.Error) 
             {
-                Console.WriteLine("test#" + numberOfCalls +
-                                   "\n     done\n");
+                Console.WriteLine("test#" + numberOfCalls + " " + str + " OK\n");
             }
             else
             {

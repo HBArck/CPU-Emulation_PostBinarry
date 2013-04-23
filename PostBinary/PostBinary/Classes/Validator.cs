@@ -16,7 +16,7 @@ namespace PostBinary.Classes
         public String inputStr = "";
         //private ValidatorErrorType errorMessenger;
         private String currErrorType;
-        public delegate ValidationResponce func1(String inStr);
+        public delegate ValidationResponce validates(String inStr);
         public Validator()
         {
             //errorMessenger = new ValidatorErrorType();
@@ -94,40 +94,20 @@ namespace PostBinary.Classes
         {
             ValidationResponce response = new ValidationResponce();
             Delegate[] delGreet = new Delegate[6] {
-                new func1(vCharacters),
-                new func1(vSequenceOfNumVar),
-                new func1(vBreckets),
-                new func1(vInsideBreckets),
-                new func1(vNameOfArray),
-                new func1(vScientificNotation)
+                new validates(vCharacters),
+                new validates(vSequenceOfNumVar),
+                new validates(vBreckets),
+                new validates(vInsideBreckets),
+                new validates(vNameOfArray),
+                new validates(vScientificNotation)
             };
 
-            foreach (func1 del in delGreet)
+            foreach (validates del in delGreet)
             {
                 response = del(inStr);
+                if (response.Error)
+                    return response;
             }
-            /*
-            response = vCharacters(inStr);
-            if (!response.Error)
-            {
-                response = vSequenceOfNumVar(inStr);
-                if (!response.Error)
-                {
-                    response = vBreckets(inStr);
-                    if (!response.Error)
-                    {
-                        response = vInsideBreckets(inStr);
-                        if (!response.Error)
-                        {
-                            response = vNameOfArray(inStr);
-                            if (!response.Error)
-                            {
-                                response = vScientificNotation(inStr);
-                            }
-                        }
-                    }
-                }
-            }*/
             return response;
 
         }
@@ -141,13 +121,14 @@ namespace PostBinary.Classes
             int errorEnd = -1;
             ValidationResponce response = new ValidationResponce();
             String[] args;
-            String currErrorType = "";
+            String currErrorType = "validEr1";
             int openedSquareBrackets = 0;
             int closedSquareBrackets = 0;
             int openedRoundBrackets = 0;
             int closedRoundBrackets = 0;
 
             CharEnumerator ce = inStr.GetEnumerator();
+
             while (ce.MoveNext())
             {
                 switch (ce.Current)
@@ -302,7 +283,6 @@ namespace PostBinary.Classes
              * TODO: find and fill errorBegin / errorEnd 
              */
 
-
             //  "3,e ; 3,e-3,9"  
             //"3,0e3"
 
@@ -322,7 +302,7 @@ namespace PostBinary.Classes
             }
             if (!error)
             {
-                char check = 'e';
+                /*char check = 'e';
                 int count = 0;
                 CharEnumerator ce = inStr.GetEnumerator();
                 while (ce.MoveNext())
@@ -343,7 +323,7 @@ namespace PostBinary.Classes
                     errorBegin = 0;
                     errorEnd = 0;
                     currErrorType = "validEr4.1";
-                }
+                }*/
             }
 
 
