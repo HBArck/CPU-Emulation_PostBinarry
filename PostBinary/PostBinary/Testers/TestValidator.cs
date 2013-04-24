@@ -10,7 +10,8 @@ namespace PostBinary.Classes
     {
         int numberOfCalls = 0;
         Validator validator;
-        String[] arrayForValidator = {"abПcde", "123", "e123", "[123]]", "(12)a(442)", "1+a[s]","a[2]", "33e-4" };
+        //String[] arrayForValidator = {"abПcde", "123", "e123", "[123]]", "(12)a(442)", "1+a[s]","a[2]", "33e-4" ,"E-4" ,  };
+        String[] arrayForValidator = { "abcdE", "e123", "E-4", "#e" ,"#321" , "#e[32]" , "3(#a)/#a" };
         public TestValidator() 
         {
             for (int i = 0; i < arrayForValidator.Length; i++)

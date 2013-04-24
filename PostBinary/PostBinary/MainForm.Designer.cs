@@ -65,7 +65,7 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tSSLStatus});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 676);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 677);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(892, 22);
             this.statusStrip1.TabIndex = 2;
@@ -339,7 +339,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.ClientSize = new System.Drawing.Size(892, 698);
+            this.ClientSize = new System.Drawing.Size(892, 699);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.textBox9);
@@ -365,7 +365,7 @@
             this.MaximumSize = new System.Drawing.Size(908, 737);
             this.MinimumSize = new System.Drawing.Size(908, 737);
             this.Name = "MainForm";
-            this.Text = "PostBinary";
+            this.Text = "PostBinary Calculator";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
