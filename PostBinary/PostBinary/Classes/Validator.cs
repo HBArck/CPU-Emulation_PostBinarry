@@ -71,7 +71,7 @@ namespace PostBinary.Classes
             int lastZeroPosition = inNumber.Remove(commaPosition).LastIndexOf('0');
             //int firstNonZeroPosition = inNumber.Substring(commaPosition).LastIndexOf('0');
 
-          
+
 
             if (lastZeroPosition > firstZeroPosition - 1)
                 for (var i = 0; i < lastZeroPosition; i++)
@@ -82,7 +82,7 @@ namespace PostBinary.Classes
                         if (inNumber[i + 1] == ',')
                             break;
                         --i;
-                          
+
                     }
                     else
                         break;
@@ -93,13 +93,15 @@ namespace PostBinary.Classes
         public ValidationResponce validate(String inStr)
         {
             ValidationResponce response = new ValidationResponce();
-            Delegate[] delGreet = new Delegate[6] {
+            Delegate[] delGreet = new Delegate[8] {
                 new validates(vCharacters),
                 new validates(vSequenceOfNumVar),
                 new validates(vBreckets),
                 new validates(vInsideBreckets),
                 new validates(vNameOfArray),
-                new validates(vScientificNotation)
+                new validates(vScientificNotation),
+                new validates(vMultiplication),
+                new validates(vConstant)
             };
 
             foreach (validates del in delGreet)
@@ -186,7 +188,7 @@ namespace PostBinary.Classes
             int errorBegin = -1;
             int errorEnd = -1;
             ValidationResponce response = new ValidationResponce();
-            Regex rgx = new Regex(@"[*+^\-/a-zA-Z\d\(\)\[\]\.,]+");
+            Regex rgx = new Regex(@"[*+^\-/a-zA-Z\d\(\)\[\]\.,#]+");
             MatchCollection mc = rgx.Matches(inStr);
             if (mc.Count != 1)
             {
@@ -262,7 +264,7 @@ namespace PostBinary.Classes
             int errorEnd = -1;
 
             ValidationResponce response = new ValidationResponce();
-            Regex rgx = new Regex(@"([*+^\-/eE\d\(\)\[\]]\[)");
+            Regex rgx = new Regex(@"([*+^\-/E#\d\(\)\[\]]\[)");
             MatchCollection mc = rgx.Matches(inStr);
             if (mc.Count > 0)
             {
@@ -327,6 +329,56 @@ namespace PostBinary.Classes
             }
 
 
+            response.setResponce(error, errorBegin, errorEnd, currErrorType);
+            return response;
+        }
+        /*
+        * validate sign of multiplication
+        */
+        private ValidationResponce vMultiplication(String inStr)
+        {
+            /*
+             * TODO: find and fill errorBegin / errorEnd 
+             */
+            bool error = false;
+            int errorBegin = -1;
+            int errorEnd = -1;
+
+            ValidationResponce response = new ValidationResponce();
+            Regex rgx = new Regex(@"([*+^\-/\d\(\)\[\]\.,#][*+^\-/a-zA-Z\d\(\)\[\]\.,#])");
+            MatchCollection mc = rgx.Matches(inStr);
+            if (mc.Count > 0)
+            {
+                error = true;
+                errorBegin = 0;
+                errorEnd = 0;
+                currErrorType = "validEr9";
+            }
+            response.setResponce(error, errorBegin, errorEnd, currErrorType);
+            return response;
+        }
+       /*
+        * validate constant
+        */
+        private ValidationResponce vConstant(String inStr)
+        {
+            /*
+             * TODO: find and fill errorBegin / errorEnd 
+             */
+            bool error = false;
+            int errorBegin = -1;
+            int errorEnd = -1;
+
+            ValidationResponce response = new ValidationResponce();
+            Regex rgx = new Regex(@"(#[*+^\-/\d\(\)\[\]\.,])");
+            MatchCollection mc = rgx.Matches(inStr);
+            if (mc.Count > 0)
+            {
+                error = true;
+                errorBegin = 0;
+                errorEnd = 0;
+                currErrorType = "validEr10";
+            }
             response.setResponce(error, errorBegin, errorEnd, currErrorType);
             return response;
         }

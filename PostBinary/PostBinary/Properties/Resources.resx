@@ -132,6 +132,10 @@
     <value>Missing {0} bracket in expression</value>
     <comment>"()) ; [][" Ошибка, которая говорит, что в строке отсутствует скобка </comment>
   </data>
+  <data name="validErEn10" xml:space="preserve">
+    <value>Incorrect constant</value>
+    <comment>"#123" Неправильная запись константы</comment>
+  </data>
   <data name="validErEn2" xml:space="preserve">
     <value>No such operation</value>
     <comment>"= ; ! ; ~" Если пользователь ввел символ неподдерживаемой операции</comment>
@@ -161,8 +165,8 @@
     <comment>"+[x]+" Если пользователь не ввел имя переменной для массива</comment>
   </data>
   <data name="validErEn9" xml:space="preserve">
-    <value>Only positive integers should represent array index</value>
-    <comment>"a[-1]"  Если пользователь ввел отрицательный индекс массива</comment>
+    <value>Only for variables you can not put a sign '*'</value>
+    <comment>"(a+b)(1+1)"  Знак умножения не обязательно ставить только для переменных</comment>
   </data>
   <data name="validErRu0" xml:space="preserve">
     <value>Синтаксическая ошибка в выражении</value>
