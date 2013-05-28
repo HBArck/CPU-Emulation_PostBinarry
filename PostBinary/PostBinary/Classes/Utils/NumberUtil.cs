@@ -85,20 +85,26 @@ namespace PostBinary.Classes
             return "";
         }
 
-        public String ConvertNumber(String inNumber)
+        public Number CreateNumber(String inNumber)
         {
             String currentNumber = "";
+            String Exponenta = "";
+            String Mantissa = "";
             IFPartsOfNumber currentPartialNumber;
             IFPartsOfNumber currentPartialNumber2cc;
-            IFPartsOfNumber currentPartialNumberExpMan;
+            
             currentNumber = NormalizeNumber(inNumber,ACCURANCY, NumberFormat.Integer);
             currentPartialNumber = DenormalizeNumber(currentNumber, NumberFormat.Integer);
             currentPartialNumber2cc.IntegerPart = convert10to2IPart(currentPartialNumber.IntegerPart);
             currentPartialNumber2cc.FloatPart = convert10to2FPart(currentPartialNumber.FloatPart);
+
+            /*Create he Pb Number and fill it*/
+            Number number = new Number();
+            
             //Define Exponent before Mantissa for correct running  algorithm 
-            currentPartialNumberExpMan.IntegerPart = selectExp(Num32);
-            currentPartialNumberExpMan.FloatPart = selectMantissa(Num32, NumberFormat.Integer);
-            return currentNumber;
+            number.Exponenta = selectExp(number);
+            number.Mantissa = selectMantissa(number, NumberFormat.Integer);
+            return number;
         }
 
         public String NormalizeNumber(String dataString, int inAccuracy, NumberFormat inNumberFormat)
@@ -993,13 +999,13 @@ namespace PostBinary.Classes
                 else
                 {
                     //inNumber.CalcStatus = Flexible_computing.CalculationStatus.Exception;
-                    if (NumberFormat == 0)
+                    if (inNumberFormat == 0)
                     { inNumber.NumberState = stateOfNumber.error; }
-                    else
+                    /*else
                         if (Left_Right == PartOfNumber.Left)
                         { inNumber.NumberState = stateOfNumber.error; }
                         else
-                        { inNumber.NumberStateRight = stateOfNumber.error; }
+                        { inNumber.NumberStateRight = stateOfNumber.error; }*/
                     throw new FCCoreArithmeticException("Exception in Func ['selectExp'] Mess=[ Empty String - BynaryIntPart ] (" + inNumber.Name + ")");
                 }
             }
@@ -1007,13 +1013,13 @@ namespace PostBinary.Classes
             {
                 //inNumber.CalcStatus = Flexible_computing.CalculationStatus.Exception;
 
-                if (NumberFormat == 0)
+                if (inNumberFormat == 0)
                 { inNumber.NumberState = stateOfNumber.error; }
-                else
+                /*else
                     if (Left_Right == PartOfNumber.Left)
                     { inNumber.NumberState = stateOfNumber.error; }
                     else
-                    { inNumber.NumberStateRight = stateOfNumber.error; }
+                    { inNumber.NumberStateRight = stateOfNumber.error; }*/
                 throw new FCCoreArithmeticException("Exception in Func ['selectExp'] Mess=[ Null - BynaryIntPart ] (" + inNumber.Name + ")");
             }
             try
@@ -1021,9 +1027,9 @@ namespace PostBinary.Classes
                 switch (inNumberFormat)
                 {
                     case 0: Offset = inNumber.Offset; break;
-                    case 1:
+                  /*case 1:
                     case 2: Offset = inNumber.OffsetFI; break;
-                  /*case 3: Offset = inNumber.OffsetTetra; break;
+                    case 3: Offset = inNumber.OffsetTetra; break;
                     case 4: Offset = inNumber.OffsetFITetra; break;*/
                 }
                 if (bynaryStringInt.IndexOf('1') != -1)
@@ -1062,13 +1068,13 @@ namespace PostBinary.Classes
 
         /// <summary>
         /// Calculates Mantissa for specified number. Define Exponent before Mantissa for correct running algorithm.
-        /// Uses funcs: isStringZero,convert10to2IPart, checkStringFull
+        /// Uses funcs: isStringZero,convert10to2IPart, checkStringFull, sumExp
         /// Uses Vars: Number.BinaryIntPart,Number.BinaryFloatPart
         /// </summary>
         /// <param name="inNumber">Number - var from which mantissa need to be taken</param>
         /// <param name="Left_Right">False - Left part og number, else - Right </param>
         /// <returns>Returns Mantissa in 2cc</returns>
-        public String selectMantissa(Number inNumber, int inputStringFormat, NumberFormat inNumberFormat)
+        public String selectMantissa(Number inNumber, NumberFormat inNumberFormat)
         {
             int i, l, z = 0;
             int currMBits;
@@ -1124,12 +1130,12 @@ namespace PostBinary.Classes
                                 }
                             else
                             {
-                                switch (inputStringFormat)
+                                switch (inNumberFormat)
                                 {
                                     case 0: currMBits = inNumber.MBits; break;
-                                    case 1:
+                                  /*case 1:
                                     case 2: currMBits = inNumber.MBitsFI; break;
-                                    default: currMBits = inNumber.MBits; break;
+                                    default: currMBits = inNumber.MBits; break;*/
                                 }
                                 tempArray = new String[currMBits];
                                 for (i = 0; i < currMBits; i++)
@@ -1147,12 +1153,12 @@ namespace PostBinary.Classes
                     throw new FCCoreArithmeticException("Exception in Func ['selectMantissa'] Mess=[ Null - BynaryIntPart or BynaryFloatPart ] (" + inNumber.Name + ")");
                 }
 
-                switch (inputStringFormat)
+                switch (inNumberFormat)
                 {
                     case 0: currMBits = inNumber.MBits; break;
-                    case 1:
+                  /*case 1:
                     case 2: currMBits = inNumber.MBitsFI; break;
-                    default: currMBits = inNumber.MBits; break;
+                    default: currMBits = inNumber.MBits; break;*/
                 }
                 if (result.Length <= currMBits)
                 {
@@ -1195,10 +1201,10 @@ namespace PostBinary.Classes
                                 M = "0";
                                 if (checkExpFull(inNumber.Exponenta))
                                 {
-                                    if (NumberFormat == 0)
+                                    //if (NumberFormat == 0)
                                         inNumber.NumberState = stateOfNumber.NaN;
-                                    else
-                                        inNumber.NumberStateRight = stateOfNumber.NaN;
+                                    //else
+                                      //  inNumber.NumberStateRight = stateOfNumber.NaN;
                                 }
                                 else
                                 {
@@ -1238,14 +1244,14 @@ namespace PostBinary.Classes
                                 M = "0";
                                 if (checkExpFull(inNumber.Exponenta))
                                 {
-                                    if (NumberFormat == 0)
+                                    //if (NumberFormat == 0)
                                         inNumber.NumberState = stateOfNumber.NaN;
-                                    else
-                                        inNumber.NumberStateRight = stateOfNumber.NaN;
+                                    //else
+                                     //   inNumber.NumberStateRight = stateOfNumber.NaN;
                                 }
                                 else
                                 {
-                                    sumExp(inNumber, "1");
+                                    sumExp(inNumber, "1",inNumberFormat);
                                 }
                             }
                             M = convert10to2IPart(M);
@@ -1268,14 +1274,14 @@ namespace PostBinary.Classes
                                 M = "0";
                                 if (checkExpFull(inNumber.Exponenta))
                                 {
-                                    if (NumberFormat == 0)
+                                   // if (NumberFormat == 0)
                                         inNumber.NumberState = stateOfNumber.NaN;
-                                    else
-                                        inNumber.NumberStateRight = stateOfNumber.NaN;
+                                    //else
+                                      //  inNumber.NumberStateRight = stateOfNumber.NaN;
                                 }
                                 else
                                 {
-                                    sumExp(inNumber, "1");
+                                    sumExp(inNumber, "1", inNumberFormat);
                                 }
                             }
                             M = convert10to2IPart(M);
@@ -1291,5 +1297,27 @@ namespace PostBinary.Classes
             }
         }
 
+        public void sumExp(Number inNumber, String inStr,NumberFormat inNumberFormat)
+        {
+            String E;
+            int iE, Offset = 0;
+            E = inNumber.Exponenta; // It can be Fraction or Interval
+            switch (inNumberFormat)
+            {
+                case 0: Offset = inNumber.Offset; break;
+              /*case 1:
+                case 2: Offset = inNumber.OffsetFI; break;
+                case 3: Offset = inNumber.OffsetTetra; break;
+                case 4: Offset = inNumber.OffsetFITetra; break;*/
+            }
+            E = convert2to10IPart(E);
+            iE = int.Parse(E) - Offset;
+            // Check if inStr > E.Max
+
+            iE += int.Parse(inStr); // This Addition is UNSECURE !
+            // Check if iE > E.Max
+            E = convert10to2IPart((iE + Offset).ToString());
+            inNumber.Exponenta = E;
+        }
     }
 }
