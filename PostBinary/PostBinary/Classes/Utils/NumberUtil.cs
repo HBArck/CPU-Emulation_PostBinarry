@@ -69,7 +69,20 @@ namespace PostBinary.Classes
             return "";
         }
 
-
+        public String ConvertNumber(String inNumber)
+        {
+            String currentNumber = "";
+            IFPartsOfNumber currentPartialNumber;
+            IFPartsOfNumber currentPartialNumber2cc;
+            IFPartsOfNumber currentPartialNumberExpMan;
+            currentNumber = NormalizeNumber(inNumber,ACCURANCY, NumberFormat.Integer);
+            currentPartialNumber = DenormalizeNumber(currentNumber, NumberFormat.Integer);
+            currentPartialNumber2cc.IntegerPart = convert10to2IPart(currentPartialNumber.IntegerPart);
+            currentPartialNumber2cc.FloatPart = convert10to2FPart(currentPartialNumber.FloatPart);
+            currentPartialNumberExpMan.IntegerPart = selectExp(Num32);
+            currentPartialNumberExpMan.FloatPart = selectMantissa(Num32, NumberFormat.Integer);
+            return currentNumber;
+        }
         public String NormalizeNumber(String dataString, int inAccuracy, NumberFormat inNumberFormat)
         {
             /// Current Number Sign 0 = '+'; 1 = '-'
@@ -514,6 +527,387 @@ namespace PostBinary.Classes
                 throw new Exception("Func [convert10to2IPart]:=" + ex.Message);
             }
             return balanse;
+        }
+
+
+        /// <summary>
+        /// Check if the input string consist only from '1' value bits. Use this function only for 2cc numbers.
+        /// </summary>
+        /// <param name="inStr">Input string for check</param>
+        /// <returns>True - if there none '0' symbols in input string ; False -  one or more symbols are '0'</returns>
+        public bool checkStringFull(String inStr)
+        {
+            int i;
+            for (i = 0; i < inStr.Length; i++)
+            {
+                if (inStr[i] == '0')
+                    return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Finds if string consist only of '0'value . Use this function only for 10cc numbers.
+        /// </summary>
+        /// <param name="inStr">String to check</param>
+        /// <returns>True - if consist; False - if there is one or more symbols alike '0'</returns>
+        public bool isStringZero(String inStr)
+        {
+            int i;
+
+            if (inStr != null)
+            {
+                for (i = 1; i < 10; i++)
+                {
+                    if (inStr.Contains(i.ToString()))
+                        return false;
+                }
+                return true;
+            }
+            else
+            {
+                throw new FCCoreGeneralException("Func 'isStringZero' = [ Input String is Null. ]");
+            }
+        }
+
+        /// <summary>
+        /// Calculates Exponent for specified number
+        /// Uses : Number.BinaryIntPart,Number.BinaryFloatPart
+        /// </summary>
+        /// <param name="inNumber">Number - var from which exponenta need to be taken</param>
+        /// <param name="Left_Right">False - Left part og number, else - Right </param>
+        /// <returns>Returns Exponent in 2cc</returns>
+        public String selectExp(Number inNumber, PartOfNumber Left_Right)
+        {
+
+            int z = 0;
+            int Offset = 0;
+            String temp, result = "";
+            String bynaryStringInt = "", bynaryStringFloat = "";
+            if (this.NumberFormat == 0)
+            {
+                bynaryStringInt = inNumber.BinaryIntPart;
+                bynaryStringFloat = inNumber.BinaryFloatPart;
+            }
+            else
+            {
+                if (Left_Right == PartOfNumber.Left)
+                {// Left part of number
+                    bynaryStringInt = inNumber.BinaryIntPartFILeft;
+                    bynaryStringFloat = inNumber.BinaryFloatPartFILeft;
+                }
+                else
+                {// Right part of number
+                    bynaryStringInt = inNumber.BinaryIntPartFIRight;
+                    bynaryStringFloat = inNumber.BinaryFloatPartFIRight;
+                }
+            }
+
+            if (bynaryStringInt != null)
+            {
+                if (bynaryStringInt != "")
+                {
+                    temp = bynaryStringInt + bynaryStringFloat;
+                }
+                else
+                {
+                    inNumber.CalcStatus = Flexible_computing.CalculationStatus.Exception;
+                    if (NumberFormat == 0)
+                    { inNumber.NumberState = stateOfNumber.error; }
+                    else
+                        if (Left_Right == PartOfNumber.Left)
+                        { inNumber.NumberState = stateOfNumber.error; }
+                        else
+                        { inNumber.NumberStateRight = stateOfNumber.error; }
+                    throw new FCCoreArithmeticException("Exception in Func ['selectExp'] Mess=[ Empty String - BynaryIntPart ] (" + inNumber.Name + ")");
+                }
+            }
+            else
+            {
+                inNumber.CalcStatus = Flexible_computing.CalculationStatus.Exception;
+
+                if (NumberFormat == 0)
+                { inNumber.NumberState = stateOfNumber.error; }
+                else
+                    if (Left_Right == PartOfNumber.Left)
+                    { inNumber.NumberState = stateOfNumber.error; }
+                    else
+                    { inNumber.NumberStateRight = stateOfNumber.error; }
+                throw new FCCoreArithmeticException("Exception in Func ['selectExp'] Mess=[ Null - BynaryIntPart ] (" + inNumber.Name + ")");
+            }
+            try
+            {
+                switch (NumberFormat)
+                {
+                    case 0: Offset = inNumber.Offset; break;
+                    case 1:
+                    case 2: Offset = inNumber.OffsetFI; break;
+                    case 3: Offset = inNumber.OffsetTetra; break;
+                    case 4: Offset = inNumber.OffsetFITetra; break;
+                }
+                if (bynaryStringInt.IndexOf('1') != -1)
+                {
+                    temp = bynaryStringInt;
+                    temp = temp.TrimStart('0');
+                    z = temp.Length - (temp.IndexOf('1') + 1);
+
+                    if (z > Offset)
+                        z = Offset;
+                }
+                else
+                    if (bynaryStringFloat.IndexOf('1') != -1)
+                    {
+                        temp = bynaryStringFloat;
+                        temp = temp.TrimEnd('0');
+                        z = (temp.IndexOf('1') + 1);
+                        z *= -1;
+                        if (z < -Offset)
+                            z = -Offset;
+                    }
+                    else
+                    {
+                        z = -Offset;
+                    }
+
+                result = convert10to2IPart((z + Offset).ToString());
+                //inNumber.Exponenta = result;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new FCCoreFunctionException("Exception in Func ['selectExp'] Mess=[" + ex.Message + "]");
+            }
+        }
+
+        /// <summary>
+        /// Calculates Mantissa for specified number
+        /// Uses funcs: isStringZero,convert10to2IPart, checkStringFull
+        /// Uses Vars: Number.BinaryIntPart,Number.BinaryFloatPart
+        /// </summary>
+        /// <param name="inNumber">Number - var from which mantissa need to be taken</param>
+        /// <param name="Left_Right">False - Left part og number, else - Right </param>
+        /// <returns>Returns Mantissa in 2cc</returns>
+        public String selectMantissa(Number inNumber, int inputStringFormat, NumberFormat inNumberFormat)
+        {
+            int i, l, z = 0;
+            int currMBits;
+            String result = "";
+            String M = "";
+            String[] tempArray;
+            int offsetDot = 1;
+            String Sign;
+            String bynaryStringInt = "", bynaryStringFloat = "";
+
+            /* Sign */
+            //Sign = SignCharacter;
+            
+            if (inNumberFormat == 0)
+            {
+                bynaryStringInt = inNumber.BinaryIntPart;
+                bynaryStringFloat = inNumber.BinaryFloatPart;
+            }
+            else
+            {
+                /*
+                if (Left_Right == PartOfNumber.Left)
+                {// Left part of number
+                    bynaryStringInt = inNumber.BinaryIntPartFILeft;
+                    bynaryStringFloat = inNumber.BinaryFloatPartFILeft;
+                }
+                else
+                {// Right part of number
+                    bynaryStringInt = inNumber.BinaryIntPartFIRight;
+                    bynaryStringFloat = inNumber.BinaryFloatPartFIRight;
+                }*/
+            }
+
+            try
+            {
+                if ((bynaryStringInt != null) && (bynaryStringFloat != null))
+                {
+                    if ((bynaryStringInt != "") && (bynaryStringFloat != ""))
+                    {
+                        if (bynaryStringInt.IndexOf('1') != -1)
+                        {
+                            offsetDot = bynaryStringInt.IndexOf('1');
+                            result = bynaryStringInt.Substring(offsetDot + 1) + bynaryStringFloat;
+                        }
+                        else
+                            if (bynaryStringFloat.IndexOf('1') != -1)
+                                if (isStringZero(inNumber.Exponenta))
+                                    result = "" + bynaryStringFloat.Substring(inNumber.Offset - 1, inNumber.MBits + 1);
+                                else
+                                {
+                                    offsetDot = bynaryStringFloat.IndexOf('1') + 1;
+                                    result = "" + bynaryStringFloat.Substring(offsetDot);
+                                }
+                            else
+                            {
+                                switch (inputStringFormat)
+                                {
+                                    case 0: currMBits = inNumber.MBits; break;
+                                    case 1:
+                                    case 2: currMBits = inNumber.MBitsFI; break;
+                                    default: currMBits = inNumber.MBits; break;
+                                }
+                                tempArray = new String[currMBits];
+                                for (i = 0; i < currMBits; i++)
+                                    tempArray[i] = "0";
+                                result = result + String.Join("", tempArray);
+                            }
+                    }
+                    else
+                    {
+                        throw new FCCoreArithmeticException("Exception in Func ['selectMantissa'] Mess=[ Empty String - BynaryIntPart or BynaryFloatPart  ] (" + inNumber.Name + ")");
+                    }
+                }
+                else
+                {
+                    throw new FCCoreArithmeticException("Exception in Func ['selectMantissa'] Mess=[ Null - BynaryIntPart or BynaryFloatPart ] (" + inNumber.Name + ")");
+                }
+
+                switch (inputStringFormat)
+                {
+                    case 0: currMBits = inNumber.MBits; break;
+                    case 1:
+                    case 2: currMBits = inNumber.MBitsFI; break;
+                    default: currMBits = inNumber.MBits; break;
+                }
+                if (result.Length <= currMBits)
+                {
+                    // After Research Modification HERE NEEDED !
+                    l = currMBits + 1 - result.Length;
+                    tempArray = new String[l];
+                    for (i = 0; i < l; i++)
+                    {
+                        tempArray[i] = "0";
+                    }
+                    result = result + String.Join("", tempArray);
+                }
+                switch (Rounding)
+                {
+                    case 0:
+                        M = result.Substring(0, currMBits);
+                        break;
+                    case 1:
+                        if (isStringZero(inNumber.Exponenta))
+                        {
+                            tempArray = new String[offsetDot];
+                            for (i = 0; i < offsetDot; i++)
+                                tempArray[i] = "0";
+                            M = M + String.Join("", tempArray);
+
+                            M += result.Substring(0, currMBits + 1 - offsetDot);
+                        }
+                        else
+                            M = result.Substring(0, currMBits + 0);
+                        if ((result[currMBits] == '1') && (Sign[0] == '+'))
+                        {
+                            if (!checkStringFull(M))
+                            {
+                                M = convert2to10IPart(M);
+                                //M = sumIPart(M, "1");
+                                M = Addition(M, "1");
+                            }
+                            else
+                            {
+                                M = "0";
+                                if (checkExpFull(inNumber.Exponenta))
+                                {
+                                    if (NumberFormat == 0)
+                                        inNumber.NumberState = stateOfNumber.NaN;
+                                    else
+                                        inNumber.NumberStateRight = stateOfNumber.NaN;
+                                }
+                                else
+                                {
+                                    sumExp(inNumber, "1");
+                                }
+                            }
+                            M = convert10to2IPart(M);
+                            if (M.Length + 1 == currMBits)
+                            {
+                                M = "0" + M;
+                            }
+                            else
+                                if (M.Length < currMBits)
+                                {
+                                    l = currMBits - M.Length;
+                                    tempArray = new String[l];
+                                    for (i = 0; i < l; i++)
+                                        tempArray[i] = "0";
+                                    M = String.Join("", tempArray) + M;
+                                }
+                        }
+                        // inNumber.Mantisa = M;
+                        break;
+
+                    case 2:// +Inf 
+                        M = result.Substring(1, currMBits);
+                        if (Sign[0] == '+')
+                        {
+                            if (!checkStringFull(M))
+                            {
+                                M = convert2to10IPart(M);
+                                //M = sumIPart(M, "1");
+                                M = Addition(M, "1");
+                            }
+                            else
+                            {
+                                M = "0";
+                                if (checkExpFull(inNumber.Exponenta))
+                                {
+                                    if (NumberFormat == 0)
+                                        inNumber.NumberState = stateOfNumber.NaN;
+                                    else
+                                        inNumber.NumberStateRight = stateOfNumber.NaN;
+                                }
+                                else
+                                {
+                                    sumExp(inNumber, "1");
+                                }
+                            }
+                            M = convert10to2IPart(M);
+                        }
+                        break;
+
+                    case 3:
+                        // -Inf
+                        M = result.Substring(1, currMBits);
+                        if (Sign[0] == '-')
+                        {
+                            if (!checkStringFull(M))
+                            {
+                                M = convert2to10IPart(M);
+                                M = Addition(M, "1");
+                                //M = sumIPart(M, "1");
+                            }
+                            else
+                            {
+                                M = "0";
+                                if (checkExpFull(inNumber.Exponenta))
+                                {
+                                    if (NumberFormat == 0)
+                                        inNumber.NumberState = stateOfNumber.NaN;
+                                    else
+                                        inNumber.NumberStateRight = stateOfNumber.NaN;
+                                }
+                                else
+                                {
+                                    sumExp(inNumber, "1");
+                                }
+                            }
+                            M = convert10to2IPart(M);
+                        }
+                        break;
+                }
+
+                return M;
+            }
+            catch (Exception ex)
+            {
+                throw new FCCoreFunctionException("Exception in Func ['selectMantissa'] Mess=[" + ex.Message + "]");
+            }
         }
 
     }
