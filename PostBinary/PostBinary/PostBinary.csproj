@@ -49,6 +49,7 @@
     <Compile Include="Classes\Helper.cs" />
     <Compile Include="Classes\Logger.cs" />
     <Compile Include="Classes\Number.cs" />
+    <Compile Include="Classes\PBNumber.cs" />
     <Compile Include="Classes\Utils\NumberUtil.cs" />
     <Compile Include="Classes\PALU.cs" />
     <Compile Include="Classes\ProgramCore.cs" />

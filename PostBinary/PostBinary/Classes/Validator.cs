@@ -122,7 +122,6 @@ namespace PostBinary.Classes
             int errorBegin = -1;
             int errorEnd = -1;
             ValidationResponce response = new ValidationResponce();
-            String[] args;
             String currErrorType = "validEr1";
             int openedSquareBrackets = 0;
             int closedSquareBrackets = 0;

@@ -52,6 +52,33 @@ namespace PostBinary.Classes
             return "";
         }
 
+        ////////////////////
+         public struct scientificNotationNumber
+        {
+            public String str;
+            public int numCh;
+            public string exponent;
+        };
+        public scientificNotationNumber retStruct;
+        public void Run()
+        {
+            String[] testStr = { "123,456e-789", "123,456e+789", "3,0e-1" };
+            for (int i = 0; i < testStr.Length; i++)
+            {
+                retStruct = SplitString(testStr[i]);
+                Console.WriteLine(" {0} , {1}, {2}", retStruct.str, retStruct.numCh, retStruct.exponent);
+                Console.ReadLine();
+            }
+
+        }
+        public scientificNotationNumber SplitString(string str)
+        {
+            retStruct = new scientificNotationNumber();
+            retStruct.numCh = str.Split('e')[0].Remove(str.Split('e')[0].IndexOf(','), 1).Trim('-').Length;
+            retStruct.exponent = str.Split('e')[str.Split('e').Count() - 1].Trim('-');
+            retStruct.str = str.Replace("e", "*10^(") + ")";
+            return retStruct;
+        }
 
     }
 }
