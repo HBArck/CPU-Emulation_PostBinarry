@@ -18,6 +18,18 @@ namespace PostBinary.Classes
     };
 
     /// <summary>
+    /// This enum indicates rounding type for number: to Zero, to Number, to Positive Infinity, to Negative Infinity
+    ///  0 - to zero 1 - to number 2 - to Pos Inf 3 - to Neg Inf 4 - to Pos Neg Inf
+    /// </summary>
+    public enum RoundingType
+    {
+        Zero=0,
+        Integer=1,
+        PositiveInfinity=2,
+        NegativeInfinity=3
+    };
+
+    /// <summary>
     /// Indicates left or right part of Number.Number must be in Float or Interval Format
     /// </summary>
     public enum PartOfNumber
@@ -25,6 +37,7 @@ namespace PostBinary.Classes
         Left = 1,
         Right = 2,
     };
+        
     struct variable
     {
         public String VariableName;
@@ -111,6 +124,18 @@ namespace PostBinary.Classes
                 {
                     rightOperandNumberFormat = value;
                 }
+            }
+        }
+        private byte roundnig;
+        public byte Rounding // 0 - to zero 1 - to number 2 - to Pos Inf 3 - to Neg Inf 4 - to Pos Neg Inf
+        {
+            get { return roundnig; }
+            set
+            {
+                if (value > 4 || value < 0)
+                    roundnig = 0;
+                else
+                    roundnig = value;
             }
         }
         public  ProgramCore()

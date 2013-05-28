@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Numerics;
 
 namespace PostBinary.Classes
 {
 
     class NumberUtil
     {
+        private ProgramCore PCoreInst = null;
+
         /// <summary>
         /// Struct stores Float and Integer part of Number
         /// </summary>
@@ -17,7 +20,20 @@ namespace PostBinary.Classes
             public String IntegerPart;
             public String FloatPart;
         }
-        private ProgramCore PCoreInst = null;
+
+        /// <summary>
+        /// Stores number states
+        /// </summary>
+        public enum stateOfNumber
+        {
+            normalized,
+            denormalized,
+            zero,
+            infinite,
+            NaN,
+            error
+        };
+
         public NumberUtil(ProgramCore newPCoreInst)
         {
             if (PCoreInst == null)
@@ -79,10 +95,12 @@ namespace PostBinary.Classes
             currentPartialNumber = DenormalizeNumber(currentNumber, NumberFormat.Integer);
             currentPartialNumber2cc.IntegerPart = convert10to2IPart(currentPartialNumber.IntegerPart);
             currentPartialNumber2cc.FloatPart = convert10to2FPart(currentPartialNumber.FloatPart);
+            //Define Exponent before Mantissa for correct running  algorithm 
             currentPartialNumberExpMan.IntegerPart = selectExp(Num32);
             currentPartialNumberExpMan.FloatPart = selectMantissa(Num32, NumberFormat.Integer);
             return currentNumber;
         }
+
         public String NormalizeNumber(String dataString, int inAccuracy, NumberFormat inNumberFormat)
         {
             /// Current Number Sign 0 = '+'; 1 = '-'
@@ -528,7 +546,369 @@ namespace PostBinary.Classes
             }
             return balanse;
         }
+       
+        /// <summary>
+        /// Converts number integer part from 2cc to 10cc
+        /// </summary>
+        /// <param name="inString">Input number integer part </param>
+        /// <returns>Number integer part in 10cc</returns>
+        public String convert2to10IPart(String inString)
+        {
+            /*
+             * Перевод целой части числа из 2 с/с в 10 с/с
+             */
+            String result = "0";
+            String tempRes = "0";
+            String factor = "1"; // множитель=степени 2
+            try
+            {
+                if (isStringZero(inString))
+                {
+                    return "0";
+                }
+                if ((inString == "0") || (inString == ""))
+                    return "0";
+                for (int i = inString.Length; i > 0; i--)
+                {
+                    if (inString[i - 1] == '1')
+                        tempRes = Addition(result, factor);
+                    result = tempRes;
+                    factor = Multiplication(factor, "2");
+                }
 
+                if ((result != "0") && (result != ""))
+                {
+                    result = result.Substring(1);
+                    if (result.IndexOf(',') != -1)
+                        return result.Substring(0, result.IndexOf(','));
+                    else
+                        return result;
+                }
+                else
+                    return "0";
+            }
+            catch (Exception ex)
+            {
+                throw new FCCoreArithmeticException("Func 'convert2to10IPart' = [ " + ex.Message + " ]");
+            }
+        }
+
+        #region Addition Functions
+        /// <summary>
+        /// Adds Operand1 to Operand2
+        /// Permissions: Input Numbers can be with sign's or without
+        /// </summary>
+        /// <param name="Operand1">First operand of addition</param>
+        /// <param name="Operand2">Second operand of addition</param>
+        /// <returns>Number wich is representation an addition of two numbers</returns>
+        public String Addition(String Operand1, String Operand2)
+        {
+            String SignResult = "", Result = "";
+            String iPartOperand1 = "", fPartOperand1 = "";
+            String iPartOperand2 = "", fPartOperand2 = "";
+
+            //Temporary Vars
+            String signOperand1 = "", signOperand2 = "";
+            int LenFloatPartOperand1 = 0, LenFloatPartOperand2 = 0;
+            int i, z;
+            int Operand1Dot = 0;
+            int Operand2Dot = 0;
+            int Operand1Exp = 0, Operand2Exp = 0;
+            char[] chArr = { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+            BigInteger BigOperand1 = 0;
+            BigInteger BigOperand2 = 0;
+            try
+            {
+                /* Sign Result */
+                if ((Operand1[0] == '-') || (Operand1[0] == '+'))
+                {
+                    signOperand1 = Operand1.Substring(0, 1);
+                    Operand1 = Operand1.Substring(1);  // Devident without sign = 123123,123
+                }
+                else
+                    signOperand1 = "+";
+
+                if ((Operand2[0] == '-') || (Operand2[0] == '+'))
+                {
+                    signOperand2 = Operand2.Substring(0, 1);
+                    Operand2 = Operand2.Substring(1);  // Devider without sign = 789789,789
+                }
+                else
+                    signOperand2 = "+";
+
+                if (signOperand1 == "+")
+                {
+                    if (signOperand2 == "+")
+                        SignResult = "+";
+                    else
+                        SignResult = "-";
+                }
+                else // if signDevident == "-"
+                {
+                    if (signOperand2 == "+")
+                        SignResult = "-";
+                    else
+                        SignResult = "+";
+                }
+
+                if (isStringZero(Operand1) && !isStringZero(Operand2))
+                {
+                    return signOperand2 + Operand2;
+                }
+                else
+                {
+                    if (!isStringZero(Operand1) && isStringZero(Operand2))
+                    {
+                        return signOperand1 + Operand1;
+                    }
+                    else
+                        if (isStringZero(Operand1) && isStringZero(Operand2))
+                            return "+0,0";
+                }
+
+
+                /*Float Part*/
+                Operand1Dot = Operand1.IndexOf(",");
+                Operand2Dot = Operand2.IndexOf(",");
+
+                if (Operand1Dot != -1)
+                {
+                    LenFloatPartOperand1 = Operand1.Length - Operand1Dot - 1;    // -1 - ','
+                    fPartOperand1 = Operand1.Substring(Operand1Dot + 1);  // copy float part Devident //  123
+                    iPartOperand1 = Operand1.Substring(0, Operand1Dot);
+                }
+                else
+                { LenFloatPartOperand1 = 1; fPartOperand1 = "0"; iPartOperand1 = Operand1; }
+
+                if (Operand2Dot != -1)
+                {
+                    LenFloatPartOperand2 = Operand2.Length - Operand2Dot - 1;      // -1 - ','
+                    fPartOperand2 = Operand2.Substring(Operand2Dot + 1);  // copy float part Devider // 789
+                    iPartOperand2 = Operand2.Substring(0, Operand2Dot);
+                }
+                else
+                { LenFloatPartOperand2 = 1; fPartOperand2 = "0"; iPartOperand2 = Operand2; }
+
+                if (LenFloatPartOperand1 >= LenFloatPartOperand2)
+                {
+                    for (i = 0; i < LenFloatPartOperand1 - LenFloatPartOperand2; i++) // After Research Modification NEEDED !
+                    {
+                        fPartOperand2 += "0";
+                    }
+                }
+                else
+                {
+                    for (i = 0; i < LenFloatPartOperand2 - LenFloatPartOperand1; i++) // After Research Modification NEEDED !
+                    {
+                        fPartOperand1 += "0";
+                    }
+                }
+
+                Operand1Exp = -LenFloatPartOperand1;
+                Operand2Exp = -LenFloatPartOperand2;
+
+                iPartOperand1 += fPartOperand1; // 123123
+                iPartOperand2 += fPartOperand2;   // 678678
+
+                BigOperand1 = BigInteger.Parse(iPartOperand1);
+                BigOperand2 = BigInteger.Parse(iPartOperand2);
+                Result = addV2(BigOperand1, BigOperand2);
+                if ((LenFloatPartOperand1 >= Result.Length) || (LenFloatPartOperand2 >= Result.Length))
+                {
+                    z = Result.Length;
+                    for (i = 0; i < LenFloatPartOperand2 + LenFloatPartOperand1 - z + 1; i++) // After Research Modification NEEDED !
+                    {
+                        Result = "0" + Result;
+                    }
+                }
+                if (LenFloatPartOperand1 > LenFloatPartOperand2)
+                    Result = SignResult + Result.Insert(Result.Length - Math.Abs(LenFloatPartOperand1), ",");
+                else
+                    Result = SignResult + Result.Insert(Result.Length - Math.Abs(LenFloatPartOperand2), ",");
+                return deleteZeroFromNumberV2(Result);
+            }
+            catch (Exception ex)
+            { throw new FCCoreArithmeticException("Func 'Addition' = [" + ex.Message + "]"); }
+        }
+
+        private String addV2(BigInteger Operand1, BigInteger Operand2)
+        {
+            BigInteger Result;
+            try
+            {
+                Result = Operand1 + Operand2;
+                return Result.ToString();
+            }
+            catch (Exception ex)
+            { throw new FCCoreArithmeticException("Func 'addV2' = [" + ex.Message + "]"); }
+        }
+
+        #endregion
+
+        #region Multiplication Functions
+        /// <summary>
+        /// Multiplies two float digits.
+        /// Permissions: Input Numbers can be with sign's or without
+        /// Warnings: Can't be in exponential form.
+        /// </summary>
+        /// <param name="Multiplicand">Number to multiply</param>
+        /// <param name="Factor">Number wich is multiplied</param>
+        /// <returns></returns>
+        public String Multiplication(String Multiplicator, String Factor)
+        {
+            String SignResult = "", Result = "";
+            String iPartMultiplicator = "", fPartMultiplicator = "";
+            String iPartFactor = "", fPartFactor = "";
+
+            //Temporary Vars
+            String signMultiplicator = "", signFactor = "";
+            int LenFloatPartMultiplicator = 0, LenFloatPartFactor = 0;
+            int i, z;
+            int MultiplicatorDot = 0;
+            int FactorDot = 0;
+            int MultiplicatorExp = 0, FactorExp = 0;
+            char[] chArr = { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+            BigInteger BigMultiplicator = 0;
+            BigInteger BigFactor = 0;
+
+            try
+            {
+                if (isStringZero(Multiplicator) || isStringZero(Factor))
+                {
+                    return "+0,0";
+                }
+
+                /* Sign Result */
+                if ((Multiplicator[0] == '-') || (Multiplicator[0] == '+'))
+                {
+                    signMultiplicator = Multiplicator.Substring(0, 1);
+                    Multiplicator = Multiplicator.Substring(1);  // Devident without sign = 123123,123
+                }
+                else
+                    signMultiplicator = "+";
+
+                if ((Factor[0] == '-') || (Factor[0] == '+'))
+                {
+                    signFactor = Factor.Substring(0, 1);
+                    Factor = Factor.Substring(1);  // Devider without sign = 789789,789
+                }
+                else
+                    signFactor = "+";
+
+                if (signMultiplicator == "+")
+                {
+                    if (signFactor == "+")
+                        SignResult = "+";
+                    else
+                        SignResult = "-";
+                }
+                else // if signDevident == "-"
+                {
+                    if (signFactor == "+")
+                        SignResult = "-";
+                    else
+                        SignResult = "+";
+                }
+
+                /*Float Part*/
+                MultiplicatorDot = Multiplicator.IndexOf(",");
+                FactorDot = Factor.IndexOf(",");
+
+                if (MultiplicatorDot != -1)
+                {
+                    LenFloatPartMultiplicator = Multiplicator.Length - MultiplicatorDot - 1;    // -1 - ','
+                    fPartMultiplicator = Multiplicator.Substring(MultiplicatorDot + 1);  // copy float part Devident //  123
+                    iPartMultiplicator = Multiplicator.Substring(0, MultiplicatorDot);
+                }
+                else
+                { LenFloatPartMultiplicator = 1; fPartMultiplicator = "0"; iPartMultiplicator = Multiplicator; }
+
+                if (FactorDot != -1)
+                {
+                    LenFloatPartFactor = Factor.Length - FactorDot - 1;      // -1 - ','
+                    fPartFactor = Factor.Substring(FactorDot + 1);  // copy float part Devider // 789
+                    iPartFactor = Factor.Substring(0, FactorDot);
+                }
+                else
+                { LenFloatPartFactor = 1; fPartFactor = "0"; iPartFactor = Factor; }
+
+                MultiplicatorExp = -LenFloatPartMultiplicator;
+                FactorExp = -LenFloatPartFactor;
+
+                iPartMultiplicator += fPartMultiplicator; // 123123
+                iPartFactor += fPartFactor;   // 678678
+
+                BigMultiplicator = BigInteger.Parse(iPartMultiplicator);
+                BigFactor = BigInteger.Parse(iPartFactor);
+
+                Result = mulV2(BigMultiplicator, BigFactor);
+                if (LenFloatPartFactor + LenFloatPartMultiplicator >= Result.Length)
+                {
+                    z = Result.Length;
+                    for (i = 0; i < LenFloatPartFactor + LenFloatPartMultiplicator - z + 1; i++)
+                    {
+                        Result = "0" + Result;
+                    }
+                }
+                Result = SignResult + Result.Insert(Result.Length - Math.Abs(LenFloatPartMultiplicator + LenFloatPartFactor), ",");
+                return deleteZeroFromNumberV2(Result);
+            }
+            catch (Exception ex)
+            {
+                throw new FCCoreArithmeticException("Func 'Multiplication' = [ " + ex.Message + " ]");
+            }
+        }
+
+        /// <summary>
+        /// Multiplicates 2 unsigned integers.
+        /// </summary>
+        /// <param name="Multiplicator">Multiplicator</param>
+        /// <param name="Factor">Multiplication factor</param>
+        /// <returns>Number in string form that repsents result of multiplication 2 unsigned integers.</returns>
+        private String mulV2(BigInteger Multiplicator, BigInteger Factor)
+        {
+            BigInteger Result = Multiplicator * Factor;
+            return Result.ToString();
+        }
+
+        /// <summary>
+        /// Trims input number all useless zero characters.
+        /// </summary>
+        /// <param name="inStr">Input number.</param>
+        /// <returns>Trimed stringlified number.</returns>
+        public String deleteZeroFromNumberV2(String inStr)
+        {
+            String result = "";
+            String sign = "";
+            String LeftPart;
+            String RightPart;
+            if ((inStr[0] == '-') || (inStr[0] == '+'))
+            {
+                sign = inStr.Substring(0, 1);
+                inStr = inStr.Substring(1);
+            }
+
+            if (inStr.IndexOf(",") != -1)
+            {
+                LeftPart = inStr.Substring(0, inStr.IndexOf(","));
+                RightPart = inStr.Substring(inStr.IndexOf(",") + 1);
+                if (LeftPart.Length > 1)
+                    LeftPart = LeftPart.TrimStart('0');
+                if (RightPart.Length > 1)
+                    RightPart = RightPart.TrimEnd('0');
+                if (LeftPart == "") LeftPart = "0";
+                if (RightPart == "") RightPart = "0";
+                result = sign + LeftPart + "," + RightPart;
+            }
+            else
+            {
+                LeftPart = inStr.Substring(0);
+                result = sign + LeftPart + ",0";
+            }
+
+            return result;
+        }
+        #endregion
 
         /// <summary>
         /// Check if the input string consist only from '1' value bits. Use this function only for 2cc numbers.
@@ -577,20 +957,21 @@ namespace PostBinary.Classes
         /// <param name="inNumber">Number - var from which exponenta need to be taken</param>
         /// <param name="Left_Right">False - Left part og number, else - Right </param>
         /// <returns>Returns Exponent in 2cc</returns>
-        public String selectExp(Number inNumber, PartOfNumber Left_Right)
+        public String selectExp(Number inNumber, NumberFormat inNumberFormat)
         {
 
             int z = 0;
             int Offset = 0;
             String temp, result = "";
             String bynaryStringInt = "", bynaryStringFloat = "";
-            if (this.NumberFormat == 0)
+            if (inNumberFormat == 0)
             {
                 bynaryStringInt = inNumber.BinaryIntPart;
                 bynaryStringFloat = inNumber.BinaryFloatPart;
             }
             else
             {
+                /*
                 if (Left_Right == PartOfNumber.Left)
                 {// Left part of number
                     bynaryStringInt = inNumber.BinaryIntPartFILeft;
@@ -600,7 +981,7 @@ namespace PostBinary.Classes
                 {// Right part of number
                     bynaryStringInt = inNumber.BinaryIntPartFIRight;
                     bynaryStringFloat = inNumber.BinaryFloatPartFIRight;
-                }
+                }*/
             }
 
             if (bynaryStringInt != null)
@@ -611,7 +992,7 @@ namespace PostBinary.Classes
                 }
                 else
                 {
-                    inNumber.CalcStatus = Flexible_computing.CalculationStatus.Exception;
+                    //inNumber.CalcStatus = Flexible_computing.CalculationStatus.Exception;
                     if (NumberFormat == 0)
                     { inNumber.NumberState = stateOfNumber.error; }
                     else
@@ -624,7 +1005,7 @@ namespace PostBinary.Classes
             }
             else
             {
-                inNumber.CalcStatus = Flexible_computing.CalculationStatus.Exception;
+                //inNumber.CalcStatus = Flexible_computing.CalculationStatus.Exception;
 
                 if (NumberFormat == 0)
                 { inNumber.NumberState = stateOfNumber.error; }
@@ -637,13 +1018,13 @@ namespace PostBinary.Classes
             }
             try
             {
-                switch (NumberFormat)
+                switch (inNumberFormat)
                 {
                     case 0: Offset = inNumber.Offset; break;
                     case 1:
                     case 2: Offset = inNumber.OffsetFI; break;
-                    case 3: Offset = inNumber.OffsetTetra; break;
-                    case 4: Offset = inNumber.OffsetFITetra; break;
+                  /*case 3: Offset = inNumber.OffsetTetra; break;
+                    case 4: Offset = inNumber.OffsetFITetra; break;*/
                 }
                 if (bynaryStringInt.IndexOf('1') != -1)
                 {
@@ -680,7 +1061,7 @@ namespace PostBinary.Classes
         }
 
         /// <summary>
-        /// Calculates Mantissa for specified number
+        /// Calculates Mantissa for specified number. Define Exponent before Mantissa for correct running algorithm.
         /// Uses funcs: isStringZero,convert10to2IPart, checkStringFull
         /// Uses Vars: Number.BinaryIntPart,Number.BinaryFloatPart
         /// </summary>
@@ -784,7 +1165,7 @@ namespace PostBinary.Classes
                     }
                     result = result + String.Join("", tempArray);
                 }
-                switch (Rounding)
+                switch (PCoreInst.Rounding)
                 {
                     case 0:
                         M = result.Substring(0, currMBits);
