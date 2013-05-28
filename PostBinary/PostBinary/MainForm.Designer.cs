@@ -38,12 +38,15 @@
             this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helperToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.validatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.validateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.variableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.tResult = new System.Windows.Forms.TextBox();
             this.tInfelicity = new System.Windows.Forms.TextBox();
             this.bStart = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.VarList = new System.Windows.Forms.ListBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
@@ -54,9 +57,8 @@
             this.textBox8 = new System.Windows.Forms.TextBox();
             this.textBox9 = new System.Windows.Forms.TextBox();
             this.textBox10 = new System.Windows.Forms.TextBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
             this.customTextBox1 = new MyControls.CustomTextBox();
+            this.varListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -82,7 +84,8 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.optionsToolStripMenuItem,
-            this.toolStripMenuItem1});
+            this.toolStripMenuItem1,
+            this.debugToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(892, 24);
@@ -141,6 +144,38 @@
             this.toolStripMenuItem1.Size = new System.Drawing.Size(24, 20);
             this.toolStripMenuItem1.Text = "?";
             // 
+            // debugToolStripMenuItem
+            // 
+            this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.validatorToolStripMenuItem,
+            this.varListToolStripMenuItem});
+            this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
+            this.debugToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
+            this.debugToolStripMenuItem.Text = "Debug";
+            // 
+            // validatorToolStripMenuItem
+            // 
+            this.validatorToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.validateToolStripMenuItem,
+            this.variableToolStripMenuItem});
+            this.validatorToolStripMenuItem.Name = "validatorToolStripMenuItem";
+            this.validatorToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+            this.validatorToolStripMenuItem.Text = "Validator";
+            // 
+            // validateToolStripMenuItem
+            // 
+            this.validateToolStripMenuItem.Name = "validateToolStripMenuItem";
+            this.validateToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.validateToolStripMenuItem.Text = "Validate";
+            this.validateToolStripMenuItem.Click += new System.EventHandler(this.validateToolStripMenuItem_Click);
+            // 
+            // variableToolStripMenuItem
+            // 
+            this.variableToolStripMenuItem.Name = "variableToolStripMenuItem";
+            this.variableToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.variableToolStripMenuItem.Text = "Variable";
+            this.variableToolStripMenuItem.Click += new System.EventHandler(this.variableToolStripMenuItem_Click);
+            // 
             // progressBar1
             // 
             this.progressBar1.Location = new System.Drawing.Point(0, 665);
@@ -188,17 +223,6 @@
             this.bStart.TabIndex = 7;
             this.bStart.UseVisualStyleBackColor = true;
             this.bStart.EnabledChanged += new System.EventHandler(this.bStart_EnabledChanged);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(653, 456);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 13;
-            this.button1.Text = "validate";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Visible = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // VarList
             // 
@@ -305,26 +329,6 @@
             this.textBox10.TabIndex = 29;
             this.textBox10.Text = "%";
             // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(708, 33);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 30;
-            this.button2.Text = "validate";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(790, 33);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 31;
-            this.button3.Text = "variable validate";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
             // customTextBox1
             // 
             this.customTextBox1.Location = new System.Drawing.Point(19, 44);
@@ -334,20 +338,24 @@
             this.customTextBox1.TabIndex = 14;
             this.customTextBox1.WindowSize = new System.Drawing.Size(0, 0);
             // 
+            // varListToolStripMenuItem
+            // 
+            this.varListToolStripMenuItem.Name = "varListToolStripMenuItem";
+            this.varListToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.varListToolStripMenuItem.Text = "VarList";
+            this.varListToolStripMenuItem.Click += new System.EventHandler(this.varListToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.ClientSize = new System.Drawing.Size(892, 699);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
             this.Controls.Add(this.textBox9);
             this.Controls.Add(this.textBox5);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.VarList);
             this.Controls.Add(this.customTextBox1);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.tInfelicity);
             this.Controls.Add(this.tResult);
             this.Controls.Add(this.listBox1);
@@ -392,7 +400,6 @@
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.TextBox tResult;
         private System.Windows.Forms.TextBox tInfelicity;
-        private System.Windows.Forms.Button button1;
         private MyControls.CustomTextBox customTextBox1;
         private System.Windows.Forms.ToolStripMenuItem helperToolStripMenuItem;
         private System.Windows.Forms.ListBox VarList;
@@ -405,8 +412,11 @@
         private System.Windows.Forms.TextBox textBox8;
         private System.Windows.Forms.TextBox textBox9;
         private System.Windows.Forms.TextBox textBox10;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.ToolStripMenuItem debugToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem validatorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem validateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem variableToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem varListToolStripMenuItem;
     }
 }
 

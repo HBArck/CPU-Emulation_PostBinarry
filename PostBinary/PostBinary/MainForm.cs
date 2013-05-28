@@ -13,28 +13,32 @@ namespace PostBinary
 {
     public partial class MainForm : Form
     {
-        #region VarList
-        // VarList Global Variables for control interconnection
-        int selectedListIndex;        
-        /// <summary>
-        /// Dynamic moving TextBox component for change selected item text of VarList
-        /// </summary>
-        TextBox dynamicTextBox; // this TextBox Should appear 
-        /// <summary>
-        /// Name of variable in VarList component
-        /// </summary>
-        String varName;
+        #region Variables
+       
+            #region VarList Variables
+            // VarList Global Variables for control interconnection
+            int selectedListIndex;        
+            /// <summary>
+            /// Dynamic moving TextBox component for change selected item text of VarList
+            /// </summary>
+            TextBox dynamicTextBox; // this TextBox Should appear 
+            /// <summary>
+            /// Name of variable in VarList component
+            /// </summary>
+            String varName;
 
-        /// <summary>
-        /// Selected item Text in VarList component before changing
-        /// </summary>
-        String prevText; 
+            /// <summary>
+            /// Selected item Text in VarList component before changing
+            /// </summary>
+            String prevText; 
         
-        #endregion
+            #endregion
 
-        #region MainCore
-        //Main Core
-        Classes.ProgramCore ProgCore;
+            #region MainCore Variables
+            //Main Core
+            Classes.ProgramCore ProgCore;
+            #endregion
+
         #endregion
 
         public MainForm()
@@ -244,14 +248,6 @@ namespace PostBinary
             dynamicTextBox.KeyPress += new KeyPressEventHandler(dynamicTextBox_KeyPress);
             dynamicTextBox.LostFocus += new EventHandler(dynamicTextBox_LostFocus);
             #endregion
-
-            // DEBUG 
-            String[] vars = { "a", "b", "c", "d", "e" };
-            String[] varVals = { "123", "234", "345", "456", "567" };
-            for (int i = 0; i < 5; i++)
-            {
-                addVariable(vars[i], varVals[i]);
-            }
         }
 
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
@@ -264,17 +260,31 @@ namespace PostBinary
 
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            TestValidator test = new TestValidator();
-        }
+        #region Debug Testers
+            #region Validator Testers
+            private void validateToolStripMenuItem_Click(object sender, EventArgs e)
+            {
+                TestValidator test = new TestValidator();
+            }
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-            TestVariableValidator test = new TestVariableValidator();
+            private void variableToolStripMenuItem_Click(object sender, EventArgs e)
+            {
+                TestVariableValidator test = new TestVariableValidator();
+            }
+            #endregion
 
-        }
-
-      
+            #region VarList Testers
+            private void varListToolStripMenuItem_Click(object sender, EventArgs e)
+            {
+                // DEBUG 
+                String[] vars = { "a", "b", "c", "d", "e" };
+                String[] varVals = { "123", "234", "345", "456", "567" };
+                for (int i = 0; i < 5; i++)
+                {
+                    addVariable(vars[i], varVals[i]);
+                }
+            }
+            #endregion
+        #endregion
     }
 }
