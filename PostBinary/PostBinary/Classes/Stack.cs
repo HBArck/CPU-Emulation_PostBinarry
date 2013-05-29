@@ -9,16 +9,16 @@ namespace PostBinary.Classes
     
         
 
-    class Command
+    public class Command
     {
         public enum commVals { Load, Add, Sub, Mul, Div, Exp, Mem };
         public String[] commNames = { "LOAD", "ADD", "SUB", "MUL", "DIV", "EXP", "M{0}" };
         /*public System.Collections.Hashtable commands = new System.Collections.Hashtable();*/
         private int Code;
-        private Number leftOperand;
-        private Number rightOperand;
-        private Number result;
-        public Number Result
+        private PBNumber leftOperand;
+        private PBNumber rightOperand;
+        private PBNumber result;
+        public PBNumber Result
         {
             get
             {

@@ -37,6 +37,7 @@ namespace PostBinary
             #region MainCore Variables
             //Main Core
             Classes.ProgramCore ProgCore;
+            Classes.Validator Validator;
             #endregion
 
         #endregion
@@ -234,9 +235,8 @@ namespace PostBinary
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            #region Init
-            //
-            ProgCore = new Classes.ProgramCore();
+            #region Init UI
+            
 
             //Create textBox for VarList Component
             dynamicTextBox = new TextBox();
@@ -247,6 +247,11 @@ namespace PostBinary
             //events 
             dynamicTextBox.KeyPress += new KeyPressEventHandler(dynamicTextBox_KeyPress);
             dynamicTextBox.LostFocus += new EventHandler(dynamicTextBox_LostFocus);
+            #endregion
+            #region Init Logic
+            // 
+            ProgCore = new Classes.ProgramCore();
+            Validator = new Classes.Validator();
             #endregion
         }
 
@@ -286,5 +291,15 @@ namespace PostBinary
             }
             #endregion
         #endregion
+
+          private void richTextBox1_TextChanged(object sender, EventArgs e)
+          {
+              ValidationResponce currentresponce;
+              currentresponce = Validator.validate(this.richTextBox1.Text);
+              if (!currentresponce.Error)
+              {
+                  bStart.Enabled = true;
+              }
+          }
     }
 }

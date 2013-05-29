@@ -7,6 +7,18 @@ using System.Numerics;
 
 namespace PostBinary.Classes
 {
+    /// <summary>
+    /// Stores number states
+    /// </summary>
+    public enum stateOfNumber
+    {
+        normalized,
+        denormalized,
+        zero,
+        infinite,
+        NaN,
+        error
+    };
 
     class NumberUtil
     {
@@ -17,22 +29,10 @@ namespace PostBinary.Classes
         /// </summary>
         public struct IFPartsOfNumber
         {
+            public String Sign;
             public String IntegerPart;
             public String FloatPart;
         }
-
-        /// <summary>
-        /// Stores number states
-        /// </summary>
-        public enum stateOfNumber
-        {
-            normalized,
-            denormalized,
-            zero,
-            infinite,
-            NaN,
-            error
-        };
 
         public NumberUtil(ProgramCore newPCoreInst)
         {
@@ -114,7 +114,7 @@ namespace PostBinary.Classes
             return retStruct;
         }
 
-        public Number CreateNumber(String inNumber)
+        public PBNumber CreateNumber(String inNumber)
         {
             String currentNumber = "";
             String Exponenta = "";
@@ -124,15 +124,17 @@ namespace PostBinary.Classes
             
             currentNumber = NormalizeNumber(inNumber,ACCURANCY, NumberFormat.Integer);
             currentPartialNumber = DenormalizeNumber(currentNumber, NumberFormat.Integer);
+
+            currentPartialNumber2cc.Sign = currentPartialNumber.Sign;
             currentPartialNumber2cc.IntegerPart = convert10to2IPart(currentPartialNumber.IntegerPart);
             currentPartialNumber2cc.FloatPart = convert10to2FPart(currentPartialNumber.FloatPart);
 
             /*Create he Pb Number and fill it*/
-            Number number = new Number();
+            PBNumber number = new PBNumber();
             
-            //Define Exponent before Mantissa for correct running  algorithm 
-            number.Exponenta = selectExp(number);
-            number.Mantissa = selectMantissa(number, NumberFormat.Integer);
+            //Define Exponent before Mantissa for correct running algorithm 
+            number.Exponent = selectExp(currentPartialNumber2cc, NumberFormat.Integer, number);
+            number.Mantissa = selectMantissa(number, NumberFormat.Integer, currentPartialNumber2cc);
             return number;
         }
 
@@ -225,7 +227,7 @@ namespace PostBinary.Classes
         {
             String denormNumber = "";
             String denormIntPart = "", denormFloatPart = "";
-            String ExpSign, Sign, SignCharacter="+";
+            String ExpSign, Sign="0", SignCharacter="+";
             String E;
             String[] tempArray;
             IFPartsOfNumber returnValue = new IFPartsOfNumber();
@@ -299,6 +301,9 @@ namespace PostBinary.Classes
                             }*/
                         }
                     }
+
+                returnValue.Sign = Sign;
+
                 //throw new Exception("Func [selectSEM]:= NoSignException.");
 
                 int index = dataString.IndexOf('e') + 1;
@@ -992,7 +997,7 @@ namespace PostBinary.Classes
         /// <param name="inNumber">Number - var from which exponenta need to be taken</param>
         /// <param name="Left_Right">False - Left part og number, else - Right </param>
         /// <returns>Returns Exponent in 2cc</returns>
-        public String selectExp(Number inNumber, NumberFormat inNumberFormat)
+        public String selectExp(IFPartsOfNumber inStingNumber, NumberFormat inNumberFormat, PBNumber inObjectNumber)
         {
 
             int z = 0;
@@ -1001,8 +1006,8 @@ namespace PostBinary.Classes
             String bynaryStringInt = "", bynaryStringFloat = "";
             if (inNumberFormat == 0)
             {
-                bynaryStringInt = inNumber.BinaryIntPart;
-                bynaryStringFloat = inNumber.BinaryFloatPart;
+                bynaryStringInt = inStingNumber.IntegerPart;
+                bynaryStringFloat = inStingNumber.FloatPart;
             }
             else
             {
@@ -1029,13 +1034,13 @@ namespace PostBinary.Classes
                 {
                     //inNumber.CalcStatus = Flexible_computing.CalculationStatus.Exception;
                     if (inNumberFormat == 0)
-                    { inNumber.NumberState = stateOfNumber.error; }
+                    { inObjectNumber.NumberState = stateOfNumber.error; }
                     /*else
                         if (Left_Right == PartOfNumber.Left)
                         { inNumber.NumberState = stateOfNumber.error; }
                         else
                         { inNumber.NumberStateRight = stateOfNumber.error; }*/
-                    throw new FCCoreArithmeticException("Exception in Func ['selectExp'] Mess=[ Empty String - BynaryIntPart ] (" + inNumber.Name + ")");
+                    throw new FCCoreArithmeticException("Exception in Func ['selectExp'] Mess=[ Empty String - BynaryIntPart ] (" + inObjectNumber.Name + ")");
                 }
             }
             else
@@ -1043,19 +1048,19 @@ namespace PostBinary.Classes
                 //inNumber.CalcStatus = Flexible_computing.CalculationStatus.Exception;
 
                 if (inNumberFormat == 0)
-                { inNumber.NumberState = stateOfNumber.error; }
+                { inObjectNumber.NumberState = stateOfNumber.error; }
                 /*else
                     if (Left_Right == PartOfNumber.Left)
                     { inNumber.NumberState = stateOfNumber.error; }
                     else
                     { inNumber.NumberStateRight = stateOfNumber.error; }*/
-                throw new FCCoreArithmeticException("Exception in Func ['selectExp'] Mess=[ Null - BynaryIntPart ] (" + inNumber.Name + ")");
+                throw new FCCoreArithmeticException("Exception in Func ['selectExp'] Mess=[ Null - BynaryIntPart ] (" + inObjectNumber.Name + ")");
             }
             try
             {
                 switch (inNumberFormat)
                 {
-                    case 0: Offset = inNumber.Offset; break;
+                    case 0: Offset = inObjectNumber.Offset; break;
                   /*case 1:
                     case 2: Offset = inNumber.OffsetFI; break;
                     case 3: Offset = inNumber.OffsetTetra; break;
@@ -1103,7 +1108,7 @@ namespace PostBinary.Classes
         /// <param name="inNumber">Number - var from which mantissa need to be taken</param>
         /// <param name="Left_Right">False - Left part og number, else - Right </param>
         /// <returns>Returns Mantissa in 2cc</returns>
-        public String selectMantissa(Number inNumber, NumberFormat inNumberFormat)
+        public String selectMantissa(PBNumber inObjectNumber, NumberFormat inNumberFormat, IFPartsOfNumber inStringNumber)
         {
             int i, l, z = 0;
             int currMBits;
@@ -1119,8 +1124,8 @@ namespace PostBinary.Classes
             
             if (inNumberFormat == 0)
             {
-                bynaryStringInt = inNumber.BinaryIntPart;
-                bynaryStringFloat = inNumber.BinaryFloatPart;
+                bynaryStringInt = inStringNumber.IntegerPart;
+                bynaryStringFloat = inStringNumber.FloatPart;
             }
             else
             {
@@ -1150,8 +1155,8 @@ namespace PostBinary.Classes
                         }
                         else
                             if (bynaryStringFloat.IndexOf('1') != -1)
-                                if (isStringZero(inNumber.Exponenta))
-                                    result = "" + bynaryStringFloat.Substring(inNumber.Offset - 1, inNumber.MBits + 1);
+                                if (isStringZero(inObjectNumber.Exponent))
+                                    result = "" + bynaryStringFloat.Substring(inObjectNumber.Offset - 1, inObjectNumber.MantissaLenght + 1);
                                 else
                                 {
                                     offsetDot = bynaryStringFloat.IndexOf('1') + 1;
@@ -1161,10 +1166,10 @@ namespace PostBinary.Classes
                             {
                                 switch (inNumberFormat)
                                 {
-                                    case 0: currMBits = inNumber.MBits; break;
-                                  /*case 1:
-                                    case 2: currMBits = inNumber.MBitsFI; break;
-                                    default: currMBits = inNumber.MBits; break;*/
+                                    case 0: currMBits = inObjectNumber.MantissaLenght; break;
+                                    /*case 1:
+                                      case 2: currMBits = inNumber.MBitsFI; break;*/
+                                    default: currMBits = inObjectNumber.MantissaLenght; break;
                                 }
                                 tempArray = new String[currMBits];
                                 for (i = 0; i < currMBits; i++)
@@ -1174,22 +1179,22 @@ namespace PostBinary.Classes
                     }
                     else
                     {
-                        throw new FCCoreArithmeticException("Exception in Func ['selectMantissa'] Mess=[ Empty String - BynaryIntPart or BynaryFloatPart  ] (" + inNumber.Name + ")");
+                        throw new FCCoreArithmeticException("Exception in Func ['selectMantissa'] Mess=[ Empty String - BynaryIntPart or BynaryFloatPart  ] (" + inObjectNumber.Name + ")");
                     }
                 }
                 else
                 {
-                    throw new FCCoreArithmeticException("Exception in Func ['selectMantissa'] Mess=[ Null - BynaryIntPart or BynaryFloatPart ] (" + inNumber.Name + ")");
+                    throw new FCCoreArithmeticException("Exception in Func ['selectMantissa'] Mess=[ Null - BynaryIntPart or BynaryFloatPart ] (" + inObjectNumber.Name + ")");
                 }
 
                 switch (inNumberFormat)
                 {
-                    case 0: currMBits = inNumber.MBits; break;
-                  /*case 1:
-                    case 2: currMBits = inNumber.MBitsFI; break;
-                    default: currMBits = inNumber.MBits; break;*/
+                    case 0: currMBits = inObjectNumber.MantissaLenght; break;
+                    /*case 1:
+                      case 2: currMBits = inNumber.MBitsFI; break;*/
+                    default: currMBits = inObjectNumber.MantissaLenght; break;
                 }
-                if (result.Length <= currMBits)
+                if (result.Length <= inObjectNumber.MantissaLenght)
                 {
                     // After Research Modification HERE NEEDED !
                     l = currMBits + 1 - result.Length;
@@ -1206,7 +1211,7 @@ namespace PostBinary.Classes
                         M = result.Substring(0, currMBits);
                         break;
                     case 1:
-                        if (isStringZero(inNumber.Exponenta))
+                        if (isStringZero(inObjectNumber.Exponent))
                         {
                             tempArray = new String[offsetDot];
                             for (i = 0; i < offsetDot; i++)
@@ -1217,7 +1222,7 @@ namespace PostBinary.Classes
                         }
                         else
                             M = result.Substring(0, currMBits + 0);
-                        if ((result[currMBits] == '1') && (Sign[0] == '+'))
+                        if ((result[currMBits] == '1') && (inStringNumber.Sign[0] == '+'))
                         {
                             if (!checkStringFull(M))
                             {
@@ -1228,16 +1233,16 @@ namespace PostBinary.Classes
                             else
                             {
                                 M = "0";
-                                if (checkExpFull(inNumber.Exponenta))
+                                if (checkStringFull(inObjectNumber.Exponent))
                                 {
                                     //if (NumberFormat == 0)
-                                        inNumber.NumberState = stateOfNumber.NaN;
+                                        inObjectNumber.NumberState = stateOfNumber.NaN;
                                     //else
                                       //  inNumber.NumberStateRight = stateOfNumber.NaN;
                                 }
                                 else
                                 {
-                                    sumExp(inNumber, "1");
+                                    sumExp(inObjectNumber, "1", inNumberFormat);
                                 }
                             }
                             M = convert10to2IPart(M);
@@ -1260,7 +1265,7 @@ namespace PostBinary.Classes
 
                     case 2:// +Inf 
                         M = result.Substring(1, currMBits);
-                        if (Sign[0] == '+')
+                        if (inStringNumber.Sign[0] == '+')
                         {
                             if (!checkStringFull(M))
                             {
@@ -1271,16 +1276,16 @@ namespace PostBinary.Classes
                             else
                             {
                                 M = "0";
-                                if (checkExpFull(inNumber.Exponenta))
+                                if (checkStringFull(inObjectNumber.Exponent))
                                 {
                                     //if (NumberFormat == 0)
-                                        inNumber.NumberState = stateOfNumber.NaN;
+                                    inObjectNumber.NumberState = stateOfNumber.NaN;
                                     //else
                                      //   inNumber.NumberStateRight = stateOfNumber.NaN;
                                 }
                                 else
                                 {
-                                    sumExp(inNumber, "1",inNumberFormat);
+                                    sumExp(inObjectNumber, "1", inNumberFormat);
                                 }
                             }
                             M = convert10to2IPart(M);
@@ -1290,7 +1295,7 @@ namespace PostBinary.Classes
                     case 3:
                         // -Inf
                         M = result.Substring(1, currMBits);
-                        if (Sign[0] == '-')
+                        if (inStringNumber.Sign[0] == '-')
                         {
                             if (!checkStringFull(M))
                             {
@@ -1301,16 +1306,16 @@ namespace PostBinary.Classes
                             else
                             {
                                 M = "0";
-                                if (checkExpFull(inNumber.Exponenta))
+                                if (checkStringFull(inObjectNumber.Exponent))
                                 {
                                    // if (NumberFormat == 0)
-                                        inNumber.NumberState = stateOfNumber.NaN;
+                                    inObjectNumber.NumberState = stateOfNumber.NaN;
                                     //else
                                       //  inNumber.NumberStateRight = stateOfNumber.NaN;
                                 }
                                 else
                                 {
-                                    sumExp(inNumber, "1", inNumberFormat);
+                                    sumExp(inObjectNumber, "1", inNumberFormat);
                                 }
                             }
                             M = convert10to2IPart(M);
@@ -1326,11 +1331,11 @@ namespace PostBinary.Classes
             }
         }
 
-        public void sumExp(Number inNumber, String inStr,NumberFormat inNumberFormat)
+        public void sumExp(PBNumber inNumber, String inStr,NumberFormat inNumberFormat)
         {
             String E;
             int iE, Offset = 0;
-            E = inNumber.Exponenta; // It can be Fraction or Interval
+            E = inNumber.Exponent; // It can be Fraction or Interval
             switch (inNumberFormat)
             {
                 case 0: Offset = inNumber.Offset; break;
@@ -1347,7 +1352,7 @@ namespace PostBinary.Classes
             iE += int.Parse(inStr); // This Addition is UNSECURE !
             // Check if iE > E.Max
             E = convert10to2IPart((iE + Offset).ToString());
-            inNumber.Exponenta = E;
+            inNumber.Exponent = E;
         }
     }
 }

@@ -9,71 +9,22 @@ namespace PostBinary.Classes
     public class PBNumber
     {
 
+        #region Class Properties
+        private String name;
+        public String Name
+        {
+            get { return name; }
+            /*Read only*/
+            set { }
+        }
 
-        private int numberState;
-        public int NumberState
+        private stateOfNumber numberState;
+        public stateOfNumber NumberState
         {
             get { return numberState; }
             set { numberState = value; }
         }
-
-        private String name;
-        private int offset;
-        private int mantissaLenght;
-        private int exponentLenght;
-        public PBNumber() { }
-        public PBNumber(int inWidth, String inS, String inE, String inM)
-        {
-            this.width = inWidth;
-            switch (this.width)
-            {
-                case 32:
-                    {
-                        this.offset = 127;
-                        this.exponentLenght = 8;
-                        this.mantissaLenght = 21;
-                        this.mf = "00";
-                        this.cf = "0";
-                        break;
-                    }
-                case 64:
-                    {
-                        this.offset = 1023;
-                        this.exponentLenght = 11;
-                        this.mantissaLenght = 48;
-                        this.mf = "000";
-                        this.cf = "01";
-                        break;
-                    }
-                case 128:
-                    {
-                        this.offset = 16383;
-                        this.exponentLenght = 15;
-                        this.mantissaLenght = 104;
-                        this.mf = "00000";
-                        this.cf = "011";
-                        break;
-                    }
-                case 256:
-                    {
-                        this.offset = 524287;
-                        this.exponentLenght = 20;
-                        this.mantissaLenght = 219;
-                        this.mf = "000000000000";
-                        this.cf = "0111";
-                        break;
-                    }
-                default:
-                    {
-                        break;
-                    }
-            }
-            this.name = this.width.ToString() + "[" + inS + inE + "|" + inM + "]";
-            this.sign = inS;
-            this.exponent = inE;
-            this.mantissa = inM;
-        }
-
+       
         private int width;
         public int Width
         {
@@ -81,6 +32,31 @@ namespace PostBinary.Classes
             set { width = value; }
         }
 
+        private int mantissaLenght;
+        public int MantissaLenght
+        {
+            get { return mantissaLenght; }
+            /*Read only*/
+            set { }
+        }
+        private int exponentLenght;
+        public int ExponentLenght
+        {
+            get { return exponentLenght; }
+            /*Read only*/
+            set { }
+        }
+
+        private int offset;
+        public int Offset
+        {
+            get { return offset; }
+            set { offset = value; }
+        }
+        #endregion
+
+        #region Class Fields
+     
         private String sign;
         public String Sign
         {
@@ -156,5 +132,65 @@ namespace PostBinary.Classes
             get { return cf; }
             set { cf = value; }
         }
+        #endregion
+
+        #region Class Constructor
+        public PBNumber() { }
+        
+        public PBNumber(int inWidth, String inSign, String inExponent, String inMantissa)
+        {
+            this.width = inWidth;
+            switch (this.width)
+            {
+                case 32:
+                    {
+                        this.offset = 127;
+                        this.exponentLenght = 8;
+                        this.mantissaLenght = 21;
+                        this.mf = "00";
+                        this.cf = "0";
+                        break;
+                    }
+                case 64:
+                    {
+                        this.offset = 1023;
+                        this.exponentLenght = 11;
+                        this.mantissaLenght = 48;
+                        this.mf = "000";
+                        this.cf = "01";
+                        break;
+                    }
+                case 128:
+                    {
+                        this.offset = 16383;
+                        this.exponentLenght = 15;
+                        this.mantissaLenght = 104;
+                        this.mf = "00000";
+                        this.cf = "011";
+                        break;
+                    }
+                case 256:
+                    {
+                        this.offset = 524287;
+                        this.exponentLenght = 20;
+                        this.mantissaLenght = 219;
+                        this.mf = "000000000000";
+                        this.cf = "0111";
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
+            }
+            this.name = this.width.ToString() + "[" + inSign + inExponent + "|" + inMantissa + "]";
+            this.sign = inSign;
+            this.exponent = inExponent;
+            this.mantissa = inMantissa;
+        }
+        #endregion
+
+        #region Class Functions
+        #endregion
     }
 }

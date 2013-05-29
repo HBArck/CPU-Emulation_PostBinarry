@@ -42,6 +42,7 @@
             this.validatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.validateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.variableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.varListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.tResult = new System.Windows.Forms.TextBox();
@@ -57,8 +58,7 @@
             this.textBox8 = new System.Windows.Forms.TextBox();
             this.textBox9 = new System.Windows.Forms.TextBox();
             this.textBox10 = new System.Windows.Forms.TextBox();
-            this.customTextBox1 = new MyControls.CustomTextBox();
-            this.varListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -176,6 +176,13 @@
             this.variableToolStripMenuItem.Text = "Variable";
             this.variableToolStripMenuItem.Click += new System.EventHandler(this.variableToolStripMenuItem_Click);
             // 
+            // varListToolStripMenuItem
+            // 
+            this.varListToolStripMenuItem.Name = "varListToolStripMenuItem";
+            this.varListToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+            this.varListToolStripMenuItem.Text = "VarList";
+            this.varListToolStripMenuItem.Click += new System.EventHandler(this.varListToolStripMenuItem_Click);
+            // 
             // progressBar1
             // 
             this.progressBar1.Location = new System.Drawing.Point(0, 665);
@@ -238,8 +245,11 @@
             // 
             this.textBox3.BackColor = System.Drawing.SystemColors.MenuBar;
             this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBox3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.textBox3.Enabled = false;
             this.textBox3.Location = new System.Drawing.Point(108, 78);
             this.textBox3.Name = "textBox3";
+            this.textBox3.ReadOnly = true;
             this.textBox3.Size = new System.Drawing.Size(538, 20);
             this.textBox3.TabIndex = 22;
             this.textBox3.Text = "Value";
@@ -249,8 +259,11 @@
             // 
             this.textBox2.BackColor = System.Drawing.SystemColors.MenuBar;
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBox2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.textBox2.Enabled = false;
             this.textBox2.Location = new System.Drawing.Point(49, 78);
             this.textBox2.Name = "textBox2";
+            this.textBox2.ReadOnly = true;
             this.textBox2.Size = new System.Drawing.Size(60, 20);
             this.textBox2.TabIndex = 21;
             this.textBox2.Text = "Operation";
@@ -260,8 +273,11 @@
             // 
             this.textBox4.BackColor = System.Drawing.SystemColors.MenuBar;
             this.textBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBox4.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.textBox4.Enabled = false;
             this.textBox4.Location = new System.Drawing.Point(20, 78);
             this.textBox4.Name = "textBox4";
+            this.textBox4.ReadOnly = true;
             this.textBox4.Size = new System.Drawing.Size(30, 20);
             this.textBox4.TabIndex = 20;
             this.textBox4.Text = "№";
@@ -271,8 +287,11 @@
             // 
             this.textBox1.BackColor = System.Drawing.SystemColors.MenuBar;
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBox1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.textBox1.Enabled = false;
             this.textBox1.Location = new System.Drawing.Point(653, 78);
             this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(61, 20);
             this.textBox1.TabIndex = 23;
             this.textBox1.Text = "Variable";
@@ -282,8 +301,11 @@
             // 
             this.textBox5.BackColor = System.Drawing.SystemColors.MenuBar;
             this.textBox5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBox5.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.textBox5.Enabled = false;
             this.textBox5.Location = new System.Drawing.Point(709, 78);
             this.textBox5.Name = "textBox5";
+            this.textBox5.ReadOnly = true;
             this.textBox5.Size = new System.Drawing.Size(171, 20);
             this.textBox5.TabIndex = 24;
             this.textBox5.Text = "Value";
@@ -329,21 +351,14 @@
             this.textBox10.TabIndex = 29;
             this.textBox10.Text = "%";
             // 
-            // customTextBox1
+            // richTextBox1
             // 
-            this.customTextBox1.Location = new System.Drawing.Point(19, 44);
-            this.customTextBox1.MaxTextLength = 0;
-            this.customTextBox1.Name = "customTextBox1";
-            this.customTextBox1.Size = new System.Drawing.Size(626, 20);
-            this.customTextBox1.TabIndex = 14;
-            this.customTextBox1.WindowSize = new System.Drawing.Size(0, 0);
-            // 
-            // varListToolStripMenuItem
-            // 
-            this.varListToolStripMenuItem.Name = "varListToolStripMenuItem";
-            this.varListToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.varListToolStripMenuItem.Text = "VarList";
-            this.varListToolStripMenuItem.Click += new System.EventHandler(this.varListToolStripMenuItem_Click);
+            this.richTextBox1.Location = new System.Drawing.Point(19, 43);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(627, 29);
+            this.richTextBox1.TabIndex = 30;
+            this.richTextBox1.Text = "";
+            this.richTextBox1.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged);
             // 
             // MainForm
             // 
@@ -351,11 +366,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.ClientSize = new System.Drawing.Size(892, 699);
+            this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.textBox9);
             this.Controls.Add(this.textBox5);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.VarList);
-            this.Controls.Add(this.customTextBox1);
             this.Controls.Add(this.tInfelicity);
             this.Controls.Add(this.tResult);
             this.Controls.Add(this.listBox1);
@@ -400,7 +415,6 @@
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.TextBox tResult;
         private System.Windows.Forms.TextBox tInfelicity;
-        private MyControls.CustomTextBox customTextBox1;
         private System.Windows.Forms.ToolStripMenuItem helperToolStripMenuItem;
         private System.Windows.Forms.ListBox VarList;
         private System.Windows.Forms.TextBox textBox3;
@@ -417,6 +431,7 @@
         private System.Windows.Forms.ToolStripMenuItem validateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem variableToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem varListToolStripMenuItem;
+        private System.Windows.Forms.RichTextBox richTextBox1;
     }
 }
 
