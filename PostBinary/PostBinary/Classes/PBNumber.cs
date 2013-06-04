@@ -243,10 +243,20 @@ namespace PostBinary.Classes
         {
             if (inSign != "")
                 this.sign = inSign;
-            if (inExponent!="")
-                this.exponent = inExponent.Substring(inExponent.Length - ( this.exponentLenght - 1) );
+            if (inExponent != "")
+            {
+                if (inExponent.Length > this.exponentLenght)
+                    this.exponent = inExponent.Substring(inExponent.Length - (this.exponentLenght - 1));
+                else
+                    this.exponent = inExponent;
+            }
             if (inMantissa != "")
-                this.mantissa = inMantissa.Substring(inMantissa.Length - ( this.mantissaLenght - 1) );
+            {
+                if (inMantissa.Length > this.mantissaLenght)
+                    this.mantissa = inMantissa.Substring(inMantissa.Length - (this.mantissaLenght - 1));
+                else
+                    this.mantissa = inMantissa;
+            }
             this.name = "Name-" + this.width.ToString() + "[S={" + inSign+"} | E={" + inExponent + "} | M={" + inMantissa + "} ]";
         }
         #endregion

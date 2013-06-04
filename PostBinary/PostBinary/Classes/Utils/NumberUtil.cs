@@ -419,7 +419,7 @@ namespace PostBinary.Classes
         /// </summary>
         /// <param name="inString">Input Number to convert</param>
         /// <returns>Returns number float part in 2cc</returns>
-        public static String convert10to2FPart(String inString)
+        public String convert10to2FPart(String inString)
         {// accurancy   -> ACCURANCY
             String result = "";
             String outString = "";
@@ -456,7 +456,7 @@ namespace PostBinary.Classes
                         }
                     }
 
-                    if (countAccuracy != ACCURANCY)
+                    if (countAccuracy != ACCURANCY + AdditionalAccurancy - 1)
                     {
                         if (outString.Length > inString.Length)
                         {
@@ -469,6 +469,10 @@ namespace PostBinary.Classes
                         }
 
                     }
+                    else
+                        if (isStringZero(result))
+                            AdditionalAccurancy += 200;
+
                     inString = outString;
                 }
             }
