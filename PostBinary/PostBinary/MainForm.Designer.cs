@@ -224,12 +224,13 @@
             this.bStart.FlatAppearance.BorderSize = 0;
             this.bStart.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.bStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.bStart.Location = new System.Drawing.Point(655, 33);
+            this.bStart.Location = new System.Drawing.Point(653, 30);
             this.bStart.Name = "bStart";
-            this.bStart.Size = new System.Drawing.Size(46, 39);
+            this.bStart.Size = new System.Drawing.Size(38, 45);
             this.bStart.TabIndex = 7;
             this.bStart.UseVisualStyleBackColor = true;
             this.bStart.EnabledChanged += new System.EventHandler(this.bStart_EnabledChanged);
+            this.bStart.Click += new System.EventHandler(this.bStart_Click);
             // 
             // VarList
             // 
@@ -353,7 +354,7 @@
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(19, 43);
+            this.richTextBox1.Location = new System.Drawing.Point(19, 38);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.Size = new System.Drawing.Size(627, 29);
             this.richTextBox1.TabIndex = 30;

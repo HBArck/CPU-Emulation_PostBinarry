@@ -49,7 +49,7 @@ namespace PostBinary
 
         private void bStart_EnabledChanged(object sender, EventArgs e)
         {
-            if (bStart.Enabled)
+            if (!bStart.Enabled)
             {
                 bStart.BackgroundImage = Properties.Resources.bStartGray;
             }
@@ -294,12 +294,21 @@ namespace PostBinary
 
           private void richTextBox1_TextChanged(object sender, EventArgs e)
           {
-              ValidationResponce currentresponce;
+              /*ValidationResponce currentresponce;
               currentresponce = Validator.validate(this.richTextBox1.Text);
               if (!currentresponce.Error)
-              {
+              {*/
                   bStart.Enabled = true;
-              }
+              //}
+          }
+
+          private void bStart_Click(object sender, EventArgs e)
+          {
+              NumberUtil numberUtil = new NumberUtil(this.ProgCore);
+              tResult.Text = numberUtil.CreateNumber(richTextBox1.Text).Name;
+              //DEBUG BEGIN
+              
+              //DEBUG END
           }
     }
 }

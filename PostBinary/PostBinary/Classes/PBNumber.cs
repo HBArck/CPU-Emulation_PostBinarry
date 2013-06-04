@@ -183,14 +183,72 @@ namespace PostBinary.Classes
                         break;
                     }
             }
-            this.name = this.width.ToString() + "[" + inSign + inExponent + "|" + inMantissa + "]";
+            this.name = "Name-"+this.width.ToString() + "[" + inSign + inExponent + "|" + inMantissa + "]";
             this.sign = inSign;
             this.exponent = inExponent;
             this.mantissa = inMantissa;
         }
+        public PBNumber(int inWidth)
+        {
+            this.width = inWidth;
+            switch (this.width)
+            {
+                case 32:
+                    {
+                        this.offset = 127;
+                        this.exponentLenght = 8;
+                        this.mantissaLenght = 21;
+                        this.mf = "00";
+                        this.cf = "0";
+                        break;
+                    }
+                case 64:
+                    {
+                        this.offset = 1023;
+                        this.exponentLenght = 11;
+                        this.mantissaLenght = 48;
+                        this.mf = "000";
+                        this.cf = "01";
+                        break;
+                    }
+                case 128:
+                    {
+                        this.offset = 16383;
+                        this.exponentLenght = 15;
+                        this.mantissaLenght = 104;
+                        this.mf = "00000";
+                        this.cf = "011";
+                        break;
+                    }
+                case 256:
+                    {
+                        this.offset = 524287;
+                        this.exponentLenght = 20;
+                        this.mantissaLenght = 219;
+                        this.mf = "000000000000";
+                        this.cf = "0111";
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
+            }
+            this.name = "Name-"+this.width.ToString() + "[]";
+        }
         #endregion
 
         #region Class Functions
+        public void SetFields(String inSign,String inExponent, String inMantissa)
+        {
+            if (inSign != "")
+                this.sign = inSign;
+            if (inExponent!="")
+                this.exponent = inExponent.Substring(inExponent.Length - ( this.exponentLenght - 1) );
+            if (inMantissa != "")
+                this.mantissa = inMantissa.Substring(inMantissa.Length - ( this.mantissaLenght - 1) );
+            this.name = "Name-" + this.width.ToString() + "[S={" + inSign+"} | E={" + inExponent + "} | M={" + inMantissa + "} ]";
+        }
         #endregion
     }
 }

@@ -117,8 +117,9 @@ namespace PostBinary.Classes
         public PBNumber CreateNumber(String inNumber)
         {
             String currentNumber = "";
-            String Exponenta = "";
+            String Exponent = "";
             String Mantissa = "";
+            
             IFPartsOfNumber currentPartialNumber;
             IFPartsOfNumber currentPartialNumber2cc;
             
@@ -130,12 +131,15 @@ namespace PostBinary.Classes
             currentPartialNumber2cc.FloatPart = convert10to2FPart(currentPartialNumber.FloatPart);
 
             /*Create he Pb Number and fill it*/
-            PBNumber number = new PBNumber();
             
+            PBNumber number = new PBNumber(128);
             //Define Exponent before Mantissa for correct running algorithm 
-            number.Exponent = selectExp(currentPartialNumber2cc, NumberFormat.Integer, number);
-            number.Mantissa = selectMantissa(number, NumberFormat.Integer, currentPartialNumber2cc);
+            Exponent = selectExp(currentPartialNumber2cc, NumberFormat.Integer, number);
+            number.SetFields(currentPartialNumber.Sign, Exponent, Mantissa);
+            Mantissa = selectMantissa(currentPartialNumber2cc, NumberFormat.Integer, number);
+            number.SetFields(currentPartialNumber.Sign, Exponent, Mantissa);
             return number;
+            
         }
 
         public String NormalizeNumber(String dataString, int inAccuracy, NumberFormat inNumberFormat)
@@ -183,6 +187,7 @@ namespace PostBinary.Classes
                     if (inNumberFormat == 0)
                     {
                         Sign = "0";
+                        
                         //SignLeft = "1";
                     }
                     else
@@ -194,9 +199,7 @@ namespace PostBinary.Classes
                             SignRight = "1";
                          */
                     }
-                }
-
-
+                }                
                 if (dataString.IndexOf(',') == -1)
                     if (dataString.IndexOf('e') != -1)
                         dataString = dataString.Substring(0, dataString.IndexOf('e')) + ",0" + dataString.Substring(dataString.IndexOf('e'));
@@ -214,6 +217,7 @@ namespace PostBinary.Classes
             {
                 throw new Exception("NormalizeNumber:" + ex.Message);
             }
+            
             return dataString;
         }
 
@@ -1108,7 +1112,7 @@ namespace PostBinary.Classes
         /// <param name="inNumber">Number - var from which mantissa need to be taken</param>
         /// <param name="Left_Right">False - Left part og number, else - Right </param>
         /// <returns>Returns Mantissa in 2cc</returns>
-        public String selectMantissa(PBNumber inObjectNumber, NumberFormat inNumberFormat, IFPartsOfNumber inStringNumber)
+        public String selectMantissa(IFPartsOfNumber inStringNumber, NumberFormat inNumberFormat, PBNumber inObjectNumber)
         {
             int i, l, z = 0;
             int currMBits;
