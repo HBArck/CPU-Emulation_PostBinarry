@@ -185,8 +185,8 @@ namespace PostBinary.Classes
             }
             this.name = "Name-"+this.width.ToString() + "[" + inSign + inExponent + "|" + inMantissa + "]";
             this.sign = inSign;
-            this.exponent = inExponent;
-            this.mantissa = inMantissa;
+            this.Exponent = inExponent;
+            this.Mantissa = inMantissa;
         }
         public PBNumber(int inWidth)
         {
@@ -246,18 +246,18 @@ namespace PostBinary.Classes
             if (inExponent != "")
             {
                 if (inExponent.Length > this.exponentLenght)
-                    this.exponent = inExponent.Substring(inExponent.Length - (this.exponentLenght - 1));
+                    this.Exponent = inExponent.Substring(inExponent.Length - (this.exponentLenght - 1));
                 else
-                    this.exponent = inExponent;
+                    this.Exponent = inExponent;
             }
             if (inMantissa != "")
             {
                 if (inMantissa.Length > this.mantissaLenght)
-                    this.mantissa = inMantissa.Substring(inMantissa.Length - (this.mantissaLenght - 1));
+                    this.Mantissa = inMantissa.Substring(inMantissa.Length - (this.mantissaLenght - 1));
                 else
-                    this.mantissa = inMantissa;
+                    this.Mantissa = inMantissa;
             }
-            this.name = "Name-" + this.width.ToString() + "[S={" + inSign+"} | E={" + inExponent + "} | M={" + inMantissa + "} ]";
+            this.name = "Name-" + this.width.ToString() + "[S={" + inSign+"} | E={" + this.Exponent + "} | M={" + this.Mantissa + "} ]";
         }
         #endregion
     }
