@@ -344,7 +344,7 @@ namespace PostBinary.Classes
             int errorEnd = -1;
 
             ValidationResponce response = new ValidationResponce();
-            Regex rgx = new Regex(@"([*+^\-/\d\(\)\[\]\.,#][*+^\-/a-zA-Z\d\(\)\[\]\.,#])");
+            Regex rgx = new Regex(@"([\d\)\]][\(\[])");
             MatchCollection mc = rgx.Matches(inStr);
             if (mc.Count > 0)
             {
