@@ -4,13 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
-namespace PostBinary.Classes
+namespace PostBinary.Classes.Utils.Parser
 {
-    /// <summary>
-    /// Class reprezent PostBinary ALU.
-    /// </summary>
-    class PALU
+    [Serializable]
+    public class FunctionArgumentList : List<string>
     {
 
     }

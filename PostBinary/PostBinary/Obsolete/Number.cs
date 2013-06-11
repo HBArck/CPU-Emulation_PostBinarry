@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace PostBinary.Classes
 {
+    [Obsolete("Not used anymore", true)]
     public struct exponent
     {
         /*
@@ -49,7 +50,7 @@ namespace PostBinary.Classes
         }
 
     }
-
+    [Obsolete("Not used anymore", true)]
     public struct mantissa
     {
         private String leftPart;
@@ -90,6 +91,7 @@ namespace PostBinary.Classes
     /// <summary>
     /// Base class for number in PostBinary Calculator
     /// </summary>
+    [Obsolete("Not used anymore",true)]
     public class BaseNumber
     {
         private String sign;
@@ -133,6 +135,7 @@ namespace PostBinary.Classes
     /// <summary>
     /// Class that represents number in PostBinary32 format
     /// </summary>
+    [Obsolete("Not used anymore", true)]
     public class Number32 : BaseNumber
     { 
 
@@ -141,6 +144,7 @@ namespace PostBinary.Classes
     /// <summary>
     /// Class that represents number in PostBinary64 format
     /// </summary>
+    [Obsolete("Not used anymore", true)]
     public class Number64 : BaseNumber
     {
 
@@ -149,6 +153,7 @@ namespace PostBinary.Classes
     /// <summary>
     /// Class that represents number in PostBinary128 format
     /// </summary>
+    [Obsolete("Not used anymore", true)]
     public class Number128 : BaseNumber
     {
 
@@ -157,12 +162,13 @@ namespace PostBinary.Classes
     /// <summary>
     /// Class that represents number in PostBinary256 format
     /// </summary>
+    [Obsolete("Not used anymore", true)]
     public class Number256 : BaseNumber
     {
 
     }
-
-    class Number : BaseNumber
+    [Obsolete("Not used anymore", true)]
+    public class Number : BaseNumber
     {
         private Number32 num32;
         public Number32 Num32

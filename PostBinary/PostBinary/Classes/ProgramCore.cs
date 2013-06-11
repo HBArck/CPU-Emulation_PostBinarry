@@ -5,29 +5,22 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 
+using PostBinary.Classes.PostBinary;
 namespace PostBinary.Classes
 {
-    /// <summary>
-    /// This enum indicates type of number: Integer, Float, Interval
-    /// </summary>
-    public enum NumberFormat
-    { 
-        Integer,
-        Float,
-        Interval
-    };
+   
 
     /// <summary>
     /// This enum indicates rounding type for number: to Zero, to Number, to Positive Infinity, to Negative Infinity
     ///  0 - to zero 1 - to number 2 - to Pos Inf 3 - to Neg Inf 4 - to Pos Neg Inf
     /// </summary>
-    public enum RoundingType
+    /*public enum RoundingType
     {
         Zero=0,
         Integer=1,
         PositiveInfinity=2,
         NegativeInfinity=3
-    };
+    };*/
 
     /// <summary>
     /// Indicates left or right part of Number.Number must be in Float or Interval Format
@@ -99,28 +92,28 @@ namespace PostBinary.Classes
                     stepNumber = value;
             }
         }
-     
-        private NumberFormat leftOperandNumberFormat;
-        public NumberFormat LeftOperandNumberFormat
+
+        private IPBNumber.NumberFormat leftOperandNumberFormat;
+        public IPBNumber.NumberFormat LeftOperandNumberFormat
         {
             get { return leftOperandNumberFormat; }
             set 
             {
                 // if value in same type and less or equal to bounds of enum
-                if ((value.GetType() == typeof(NumberFormat)) && (int)value <= 2)
+                if ((value.GetType() == typeof(IPBNumber.NumberFormat)) && (int)value <= 2)
                 {
                     leftOperandNumberFormat = value;
                 }
             }
         }
-        private NumberFormat rightOperandNumberFormat;
-        public NumberFormat RightOperandNumberFormat
+        private IPBNumber.NumberFormat rightOperandNumberFormat;
+        public IPBNumber.NumberFormat RightOperandNumberFormat
         {
             get { return rightOperandNumberFormat; }
             set
             {
                 // if value in same type and less or equal to bounds of enum
-                if ((value.GetType() == typeof(NumberFormat)) && (int)value <= 2)
+                if ((value.GetType() == typeof(IPBNumber.NumberFormat)) && (int)value <= 2)
                 {
                     rightOperandNumberFormat = value;
                 }

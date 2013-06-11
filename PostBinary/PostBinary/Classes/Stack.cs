@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using PostBinary.Classes.PostBinary;
 namespace PostBinary.Classes
 {
-    
-        
-
     public class Command
     {
         public enum commVals { Load, Add, Sub, Mul, Div, Exp, Mem };

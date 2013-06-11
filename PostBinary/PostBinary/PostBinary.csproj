@@ -11,6 +11,21 @@
     <AssemblyName>PostBinary</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <PublishUrl>опубликовать\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -27,9 +42,10 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -49,19 +65,43 @@
     <Compile Include="Classes\Exceptions.cs" />
     <Compile Include="Classes\Helper.cs" />
     <Compile Include="Classes\Logger.cs" />
-    <None Include="Classes\Number.cs" />
-    <Compile Include="Classes\PBNumber.cs" />
+    <Compile Include="Classes\PostBinary\PBConstants.cs" />
+    <Compile Include="Classes\PostBinary\PBConvertion.cs" />
+    <Compile Include="Classes\PostBinary\PBExceptions.cs" />
+    <Compile Include="Classes\PostBinary\PBMath.cs" />
+    <Compile Include="Classes\PostBinary\PBNumber.cs" />
     <Compile Include="Classes\Utils\NumberUtil.cs" />
     <Compile Include="Classes\PALU.cs" />
     <Compile Include="Classes\ProgramCore.cs" />
     <Compile Include="Classes\Responce.cs" />
     <Compile Include="Classes\Stack.cs" />
+    <Compile Include="Classes\Utils\Parser\FunctionArgumentList.cs" />
+    <Compile Include="Classes\Utils\Parser\IOrderedDictionary.cs" />
+    <Compile Include="Classes\Utils\Parser\Lexer.cs" />
+    <Compile Include="Classes\Utils\Parser\OrderedDictionary.cs" />
+    <Compile Include="Classes\Utils\Parser\Parser.cs" />
+    <Compile Include="Classes\Utils\Parser\ParserExceptions\CouldNotParseExpressionException.cs" />
+    <Compile Include="Classes\Utils\Parser\ParserExceptions\MismatchedParenthesisException.cs" />
+    <Compile Include="Classes\Utils\Parser\ParserExceptions\NoSuchFunctionException.cs" />
+    <Compile Include="Classes\Utils\Parser\ParserExceptions\NoSuchVariableException.cs" />
+    <Compile Include="Classes\Utils\Parser\ParserExceptions\VariableAlreadyDefinedException.cs" />
+    <Compile Include="Classes\Utils\Parser\SimplificationReturnValue.cs" />
     <Compile Include="Classes\Utils\StringUtil.cs" />
     <Compile Include="Forms\HelperForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\HelperForm.Designer.cs">
       <DependentUpon>HelperForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Testers\TestValidator.cs" />
     <Compile Include="Classes\Validator.cs" />
@@ -81,20 +121,19 @@
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -105,18 +144,39 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\bStart.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\bStartGray.png" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\CustomTextBox\CustomTextBoxOld.csproj">
       <Project>{1d81b5d9-5d12-4571-bdf5-0ff780c8e85b}</Project>
       <Name>CustomTextBoxOld</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 и x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>Клиентский профиль .NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bStart.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bStartGray.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

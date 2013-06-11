@@ -59,6 +59,7 @@
             this.textBox9 = new System.Windows.Forms.TextBox();
             this.textBox10 = new System.Windows.Forms.TextBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.rTBLog = new System.Windows.Forms.RichTextBox();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -220,7 +221,6 @@
             // 
             this.bStart.BackgroundImage = global::PostBinary.Properties.Resources.bStartGray;
             this.bStart.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.bStart.Enabled = false;
             this.bStart.FlatAppearance.BorderSize = 0;
             this.bStart.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.bStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -354,12 +354,19 @@
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(19, 38);
+            this.richTextBox1.Location = new System.Drawing.Point(20, 42);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(627, 29);
+            this.richTextBox1.Size = new System.Drawing.Size(626, 20);
             this.richTextBox1.TabIndex = 30;
             this.richTextBox1.Text = "";
-            this.richTextBox1.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged);
+            // 
+            // rTBLog
+            // 
+            this.rTBLog.Location = new System.Drawing.Point(20, 459);
+            this.rTBLog.Name = "rTBLog";
+            this.rTBLog.Size = new System.Drawing.Size(626, 96);
+            this.rTBLog.TabIndex = 31;
+            this.rTBLog.Text = "";
             // 
             // MainForm
             // 
@@ -367,6 +374,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.ClientSize = new System.Drawing.Size(892, 699);
+            this.Controls.Add(this.rTBLog);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.textBox9);
             this.Controls.Add(this.textBox5);
@@ -433,6 +441,7 @@
         private System.Windows.Forms.ToolStripMenuItem variableToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem varListToolStripMenuItem;
         private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.RichTextBox rTBLog;
     }
 }
 

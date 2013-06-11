@@ -48,12 +48,12 @@ namespace PostBinary.Classes
                         }
 
                         currErrorTypeName.Insert( NumPos - 1, getLocalization());
-                        if (Properties.Resources.ResourceManager.GetObject(currErrorTypeName) != null) 
+                        /*if (Properties.Resources.ResourceManager.GetObject(currErrorTypeName) != null) 
                         {
                             type = currErrorTypeName;
                         }
                         else
-                            throw new NoSuchErrorTypeException("There is no such message in resource file.");
+                            throw new NoSuchErrorTypeException("There is no such message in resource file.");*/
                     }
                     else
                     {

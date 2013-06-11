@@ -8,7 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
 using PostBinary.Classes;
+using PostBinary.Classes.Utils.Parser;
+using PostBinary.Classes.PostBinary;
 namespace PostBinary
 {
     public partial class MainForm : Form
@@ -38,6 +41,7 @@ namespace PostBinary
             //Main Core
             Classes.ProgramCore ProgCore;
             Classes.Validator Validator;
+            //Parser muParser;
             #endregion
 
         #endregion
@@ -49,14 +53,14 @@ namespace PostBinary
 
         private void bStart_EnabledChanged(object sender, EventArgs e)
         {
-            if (!bStart.Enabled)
+        /*    if (!bStart.Enabled)
             {
                 bStart.BackgroundImage = Properties.Resources.bStartGray;
             }
             else
             {
                 bStart.BackgroundImage = Properties.Resources.bStart;
-            }
+            }*/
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -253,17 +257,11 @@ namespace PostBinary
             ProgCore = new Classes.ProgramCore();
             Validator = new Classes.Validator();
             #endregion
+          
+            bStart.Enabled = true;
         }
 
-        private void textBox1_KeyDown(object sender, KeyEventArgs e)
-        {
-
-        }
-
-        private void textBox1_Leave(object sender, EventArgs e)
-        {
-
-        }
+     
 
         #region Debug Testers
             #region Validator Testers
@@ -304,11 +302,17 @@ namespace PostBinary
 
           private void bStart_Click(object sender, EventArgs e)
           {
-              NumberUtil numberUtil = new NumberUtil(this.ProgCore);
-              tResult.Text = numberUtil.CreateNumber(richTextBox1.Text).Name;
               //DEBUG BEGIN
+                // NumberUtil numberUtil = new NumberUtil(this.ProgCore);
+                // tResult.Text = numberUtil.CreateNumber(richTextBox1.Text).Name;
+              /// Parse the input expression
               
+              //rTBLog.Text += temp1.ToString();
+              //rTBLog.Text += "\r\n" + temp.ToString();
               //DEBUG END
+              String testNumber = "1.25121312";
+              PBNumber pbNumber = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
+              richTextBox1.Text = pbNumber.ToString();
           }
     }
 }
