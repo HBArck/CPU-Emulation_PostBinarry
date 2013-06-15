@@ -1347,5 +1347,665 @@ namespace PostBinary.Classes.PostBinary
         }
         #endregion
 
+
+        #region From PostBinary to 10cc
+
+        /// <summary>
+        /// Based on Number Exp and Mantisa function calculates Correct Value 
+        /// Uses: Number.E, Number.M
+        /// IMPORTANT- Doesn't count variety of formats (only Integer)
+        /// </summary>
+        /// <param name="inNumber">Input variable.</param>
+        public void calcRes(PBNumber inNumber)
+        {
+
+            String M = "", E = "", Mr = "", Er = "", binIPartOut, binFPartOut;
+
+            String CorrectResult;
+            String CorrectResultExp, CorrectResult2ccExp;
+            
+            try
+            {
+                int z, cycle;
+                int Offset = 0;
+                int precision = 1900;
+                String Sign = "";
+                // temp Vars
+                IPBNumber.stateOfNumber currentState;
+                IPBNumber.NumberFormat NumberFormat = IPBNumber.NumberFormat.INTEGER;
+                String[] tempArray;
+                switch (inNumber.Name)
+                {
+                    case "Num32": precision = 1000; break;
+                    case "Num64": precision = 1200; break;
+                    case "Num128": precision = 1800; break;
+                    case "Num256": precision = 1900; break;
+                }
+                switch ( NumberFormat)
+                {
+                    case 0: Offset = (int)inNumber.Offset; break;
+                    /*case 1:
+                    case 2: Offset = inNumber.OffsetFI; break;
+                    case 3: Offset = inNumber.OffsetTetra; break;
+                    case 4: Offset = inNumber.OffsetFITetra; break;*/
+                }
+
+                cycle = NumberFormat == 0 ? 1 : 2;
+                //z = RightPart == PartOfNumber.Left ? 0 : 1;
+                //for (z = 0; z < cycle; z++)
+                //{
+                //if (NumberFormat == 0 || z == 0) // Number
+                //{
+                    /*M = inNumber.Mantissa;
+                    E = inNumber.Exponent;*/
+                //}
+                /*else // Fraction or Interval
+                {
+                    Mr = inNumber.MantisaRight;
+                    Er = inNumber.ExponentaRight;
+                }*/
+                //if (z == 0)
+                    currentState = inNumber.NumberState;
+                //else
+                //    currentState = inNumber.NumberStateRight;
+
+                switch (currentState)
+                {
+                    case IPBNumber.stateOfNumber.NORMALIZED:
+                        //if (NumberFormat == 0)
+                         CorrectResult = calcResForNorm(inNumber, precision);
+                        /*else
+                        {
+                            if (RightPart == PartOfNumber.Left)
+                                calcResForNorm(inNumber, M, E, Offset, precision, z);
+                            else
+                                calcResForNorm(inNumber, Mr, Er, Offset, precision, z);
+                        }*/
+
+                        break;
+                    /*
+                    case stateOfNumber.denormalized:
+                        if (NumberFormat == 0)
+                            calcResForDenorm(inNumber, M, E, Offset, precision, z);
+                        else
+                        {
+                            if (RightPart == PartOfNumber.Left)
+                                calcResForDenorm(inNumber, M, E, Offset, precision, z);
+                            else
+                                calcResForDenorm(inNumber, Mr, Er, Offset, precision, z);
+                        }
+
+                        break;
+
+                    case stateOfNumber.zero:
+                        calcResForZero(inNumber, z, cycle);
+
+                        break;
+                        */
+                    default:
+                        calcResForNan(inNumber);
+
+                        break;
+
+                }//switch
+                //stateOfNumber tempState = RightPart == PartOfNumber.Right ? inNumber.NumberStateRight : inNumber.NumberState;
+                IPBNumber.stateOfNumber tempState = inNumber.NumberState;
+
+                /* Sign */
+                Sign = inNumber.Sign;
+                //if (RightPart == PartOfNumber.Left)
+                    //Sign = SignCharacterLeft;
+                /*else
+                    Sign = SignCharacterRight;*/
+
+                if ((tempState == IPBNumber.stateOfNumber.NORMALIZED) || (tempState == IPBNumber.stateOfNumber.DENORMALIZED))
+                {
+                    switch (NumberFormat)
+                    {
+                        case 0:
+                            /*
+                            CorrectResultExp = Sign + convertToExp(inNumber.CorrectResult);
+                            CorrectResult2ccExp = Sign + convertToExp(inNumber.CorrectResult2cc);
+                            */
+                            break;
+
+                        /*case 1:
+                            if (z == 0)
+                            {
+                                inNumber.CorrectResultFractionExpL = Sign + convertToExp(inNumber.CorrectResultFractionL);
+                                inNumber.CorrectResultFraction2ccExpL = Sign + convertToExp(inNumber.CorrectResultFraction2ccL);
+                            }
+                            else
+                            {
+                                inNumber.CorrectResultFractionExpR = Sign + convertToExp(inNumber.CorrectResultFractionR);
+                                inNumber.CorrectResultFraction2ccExpR = Sign + convertToExp(inNumber.CorrectResultFraction2ccR);
+                            }
+                            break;
+                        case 2:
+                            if (z == 0)
+                            {
+                                inNumber.CorrectResultIntervalExpL = Sign + convertToExp(inNumber.CorrectResultIntervalL);
+                                inNumber.CorrectResultInterval2ccExpL = Sign + convertToExp(inNumber.CorrectResultInterval2ccL);
+                            }
+                            else
+                            {
+                                inNumber.CorrectResultIntervalExpR = Sign + convertToExp(inNumber.CorrectResultIntervalR);
+                                inNumber.CorrectResultInterval2ccExpR = Sign + convertToExp(inNumber.CorrectResultInterval2ccR);
+                            }
+                            break;*/
+                    }
+                }
+
+                //}// for
+            }
+            catch (Exception ex)
+            {
+                throw new FCCoreArithmeticException("Func 'calcRes' = [ " + ex.Message + " ]");
+            }
+        }
+        /// <summary>
+        /// Function converts postbinary normilized number to number in 10cc
+        /// </summary>
+        /// <param name="inNumber">PostBinary number.</param>
+        /// <param name="precision"></param>
+        public String calcResForNorm(PBNumber inNumber, int precision)
+        {
+            String binIPartOut, binFPartOut, Sign;
+            String[] tempArray;
+            String M, E;
+            String CorrectResult="", CorrectResult2cc;
+            try
+            {
+                E = inNumber.Exponent;
+                M = inNumber.Mantissa;
+
+                M = "1" + M;
+                E = convert2to10IPart(E);
+                int iE = int.Parse(E) - (int)inNumber.Offset;
+                if (iE > M.Length)
+                {
+                    tempArray = new String[Math.Abs(iE) + 1];
+                    for (int i = 0; i <= iE; i++)
+                        tempArray[i] = "0";
+                    M = M + String.Join("", tempArray);
+
+                }
+                if (iE >= 0)
+                {
+                    if (iE + 1 <= M.Length)
+                    {
+                        binIPartOut = M.Substring(0, iE + 1);
+                        //binFPartOut = "0" + M.Substring(iE + 1);
+                        binFPartOut = M.Substring(iE + 1);
+                    }
+                    else
+                    {
+                        int temp = M.Length;
+                        binIPartOut = M.Substring(0, temp);
+                        binFPartOut = M.Substring(temp);
+                    }
+                }
+                else
+                {
+                    // After Research
+                    int max = 0;
+                    tempArray = new String[Math.Abs(iE) + 1];
+                    for (int i = 1; i < Math.Abs(iE); i++) //for (int i = -1; i > iE; i--)
+                    {
+                        tempArray[max] = "0";
+                        max++;
+                    }
+                    if (max > 0)
+                        M = String.Join("", tempArray) + M;
+                    //else
+                    //    M = "0" + M;
+
+                    binIPartOut = "0";
+                    binFPartOut = M;
+                }
+                
+                /* Sign */
+                Sign = inNumber.Sign;
+                /*if ((z == 0) || (NumberFormat == 0))
+                    Sign = SignCharacterLeft;
+                else
+                    Sign = SignCharacterRight;
+                */
+                IPBNumber.NumberFormat NumberFormat = IPBNumber.NumberFormat.INTEGER;
+                switch (NumberFormat)
+                {
+                    case 0:
+                        CorrectResult = Sign + convert2to10IPart(binIPartOut) + "," + convert2to10FPart(binFPartOut, precision);
+                        CorrectResult2cc = Sign + binIPartOut + "," + binFPartOut;
+                        break;
+                        /*
+                    case 1:
+                        if (z == 0)
+                        {
+                            inNumber.CorrectResultFractionL = Sign + convert2to10IPart(binIPartOut) + "," + convert2to10FPart(binFPartOut, precision);
+                            inNumber.CorrectResultFraction2ccL = Sign + binIPartOut + "," + binFPartOut;
+                        }
+                        else
+                        {
+                            inNumber.CorrectResultFractionR = Sign + convert2to10IPart(binIPartOut) + "," + convert2to10FPart(binFPartOut, precision);
+                            inNumber.CorrectResultFraction2ccR = Sign + binIPartOut + "," + binFPartOut;
+                        }
+                        break;
+                    case 2:
+                        if (z == 0)
+                        {
+                            inNumber.CorrectResultIntervalL = Sign + convert2to10IPart(binIPartOut) + "," + convert2to10FPart(binFPartOut, precision);
+                            inNumber.CorrectResultInterval2ccL = Sign + binIPartOut + "," + binFPartOut;
+                        }
+                        else
+                        {
+                            inNumber.CorrectResultIntervalR = Sign + convert2to10IPart(binIPartOut) + "," + convert2to10FPart(binFPartOut, precision);
+                            inNumber.CorrectResultInterval2ccR = Sign + binIPartOut + "," + binFPartOut;
+                        }
+                        break;*/
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new FCCoreFunctionException("Func 'calcResForNorm' = [ " + ex.Message + " ]");
+            }
+            return CorrectResult;
+            //break;
+        }
+        public void calcResForDenorm(PBNumber inNumber ,int precision)
+        {
+            String[] tempArray;
+            String Sign;
+            String E,M;
+            String CorrectResult, CorrectResult2cc;
+            int Offset = (int)inNumber.Offset;
+            try
+            {
+                E = inNumber.Exponent;
+                M = inNumber.Mantissa;
+                tempArray = new String[Math.Abs(Offset) + 1];
+                for (int i = 1; i <= Offset; i++)
+                    tempArray[i] = "0";
+                M = String.Join("", tempArray) + M;
+
+                /* Sign */
+                Sign = inNumber.Sign;
+                /*if ((z == 0) || (NumberFormat == 0))
+                    Sign = SignCharacterLeft;
+                else
+                    Sign = SignCharacterRight;
+                */
+                IPBNumber.NumberFormat NumberFormat = IPBNumber.NumberFormat.INTEGER;
+                switch (NumberFormat)
+                {
+                    case IPBNumber.NumberFormat.INTEGER:
+                        CorrectResult = Sign + "0," + convert2to10FPart(M, precision);
+                        CorrectResult2cc = Sign + "0," + M;
+                        break;
+                    /*
+                     * case 1:
+                        if (z == 0)
+                        {
+                            inNumber.CorrectResultFractionL = Sign + "0," + convert2to10FPart(M, precision);
+                            inNumber.CorrectResultFraction2ccL = Sign + "0," + M;
+                        }
+                        else
+                        {
+                            inNumber.CorrectResultFractionR = Sign + "0," + convert2to10FPart(M, precision);
+                            inNumber.CorrectResultFraction2ccR = Sign + "0," + M;
+                        }
+                        break;
+                    case 2:
+                        if (z == 0)
+                        {
+                            inNumber.CorrectResultIntervalL = Sign + "0," + convert2to10FPart(M, precision);
+                            inNumber.CorrectResultInterval2ccL = Sign + "0," + M;
+                        }
+                        else
+                        {
+                            inNumber.CorrectResultIntervalR = Sign + "0," + convert2to10FPart(M, precision);
+                            inNumber.CorrectResultInterval2ccR = Sign + "0," + M;
+                        }
+                        break;
+                     */
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new FCCoreFunctionException("Func 'calcResForDenorm' = [ " + ex.Message + " ]");
+            }
+        }
+        public void calcResForZero(PBNumber inNumber)
+        {
+            try
+            {
+                /*
+                String Sign;
+                switch (inNumber.Name)
+                {
+                    case "Num32":
+                        Num32.Exponenta = "00000000";
+                        Num32.Mantisa = "000000000000000000000"; // 21
+                        break;
+                    case "Num64":
+                        if (z == 0)
+                        {
+                            Num64.Exponenta = Format == 0 ? "00000000000" : "00000000";
+                            Num64.Mantisa = Format == 0 ? "000000000000000000000000000000000000000000000000" : "000000000000000000000"; // 48 - 21
+                        }
+                        else
+                        {
+                            Num64.ExponentaRight = Format == 0 ? "00000000000" : "00000000";
+                            Num64.MantisaRight = Format == 0 ? "000000000000000000000000000000000000000000000000" : "000000000000000000000"; // 48 - 21
+                        }
+                        break;
+                    case "Num128":
+                        if (z == 0)
+                        {
+                            Num128.Exponenta = Format == 0 ? "000000000000000" : "00000000000";
+                            Num128.Mantisa = Format == 0 ? "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000" : "000000000000000000000000000000000000000000000000";  // 104 - 48
+                        }
+                        else
+                        {
+                            Num128.ExponentaRight = Format == 0 ? "000000000000000" : "00000000000";
+                            Num128.MantisaRight = Format == 0 ? "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000" : "000000000000000000000000000000000000000000000000";  // 104 - 48
+                        }
+                        break;
+                    case "Num256":
+                        if (z == 0)
+                        {
+                            Num256.Exponenta = Format == 0 ? "00000000000000000000" : "000000000000000";
+                            Num256.Mantisa = Format == 0 ? "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000" : "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"; // 219 - 104
+                        }
+                        else
+                        {
+                            Num256.ExponentaRight = Format == 0 ? "00000000000000000000" : "000000000000000";
+                            Num256.MantisaRight = Format == 0 ? "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000" : "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"; // 219 - 104
+                        }
+                        break;
+                }
+
+                /* Sign */
+               /* if ((z == 0) || (NumberFormat == 0))
+                    Sign = SignCharacterLeft;
+                else
+                    Sign = SignCharacterRight;
+
+                if (NumberFormat == 0)
+                {
+                    inNumber.CorrectResult = Sign + "0,0";
+                    inNumber.CorrectResultExp = Sign + "0,0";
+                    inNumber.CorrectResult2cc = Sign + "0,0";
+                    inNumber.CorrectResult2ccExp = Sign + "0,0";
+                    inNumber.Error = Sign + "0,0";
+                }
+
+                if (cycle == 2 && NumberFormat == 1)
+                {
+                    if (z == 0)
+                    {
+                        inNumber.CorrectResultFractionL = Sign + "0,0";
+                        inNumber.CorrectResultFractionExpL = Sign + "0,0";
+                        inNumber.CorrectResultFraction2ccL = Sign + "0,0";
+                        inNumber.CorrectResultFraction2ccExpL = Sign + "0,0";
+                        inNumber.ErrorFractionLeft = Sign + "0,0";
+                    }
+                    if (z == 1)
+                    {
+                        inNumber.CorrectResultFractionR = Sign + "0,0";
+                        inNumber.CorrectResultFractionExpR = Sign + "0,0";
+                        inNumber.CorrectResultFraction2ccR = Sign + "0,0";
+                        inNumber.CorrectResultFraction2ccExpR = Sign + "0,0";
+                        inNumber.ErrorIntervalRight = Sign + "0,0";
+                    }
+                }
+
+                if (cycle == 2 && NumberFormat == 2)
+                {
+                    if (z == 0)
+                    {
+                        inNumber.CorrectResultIntervalL = Sign + "0,0";
+                        inNumber.CorrectResultIntervalExpL = Sign + "0,0";
+                        inNumber.CorrectResultInterval2ccL = Sign + "0,0";
+                        inNumber.CorrectResultInterval2ccExpL = Sign + "0,0";
+                        inNumber.ErrorIntervalLeft = Sign + "0,0";
+                    }
+                    if (z == 1)
+                    {
+                        inNumber.CorrectResultIntervalR = Sign + "0,0";
+                        inNumber.CorrectResultIntervalExpR = Sign + "0,0";
+                        inNumber.CorrectResultInterval2ccR = Sign + "0,0";
+                        inNumber.CorrectResultInterval2ccExpR = Sign + "0,0";
+                        inNumber.ErrorIntervalRight = Sign + "0,0";
+                    }
+                }*/
+            }
+            catch (Exception ex)
+            {
+                throw new FCCoreFunctionException("Func 'calcResForZero' = [ " + ex.Message + " ]");
+            }
+        }
+        public void calcResForInf(PBNumber inNumber,  int precision)
+        {
+            String Sign;
+            try
+            {
+                /* Sign */
+                /*
+                if ((z == 0) || (NumberFormat == 0))
+                    Sign = SignCharacterLeft;
+                else
+                    Sign = SignCharacterRight;
+                inNumber.CorrectResult = DenormalizedNumber;
+                inNumber.CorrectResultExp = NormalizedNumber;
+
+                inNumber.CorrectResult2cc = Sign + convert10to2IPart(DenormIntPart) + "," + convert10to2FPart(DenormFloatPart);
+                inNumber.CorrectResult2ccExp = Sign + convertToExp(convert10to2IPart(DenormIntPart) + "," + convert10to2FPart(DenormFloatPart));
+
+                inNumber.Error = Sign + "0,0";
+                */
+            }
+            catch (Exception ex)
+            {
+                throw new FCCoreFunctionException("Func 'calcResForInf' = [ " + ex.Message + " ]");
+            }
+
+        }
+        public void calcResForNan(PBNumber inNumber )
+        {
+            try
+            {
+                /* 
+                if (NumberFormat == 0)
+                {
+                    inNumber.CorrectResult = "Невозможно представить в данном формате";
+                    inNumber.CorrectResultExp = "Невозможно представить в данном формате";
+                    inNumber.CorrectResult2cc = "Невозможно представить в данном формате";
+                    inNumber.CorrectResult2ccExp = "Невозможно представить в данном формате";
+                    inNumber.Error = "Невозможно представить в данном формате";
+                }
+
+                if (cycle == 2 && NumberFormat == 1)
+                {
+                    if (z == 0)
+                    {
+                        inNumber.CorrectResultFractionL = "Невозможно представить в данном формате";
+                        inNumber.CorrectResultFractionExpL = "Невозможно представить в данном формате";
+                        inNumber.CorrectResultFraction2ccL = "Невозможно представить в данном формате";
+                        inNumber.CorrectResultFraction2ccExpL = "Невозможно представить в данном формате";
+                        inNumber.ErrorFractionLeft = "Невозможно представить в данном формате";
+                    }
+                    if (z == 1)
+                    {
+                        inNumber.CorrectResultFractionR = "Невозможно представить в данном формате";
+                        inNumber.CorrectResultFractionExpR = "Невозможно представить в данном формате";
+                        inNumber.CorrectResultFraction2ccR = "Невозможно представить в данном формате";
+                        inNumber.CorrectResultFraction2ccExpR = "Невозможно представить в данном формате";
+                        inNumber.ErrorFractionRight = "Невозможно представить в данном формате";
+                    }
+                }
+
+
+                if (cycle == 2 && NumberFormat == 2)
+                {
+                    if (z == 0)
+                    {
+                        inNumber.CorrectResultIntervalL = "Невозможно представить в данном формате";
+                        inNumber.CorrectResultIntervalExpL = "Невозможно представить в данном формате";
+                        inNumber.CorrectResultInterval2ccL = "Невозможно представить в данном формате";
+                        inNumber.CorrectResultInterval2ccExpL = "Невозможно представить в данном формате";
+                        inNumber.ErrorIntervalLeft = "Невозможно представить в данном формате";
+                    }
+                    if (z == 1)
+                    {
+                        inNumber.CorrectResultIntervalR = "Невозможно представить в данном формате";
+                        inNumber.CorrectResultIntervalExpR = "Невозможно представить в данном формате";
+                        inNumber.CorrectResultInterval2ccR = "Невозможно представить в данном формате";
+                        inNumber.CorrectResultInterval2ccExpR = "Невозможно представить в данном формате";
+                        inNumber.ErrorIntervalRight = "Невозможно представить в данном формате";
+                    }
+                }*/
+            }
+            catch (Exception ex)
+            {
+                throw new FCCoreFunctionException("Func 'calcResForNan' = [ " + ex.Message + " ]");
+            }
+        }
+
+        public String convert2to10FPart(String inString, int Precision)
+        {
+            /*
+             * Перевод дробной части числа из 2 с/с в 10 с/с
+             */
+            String result = "0";
+            String divider = "0,5"; // делитель=степени 2
+
+            if (isStringZero(inString))
+            {
+                return "0";
+            }
+            try
+            {
+                for (int i = 0; i < inString.Length; i++)
+                {
+                    if (inString[i] == '1')
+                    {
+                        divider = DevideBy2(i);
+                        result = Addition(result, divider);
+                    }
+                    // divider = Devision(divider, "2", Precision);
+                }
+                return result.Substring(result.IndexOf(',') + 1, result.Length - result.IndexOf(',') - 1);
+            }
+            catch (Exception ex)
+            {
+                throw new FCCoreArithmeticException("Func 'convert2to10FPart' = [ " + ex.Message + " ]");
+            }
+        }
+
+        public static String DevideBy2(int Degree)
+        {
+            BigInteger Devident = 1;
+            String Result;
+            int Exp = 0;// Onle negative value from -1 to -Inf
+            String[] temp;
+            int i;
+            for (i = 0; i <= Degree; i++)
+            {
+                Devident *= 5;
+                if ((Devident.ToString()[0] == '1') && (i + 1 <= Degree))
+                {
+                    Exp++;
+                }
+            }
+
+            temp = new String[Exp];
+            for (i = 0; i < Exp; i++)
+                temp[i] = "0";
+            Result = String.Join("", temp) + Devident.ToString();
+            //if (Degree != 0)
+            return "+0," + Result;
+            //else
+            //    return "+" + Result;
+        }
+        public String convertToExp(String inputStr)
+        {
+            String currentValue;
+            String Exp = "";
+            String signExp;
+            try
+            {
+
+                if (inputStr.IndexOf('e') != -1)
+                {
+                    currentValue = inputStr;
+                    Exp = inputStr.Substring(inputStr.IndexOf('e') + 1);
+                    inputStr = inputStr.Substring(0, inputStr.IndexOf('e'));
+                }
+                if ((inputStr[0] != '-') && (inputStr[0] != '+'))
+                    inputStr = "+" + inputStr;
+
+                if (isStringZero(inputStr) == true)
+                    return inputStr.Substring(1, 3);
+
+                String outString = "";
+                String signTemp = "+";
+
+                if ((inputStr[1] == '0') && (inputStr[2] == ','))
+                {
+
+                    int offset = 0;
+                    for (int i = 3; i < inputStr.Length; i++)
+                        if (inputStr[i] != '0')
+                        {
+                            offset = i;
+                            break;
+                        }
+                    if (inputStr.Length == offset + 1)
+                        inputStr += "0";
+
+                    String temp1, temp2, temp3;
+                    temp1 = inputStr.Substring(offset, 1);
+                    temp2 = inputStr.Substring(offset + 1);
+                    temp3 = (offset - 2).ToString();
+                    //outString = signTemp + temp1 + ","+ temp2 +"e-"+ temp3;
+                    if (Exp == "")
+                    {
+                        if (int.Parse(temp3) > 0)
+                            signExp = "-";
+                        else
+                            signExp = "+";
+                        outString = temp1 + "," + temp2 + "e" + signExp + temp3;
+                    }
+                    else
+                    {
+                        int res = int.Parse("-" + temp3) + int.Parse(Exp);
+                        if (res >= 0)
+                            outString = temp1 + "," + temp2 + "e+" + res.ToString();
+                        else
+                            outString = temp1 + "," + temp2 + "e" + res.ToString();
+                    }
+                }
+                else
+                {
+                    int offset = inputStr.IndexOf(',') - 2;
+                    if (Exp != "")
+                        offset += int.Parse(Exp);
+                    if (offset >= 0)
+                        signExp = "+";
+                    else
+                        signExp = "";
+                    inputStr = inputStr.Replace(",", "");
+                    outString = inputStr.Substring(0, 2) + "," + inputStr.Substring(2) + "e" + signExp + offset.ToString();
+                    outString = outString.Substring(1, outString.Length - 1);
+                }
+                return outString;
+            }
+            catch (Exception ex)
+            {
+                throw new FCCoreArithmeticException("Func 'convertToExp' = [ " + ex.Message + " ]");
+            }
+        }
+        #endregion
     }
 }
