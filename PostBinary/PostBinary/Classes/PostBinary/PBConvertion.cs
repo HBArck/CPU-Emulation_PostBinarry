@@ -1356,7 +1356,7 @@ namespace PostBinary.Classes.PostBinary
         /// IMPORTANT- Doesn't count variety of formats (only Integer)
         /// </summary>
         /// <param name="inNumber">Input variable.</param>
-        public void calcRes(PBNumber inNumber)
+        public string toDigit(PBNumber inNumber)
         {
 
             String M = "", E = "", Mr = "", Er = "", binIPartOut, binFPartOut;
