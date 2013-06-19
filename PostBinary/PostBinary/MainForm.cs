@@ -312,6 +312,9 @@ namespace PostBinary
               //DEBUG END
               String testNumber = "1.25121312";
               PBNumber pbNumber = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
+              String teet2 = pbNumber.toDigit();
+              PBConvertion pbc = new PBConvertion();
+
               richTextBox1.Text = pbNumber.ToString();
           }
     }
