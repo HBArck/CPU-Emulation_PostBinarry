@@ -370,30 +370,30 @@ namespace PostBinary.Classes.PostBinary
         #endregion
 
 
+     
+        
+
+     
         /// <summary>
         /// Based on Number Exp and Mantisa function calculates Correct Value 
         /// Uses: Number.E, Number.M
         /// IMPORTANT- Doesn't count variety of formats (only Integer)
         /// </summary>
-        /// <param name="inNumber">Input variable.</param>
-        public string toDigit()
+        /// <param name="scientificNotation">true - returns digit in scientific notation, else - in simple format</param>
+        /// <returns>Returns digit accordingly parameters</returns>
+        public string toDigit(bool scientificNotation)
         {
-
-            String M = "", E = "", Mr = "", Er = "", binIPartOut, binFPartOut;
-
             String CorrectResult = "";
-            String CorrectResultExp, CorrectResult2ccExp;
+            String CorrectResultExp = "";
 
             try
             {
-                int z, cycle;
                 int Offset = 0;
                 int precision = 1900;
                 String Sign = "";
                 // temp Vars
                 IPBNumber.stateOfNumber currentState;
                 IPBNumber.NumberFormat NumberFormat = IPBNumber.NumberFormat.INTEGER;
-                String[] tempArray;
                 PBConvertion pbconvertion = new PBConvertion();
                 switch (this.Name)
                 {
@@ -406,126 +406,89 @@ namespace PostBinary.Classes.PostBinary
                 switch (NumberFormat)
                 {
                     case 0: Offset = (int)this.Offset; break;
-                    /*case 1:
-                    case 2: Offset = this.OffsetFI; break;
-                    case 3: Offset = this.OffsetTetra; break;
-                    case 4: Offset = this.OffsetFITetra; break;*/
                 }
-
-                //cycle = NumberFormat == 0 ? 1 : 2;
-                //z = RightPart == PartOfNumber.Left ? 0 : 1;
-                //for (z = 0; z < cycle; z++)
-                //{
-                //if (NumberFormat == 0 || z == 0) // Number
-                //{
-                /*M = this.Mantissa;
-                E = this.Exponent;*/
-                //}
-                /*else // Fraction or Interval
-                {
-                    Mr = this.MantisaRight;
-                    Er = this.ExponentaRight;
-                }*/
-                //if (z == 0)
                 currentState = this.NumberState;
-                //else
-                //    currentState = this.NumberStateRight;
 
                 switch (currentState)
                 {
                     case IPBNumber.stateOfNumber.NORMALIZED:
-                        //if (NumberFormat == 0)
                         CorrectResult = pbconvertion.calcResForNorm(this, precision);
-                        /*else
-                        {
-                            if (RightPart == PartOfNumber.Left)
-                                calcResForNorm(this, M, E, Offset, precision, z);
-                            else
-                                calcResForNorm(this, Mr, Er, Offset, precision, z);
-                        }*/
-
                         break;
-                    /*
-                    case stateOfNumber.denormalized:
-                        if (NumberFormat == 0)
-                            calcResForDenorm(this, M, E, Offset, precision, z);
-                        else
-                        {
-                            if (RightPart == PartOfNumber.Left)
-                                calcResForDenorm(this, M, E, Offset, precision, z);
-                            else
-                                calcResForDenorm(this, Mr, Er, Offset, precision, z);
-                        }
-
-                        break;
-
-                    case stateOfNumber.zero:
-                        calcResForZero(this, z, cycle);
-
-                        break;
-                        */
                     default:
                         pbconvertion.calcResForNan(this);
-
                         break;
-
-                }//switch
-                //stateOfNumber tempState = RightPart == PartOfNumber.Right ? this.NumberStateRight : this.NumberState;
+                }
                 IPBNumber.stateOfNumber tempState = this.NumberState;
-
-                /* Sign */
                 Sign = this.Sign;
-                //if (RightPart == PartOfNumber.Left)
-                //Sign = SignCharacterLeft;
-                /*else
-                    Sign = SignCharacterRight;*/
 
                 if ((tempState == IPBNumber.stateOfNumber.NORMALIZED) || (tempState == IPBNumber.stateOfNumber.DENORMALIZED))
                 {
-                    switch (NumberFormat)
+                    if (NumberFormat == 0)
                     {
-                        case 0:
-
-                            CorrectResultExp = Sign + pbconvertion.convertToExp(CorrectResult);
-                            /*CorrectResult2ccExp = Sign + convertToExp(this.CorrectResult2cc);
-                            */
-                            break;
-
-                        /*case 1:
-                            if (z == 0)
-                            {
-                                this.CorrectResultFractionExpL = Sign + convertToExp(this.CorrectResultFractionL);
-                                this.CorrectResultFraction2ccExpL = Sign + convertToExp(this.CorrectResultFraction2ccL);
-                            }
-                            else
-                            {
-                                this.CorrectResultFractionExpR = Sign + convertToExp(this.CorrectResultFractionR);
-                                this.CorrectResultFraction2ccExpR = Sign + convertToExp(this.CorrectResultFraction2ccR);
-                            }
-                            break;
-                        case 2:
-                            if (z == 0)
-                            {
-                                this.CorrectResultIntervalExpL = Sign + convertToExp(this.CorrectResultIntervalL);
-                                this.CorrectResultInterval2ccExpL = Sign + convertToExp(this.CorrectResultInterval2ccL);
-                            }
-                            else
-                            {
-                                this.CorrectResultIntervalExpR = Sign + convertToExp(this.CorrectResultIntervalR);
-                                this.CorrectResultInterval2ccExpR = Sign + convertToExp(this.CorrectResultInterval2ccR);
-                            }
-                            break;*/
+                        CorrectResultExp = pbconvertion.convertToExp(CorrectResult);
                     }
                 }
 
-                //}// for
-
-                return signCharacter + CorrectResult;
+                String result = (scientificNotation) ? CorrectResultExp : CorrectResult;
+                return signCharacter + result;
             }
             catch (Exception ex)
             {
                 throw new FCCoreArithmeticException("Func 'calcRes' = [ " + ex.Message + " ]");
             }
+        }
+
+        /// <summary>
+        /// Based on Number Exp and Mantisa function calculates Correct Value 
+        /// Uses: Number.E, Number.M
+        /// IMPORTANT- Doesn't count variety of formats (only Integer)
+        /// </summary>
+        /// <param name="number">Number of significant digits</param>
+        /// <param name="scientificNotation">true - returns digit in scientific notation, else - in simple format</param>
+        /// <returns>Returns digit accordingly parameters</returns>
+        public string toDigit(int number, bool scientificNotation)
+        {
+            String digit = ""; 
+            int signConsider = 1; // toDigit() always returns digit with sign
+            int dotConsider;
+            String resultDigit;
+            String exp = "";
+
+            digit = toDigit(scientificNotation);
+            dotConsider = (digit.IndexOf(',') < number + 1) ? 1 : 0; // is dot inside of significant bits
+
+            if (scientificNotation)
+            {
+                int expIndex = digit.IndexOf('e');
+                exp = digit.Substring(expIndex);
+                digit = digit.Substring(0, expIndex);
+            }
+
+            resultDigit = (digit.Length > number) ? digit.Substring(0, number + signConsider + dotConsider) : digit;
+            return resultDigit + exp;
+        }
+
+        /// <summary>
+        /// Based on Number Exp and Mantisa function calculates Correct Value 
+        /// Uses: Number.E, Number.M
+        /// IMPORTANT- Doesn't count variety of formats (only Integer)
+        /// </summary>
+        /// <param name="number">Number of significant digits</param>
+        /// <returns>Returns digit accordingly parameters in simple format</returns>
+        public string toDigit(int number)
+        {
+            return toDigit(number, false);
+        }
+
+        /// <summary>
+        /// Based on Number Exp and Mantisa function calculates Correct Value 
+        /// Uses: Number.E, Number.M
+        /// IMPORTANT- Doesn't count variety of formats (only Integer)
+        /// </summary>
+        /// <returns>Returns full digit in simple format</returns>
+        public string toDigit()
+        {
+            return toDigit(-1, false);
         }
 
         /// <summary>

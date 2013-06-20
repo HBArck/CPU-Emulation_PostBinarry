@@ -1494,7 +1494,7 @@ namespace PostBinary.Classes.PostBinary
                     outString = inputStr.Substring(0, 2) + "," + inputStr.Substring(2) + "e" + signExp + offset.ToString();
                     outString = outString.Substring(1, outString.Length - 1);
                 }
-                return outString;
+                return deleteNonSignificantBits(outString);
             }
             catch (Exception ex)
             {
