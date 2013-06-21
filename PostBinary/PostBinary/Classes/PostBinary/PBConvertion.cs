@@ -1444,7 +1444,6 @@ namespace PostBinary.Classes.PostBinary
                     return inputStr.Substring(1, 3);
 
                 String outString = "";
-                String signTemp = "+";
 
                 if ((inputStr[1] == '0') && (inputStr[2] == ','))
                 {
@@ -1463,22 +1462,16 @@ namespace PostBinary.Classes.PostBinary
                     temp1 = inputStr.Substring(offset, 1);
                     temp2 = inputStr.Substring(offset + 1);
                     temp3 = (offset - 2).ToString();
-                    //outString = signTemp + temp1 + ","+ temp2 +"e-"+ temp3;
                     if (Exp == "")
                     {
-                        if (int.Parse(temp3) > 0)
-                            signExp = "-";
-                        else
-                            signExp = "+";
-                        outString = temp1 + "," + temp2 + "e" + signExp + temp3;
+                         String expSign = (int.Parse(temp3) > 0) ? "-" : "+";
+                         outString = temp1 + "," + temp2 + "e" + expSign + temp3;
                     }
                     else
                     {
                         int res = int.Parse("-" + temp3) + int.Parse(Exp);
-                        if (res >= 0)
-                            outString = temp1 + "," + temp2 + "e+" + res.ToString();
-                        else
-                            outString = temp1 + "," + temp2 + "e" + res.ToString();
+                        String expSign = (res >= 0) ? "+" : "";
+                        outString = deleteNonSignificantBits(temp1 + "," + temp2) + "e" + expSign + res.ToString();
                     }
                 }
                 else
@@ -1491,10 +1484,11 @@ namespace PostBinary.Classes.PostBinary
                     else
                         signExp = "";
                     inputStr = inputStr.Replace(",", "");
-                    outString = inputStr.Substring(0, 2) + "," + inputStr.Substring(2) + "e" + signExp + offset.ToString();
-                    outString = outString.Substring(1, outString.Length - 1);
+                    outString = deleteNonSignificantBits(inputStr.Substring(0, 2) + "," + inputStr.Substring(2)) + "e" + signExp + offset.ToString();
+
+                    outString = outString.Substring(1);
                 }
-                return deleteNonSignificantBits(outString);
+                return outString;
             }
             catch (Exception ex)
             {
@@ -1509,7 +1503,7 @@ namespace PostBinary.Classes.PostBinary
         /// </summary>
         /// <param name="inString"></param>
         /// <returns></returns>
-        private String deleteNonSignificantBits(String inString)
+        public static String deleteNonSignificantBits(String inString)
         {
             int indexDot = inString.IndexOf(',');
 
@@ -1519,7 +1513,7 @@ namespace PostBinary.Classes.PostBinary
                 inString = inString.Substring(1);
                 firstZero = inString.IndexOf('0');
             }
-            
+
             int lastZero = inString.LastIndexOf('0');
             while ((lastZero == inString.Length - 1) && (lastZero > indexDot))
             {

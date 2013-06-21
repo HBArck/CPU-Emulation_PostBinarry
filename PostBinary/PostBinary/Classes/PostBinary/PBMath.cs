@@ -22,11 +22,28 @@ namespace PostBinary.Classes.PostBinary
         /// <returns></returns>
         public PBNumber ADD(PBNumber leftOperand, PBNumber rightOperand)
         {
-         /*   // сложение тетракодов  
-        // (если und = true - сумма с учетом выходного переноса)
-            String opA;
-            String opB;
-            bool und;
+            return null;// ЗАГЛУШКА
+        }
+
+        public static int CMP(String opA, String opB) {
+            PBConvertion pbconvertion = new PBConvertion();
+            if (opA.Length > 31)
+                throw new ArithmeticException("");
+            int a = Int32.Parse(pbconvertion.convert2to10IPart(opA));
+            int b = Int32.Parse(pbconvertion.convert2to10IPart(opB));
+
+            int result = 0;
+            if (a > b)
+                result = 1;
+            else if (a < b)
+                result = -1;
+
+            return result;
+        }
+        public static String ADDTetra(String opA, String opB, bool und)
+        {
+            // сложение тетракодов  
+            // (если und = true - сумма с учетом выходного переноса)
             String opC = "";	//строка-результат
 
             //если одна из строк-операндов пустая - возвращаем пустую
@@ -45,117 +62,321 @@ namespace PostBinary.Classes.PostBinary
                 switch (opA[i])
                 {
                     case '0':
-                        if (buf == '0') opC = opC.Insert(0, opB[i].ToString());
-                        else if (buf == '1')
+                        switch (buf)
                         {
-                            buf = opB[i];
-                            if (opB[i] == '0') opC = opC.Insert(0, "1");
-                            if (opB[i] == '1') opC = opC.Insert(0, "0");
-                            if (opB[i] == 'A') opC = opC.Insert(0, "M");
-                            if (opB[i] == 'M') opC = opC.Insert(0, "A");
-                        }
-                        else if (buf == 'A')
-                        {
-                            if (opB[i] == '0') { opC = opC.Insert(0, "A"); buf = '0'; }
-                            if (opB[i] == '1') { opC = opC.Insert(0, "M"); buf = 'A'; }
-                            if (opB[i] == 'A') { opC = opC.Insert(0, "0"); buf = 'A'; }
-                            if (opB[i] == 'M') { opC = opC.Insert(0, "1"); buf = '0'; }
-                        }
-                        else if (buf == 'M')
-                        {
-                            if (opB[i] == '0') { opC = opC.Insert(0, "M"); buf = '0'; }
-                            if (opB[i] == '1') { opC = opC.Insert(0, "A"); buf = 'M'; }
-                            if (opB[i] == 'A') { opC = opC.Insert(0, "1"); buf = '0'; }
-                            if (opB[i] == 'M') { opC = opC.Insert(0, "0"); buf = 'M'; }
+                            case '0':
+                                opC = opC.Insert(0, opB[i].ToString());
+                                break;
+                            case '1':
+                                buf = opB[i];
+                                switch (opB[i])
+                                {
+                                    case '0':
+                                        opC = opC.Insert(0, "1");
+                                        break;
+                                    case '1':
+                                        opC = opC.Insert(0, "0");
+                                        break;
+                                    case 'A':
+                                        opC = opC.Insert(0, "M");
+                                        break;
+                                    case 'M':
+                                        opC = opC.Insert(0, "A");
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            case 'A':
+                                switch (opB[i])
+                                {
+                                    case '0':
+                                        opC = opC.Insert(0, "A"); 
+                                        buf = '0';
+                                        break;
+                                    case '1':
+                                        opC = opC.Insert(0, "M");
+                                        buf = 'A';
+                                        break;
+                                    case 'A':
+                                        opC = opC.Insert(0, "0"); 
+                                        buf = 'A';
+                                        break;
+                                    case 'M':
+                                        opC = opC.Insert(0, "1"); 
+                                        buf = '0';
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            case 'M':
+                                switch (opB[i])
+                                {
+                                    case '0':
+                                        opC = opC.Insert(0, "M"); 
+                                        buf = '0';
+                                        break;
+                                    case '1':
+                                        opC = opC.Insert(0, "A"); 
+                                        buf = 'M';
+                                        break;
+                                    case 'A':
+                                        opC = opC.Insert(0, "1"); 
+                                        buf = '0';
+                                        break;
+                                    case 'M':
+                                        opC = opC.Insert(0, "0"); 
+                                        buf = 'M';
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            default:
+                                break;
                         }
                         break;
-
                     case '1':
-                        if (buf == '0')
+                        switch (buf)
                         {
-                            buf = opB[i];
-                            if (opB[i] == '0') opC = opC.Insert(0, "1");
-                            if (opB[i] == '1') opC = opC.Insert(0, "0");
-                            if (opB[i] == 'A') opC = opC.Insert(0, "M");
-                            if (opB[i] == 'M') opC = opC.Insert(0, "A");
+                            case '0':
+                                buf = opB[i];
+                                switch (opB[i])
+                                {
+                                    case '0':
+                                        opC = opC.Insert(0, "1");
+                                        break;
+                                    case '1':
+                                        opC = opC.Insert(0, "0");
+                                        break;
+                                    case 'A':
+                                        opC = opC.Insert(0, "M");
+                                        break;
+                                    case 'M':
+                                        opC = opC.Insert(0, "A");
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            case '1':
+                                opC = opC.Insert(0, opB[i].ToString());
+                                break;
+                            case 'A':
+                                switch (opB[i])
+                                {
+                                    case '0':
+                                        opC = opC.Insert(0, "M"); 
+                                        buf = 'A';
+                                        break;
+                                    case '1':
+                                        opC = opC.Insert(0, "A"); 
+                                        buf = '1';
+                                        break;
+                                    case 'A':
+                                        opC = opC.Insert(0, "1"); 
+                                        buf = 'A';
+                                        break;
+                                    case 'M':
+                                        opC = opC.Insert(0, "0"); 
+                                        buf = '1';
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            case 'M':
+                                switch (opB[i])
+                                {
+                                    case '0':
+                                        opC = opC.Insert(0, "A"); 
+                                        buf = 'M';
+                                        break;
+                                    case '1':
+                                        opC = opC.Insert(0, "M");
+                                        buf = '1';
+                                        break;
+                                    case 'A':
+                                        opC = opC.Insert(0, "0");
+                                        buf = '1';
+                                        break;
+                                    case 'M':
+                                        opC = opC.Insert(0, "1"); 
+                                        buf = 'M';
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            default:
+                                break;
                         }
-                        else if (buf == '1') opC = opC.Insert(0, opB[i].ToString());
-                        else if (buf == 'A')
-                        {
-                            if (opB[i] == '0') { opC = opC.Insert(0, "M"); buf = 'A'; }
-                            if (opB[i] == '1') { opC = opC.Insert(0, "A"); buf = '1'; }
-                            if (opB[i] == 'A') { opC = opC.Insert(0, "1"); buf = 'A'; }
-                            if (opB[i] == 'M') { opC = opC.Insert(0, "0"); buf = '1'; }
-                        }
-                        else if (buf == 'M')
-                        {
-                            if (opB[i] == '0') { opC = opC.Insert(0, "A"); buf = 'M'; }
-                            if (opB[i] == '1') { opC = opC.Insert(0, "M"); buf = '1'; }
-                            if (opB[i] == 'A') { opC = opC.Insert(0, "0"); buf = '1'; }
-                            if (opB[i] == 'M') { opC = opC.Insert(0, "1"); buf = 'M'; }
-                        }
+
                         break;
 
                     case 'A':
-                        if (buf == '0')
+                        switch (buf)
                         {
-                            if (opB[i] == '0') { opC = opC.Insert(0, "A"); buf = '0'; }
-                            if (opB[i] == '1') { opC = opC.Insert(0, "M"); buf = 'A'; }
-                            if (opB[i] == 'A') { opC = opC.Insert(0, "0"); buf = 'A'; }
-                            if (opB[i] == 'M') { opC = opC.Insert(0, "1"); buf = '0'; }
+                            case '0':
+                                switch (opB[i])
+                                {
+                                    case '0':
+                                        opC = opC.Insert(0, "A"); 
+                                        buf = '0';
+                                        break;
+                                    case '1':
+                                        opC = opC.Insert(0, "M"); 
+                                        buf = 'A';
+                                        break;
+                                    case 'A':
+                                        opC = opC.Insert(0, "0"); 
+                                        buf = 'A';
+                                        break;
+                                    case 'M':
+                                        opC = opC.Insert(0, "1"); 
+                                        buf = '0';
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            case '1':
+                                switch (opB[i])
+                                {
+                                    case '0':
+                                        opC = opC.Insert(0, "M"); 
+                                        buf = 'A';
+                                        break;
+                                    case '1':
+                                        opC = opC.Insert(0, "A"); 
+                                        buf = '1';
+                                        break;
+                                    case 'A':
+                                        opC = opC.Insert(0, "1"); 
+                                        buf = 'A';
+                                        break;
+                                    case 'M':
+                                        opC = opC.Insert(0, "0"); 
+                                        buf = '1';
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            case 'A':
+                                opC = opC.Insert(0, opB[i].ToString());
+                                break;
+                            case 'M':
+                                buf = opB[i];
+                                switch (opB[i])
+                                {
+                                    case '0':
+                                        opC = opC.Insert(0, "1");
+                                        break;
+                                    case '1':
+                                        opC = opC.Insert(0, "0");
+                                        break;
+                                    case 'A':
+                                        opC = opC.Insert(0, "M");
+                                        break;
+                                    case 'M':
+                                        opC = opC.Insert(0, "A");
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            default:
+                                break;
                         }
-                        else if (buf == '1')
-                        {
-                            if (opB[i] == '0') { opC = opC.Insert(0, "M"); buf = 'A'; }
-                            if (opB[i] == '1') { opC = opC.Insert(0, "A"); buf = '1'; }
-                            if (opB[i] == 'A') { opC = opC.Insert(0, "1"); buf = 'A'; }
-                            if (opB[i] == 'M') { opC = opC.Insert(0, "0"); buf = '1'; }
-                        }
-                        else if (buf == 'A') opC = opC.Insert(0, opB[i].ToString());
-                        else if (buf == 'M')
-                        {
-                            buf = opB[i];
-                            if (opB[i] == '0') opC = opC.Insert(0, "1");
-                            if (opB[i] == '1') opC = opC.Insert(0, "0");
-                            if (opB[i] == 'A') opC = opC.Insert(0, "M");
-                            if (opB[i] == 'M') opC = opC.Insert(0, "A");
-                        }
+
                         break;
                     default:
-                        if (buf == '0')
+                        switch (buf)
                         {
-                            if (opB[i] == '0') { opC = opC.Insert(0, "M"); buf = '0'; }
-                            if (opB[i] == '1') { opC = opC.Insert(0, "A"); buf = 'M'; }
-                            if (opB[i] == 'A') { opC = opC.Insert(0, "1"); buf = '0'; }
-                            if (opB[i] == 'M') { opC = opC.Insert(0, "0"); buf = 'M'; }
-                        }
-                        else if (buf == '1')
-                        {
-                            if (opB[i] == '0') { opC = opC.Insert(0, "A"); buf = 'M'; }
-                            if (opB[i] == '1') { opC = opC.Insert(0, "M"); buf = '1'; }
-                            if (opB[i] == 'A') { opC = opC.Insert(0, "0"); buf = '1'; }
-                            if (opB[i] == 'M') { opC = opC.Insert(0, "1"); buf = 'M'; }
-                        }
-                        else if (buf == 'M') opC = opC.Insert(0, opB[i].ToString());
-                        else if (buf == 'A')
-                        {
-                            buf = opB[i];
-                            if (opB[i] == '0') opC = opC.Insert(0, "1");
-                            if (opB[i] == '1') opC = opC.Insert(0, "0");
-                            if (opB[i] == 'A') opC = opC.Insert(0, "M");
-                            if (opB[i] == 'M') opC = opC.Insert(0, "A");
+                            case '0':
+                                switch (opB[i])
+                                {
+                                    case '0':
+                                        opC = opC.Insert(0, "M");
+                                        buf = '0';
+                                        break;
+                                    case '1':
+                                        opC = opC.Insert(0, "A");
+                                        buf = 'M';
+                                        break;
+                                    case 'A':
+                                        opC = opC.Insert(0, "1"); 
+                                        buf = '0';
+                                        break;
+                                    case 'M':
+                                        opC = opC.Insert(0, "0"); 
+                                        buf = 'M';
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            case '1':
+                                switch (opB[i])
+                                {
+                                    case '0':
+                                        opC = opC.Insert(0, "A"); 
+                                        buf = 'M';
+                                        break;
+                                    case '1':
+                                        opC = opC.Insert(0, "M"); 
+                                        buf = '1';
+                                        break;
+                                    case 'A':
+                                        opC = opC.Insert(0, "0"); 
+                                        buf = '1';
+                                        break;
+                                    case 'M':
+                                        opC = opC.Insert(0, "1"); 
+                                        buf = 'M';
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            case 'A':
+                                buf = opB[i];
+                                switch (opB[i])
+                                {
+                                    case '0':
+                                        opC = opC.Insert(0, "1");
+                                        break;
+                                    case '1':
+                                        opC = opC.Insert(0, "0");
+                                        break;
+                                    case 'A':
+                                        opC = opC.Insert(0, "M");
+                                        break;
+                                    case 'M':
+                                        opC = opC.Insert(0, "A");
+                                        break;
+                                    default:
+                                        break;
+                                }
+
+                                break;
+                            case 'M':
+                                opC = opC.Insert(0, opB[i].ToString());
+                                break;
+                            default:
+                                break;
                         }
                         break;
                 }
-
             }
 
             if (buf != '0' && und) opC = opC.Insert(0, buf.ToString()); // учитываем выходной перенос
 
             /* ни в коем случае при сложении для мантиссы нельзя удалять незначащие (те которые спереди) нули!!! */
-            /*
-            return opC;*/
-            return null;// ЗАГЛУШКА
+
+            return opC;
         }
 
         /// <summary>

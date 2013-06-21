@@ -464,7 +464,8 @@ namespace PostBinary.Classes.PostBinary
                 digit = digit.Substring(0, expIndex);
             }
 
-            resultDigit = (digit.Length > number) ? digit.Substring(0, number + signConsider + dotConsider) : digit;
+            int digitLengthWithOffset = number + signConsider + dotConsider;
+            resultDigit = (digit.Length > digitLengthWithOffset) ? PBConvertion.deleteNonSignificantBits(digit.Substring(0, digitLengthWithOffset)) : digit;
             return resultDigit + exp;
         }
 
@@ -765,8 +766,8 @@ namespace PostBinary.Classes.PostBinary
                         break;
 
                     case IPBNumber.RoundingType.POSITIVE_INFINITY:// +Inf 
-                        M = result.Substring(1, currMBits);
-                        if (inStringNumber.Sign[0] == '+')
+                        M = result.Substring(0, currMBits);
+                        if (inStringNumber.Sign[0] == '0')
                         {
                             if (!pbConvertion.checkStringFull(M))
                             {
@@ -795,8 +796,8 @@ namespace PostBinary.Classes.PostBinary
 
                     case IPBNumber.RoundingType.NEGATIVE_INFINITY:
                         // -Inf
-                        M = result.Substring(1, currMBits);
-                        if (inStringNumber.Sign[0] == '-')
+                        M = result.Substring(0, currMBits);
+                        if (inStringNumber.Sign[0] == '1')
                         {
                             if (!pbConvertion.checkStringFull(M))
                             {
