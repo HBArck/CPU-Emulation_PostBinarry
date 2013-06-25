@@ -320,12 +320,19 @@ namespace PostBinary
               Stack _Stack = parser.GetStack();
               Stack<Command> pbStack;// = new Stack<Com>();
               pbStack = _Stack.populateStack();
+              String temp = "";
               foreach (var currElem in pbStack)
               {
-                if (currElem.leftOperand != null)
-                    commandTable1.AddItem(Command.commNames[currElem.Code] + " " + currElem.leftOperand.InitValue, currElem.leftOperand.Sign + currElem.leftOperand.Exponent + currElem.leftOperand.Mantissa);
-                else
-                    commandTable1.AddItem(string.Format(Command.commNames[currElem.Code], currElem.MemoryCellNeeded), "0" + PBNumber.EmptyExponent[2] + PBNumber.EmptyMantissa[2]);
+                  if (currElem.leftOperand != null)
+                      commandTable1.AddItem(Command.commNames[currElem.Code] + " " + currElem.leftOperand.InitValue, currElem.leftOperand.Sign + currElem.leftOperand.Exponent + currElem.leftOperand.Mantissa);
+                  else
+                  {
+                      if (currElem.Code != (int)CommandBase.commVals.Mem)
+                        temp = string.Format(Command.commNames[currElem.Code] +" "+ Command.commNames[(int)CommandBase.commVals.Mem], currElem.MemoryCellNeeded);
+                      else
+                          temp = string.Format(Command.commNames[currElem.Code] , currElem.MemoryCellNeeded);
+                      commandTable1.AddItem(temp, "0" + PBNumber.EmptyExponent[2] + PBNumber.EmptyMantissa[2]);
+                  }
               }
               //DEBUG END
           }

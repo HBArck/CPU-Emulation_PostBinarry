@@ -131,7 +131,7 @@ namespace PostBinary.Components
         #endregion
 
         #region Properties
-        private int width = 266; // 522
+        private int width = 522; // 266
         private int height = 14;
         TextBox tempBox;
         [DefaultValue("")]
@@ -249,7 +249,7 @@ namespace PostBinary.Components
                 M = new System.Drawing.Pen(System.Drawing.Color.FromArgb(205, 115, 107));
                 int count = 0;
 
-                int scaling = 1; 
+                int scaling = 2; 
                 for (int i = 258; i < 0 || count < Number.Length; i--, count++)
                 {
 

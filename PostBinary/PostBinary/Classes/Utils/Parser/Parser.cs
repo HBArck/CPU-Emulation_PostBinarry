@@ -879,14 +879,15 @@ namespace PostBinary.Classes.Utils.Parser
                 _outputQueue.Enqueue(nc);
             }
 
-            bool floatAnswer = _outputQueue.Any(v => v.NumberType == NumberClass.NumberTypes.Float);
+            bool floatAnswer = true;// _outputQueue.Any(v => v.NumberType == NumberClass.NumberTypes.Float);
             var intStack = new Stack<int>();
             int lastMemoryCell = 0;
 
             if (floatAnswer || _outputQueue.Any(v => v.Operator == "/"))
             {
                 var dblStack = new Stack<double>();
-
+                String leftOperand, rightOperand;
+                int leftOperandInt, rightOperandInt;
                 foreach (var nc in _outputQueue)
                 {
                     if (nc.NumberType == NumberClass.NumberTypes.Integer)
@@ -901,16 +902,29 @@ namespace PostBinary.Classes.Utils.Parser
                     }
                     if (nc.NumberType == NumberClass.NumberTypes.Operator)
                     {
-                        
+                       
                         // Stack filling
                         if ((dblStack.Peek() > 0) && (dblStack.ElementAt<double>(1) > 0))
-                            _pbStack.PushCommand(nc.Operator, dblStack.Pop().ToString(), dblStack.Pop().ToString());
+                        {
+                            rightOperand = dblStack.Pop().ToString();
+                            leftOperand = dblStack.Pop().ToString();
+                            _pbStack.PushCommand(nc.Operator, leftOperand, rightOperand);
+                        }
                         else
                         {
                             if (dblStack.Peek() < 0)
-                                _pbStack.PushCommand(nc.Operator, (int)-(dblStack.Pop() + 1), dblStack.Pop().ToString());
+                            {
+                                leftOperandInt = (int)-(dblStack.Pop() + 1);
+                                rightOperand = dblStack.Pop().ToString();
+                                _pbStack.PushCommand(nc.Operator, leftOperandInt, rightOperand);
+                            }
                             else
-                                _pbStack.PushCommand(nc.Operator, dblStack.Pop().ToString(), (int)-(dblStack.Pop()+1));
+                            {
+                                
+                                leftOperand = dblStack.Pop().ToString();
+                                rightOperandInt = (int)-(dblStack.Pop() + 1);
+                                _pbStack.PushCommand(nc.Operator, leftOperand, rightOperandInt);
+                            }
                         }
                         //double val = DoMath(nc.Operator, dblStack.Pop(), dblStack.Pop());
 

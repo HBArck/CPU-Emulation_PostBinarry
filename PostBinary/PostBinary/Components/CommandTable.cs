@@ -106,7 +106,7 @@ namespace PostBinary.Components
             // Number Right Border
             e.Graphics.DrawLine(borderLRB, 29, 1, 29, Height - 1);
             // Command Right Border
-            e.Graphics.DrawLine(borderLRB, 88, 1, 88, Height - 1);
+            e.Graphics.DrawLine(borderLRB, 118, 1, 118, Height - 1);
 
             borderLRB.Dispose();
             inner.Dispose();

@@ -224,9 +224,9 @@
             // 
             this.VarList.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.VarList.ItemHeight = 16;
-            this.VarList.Location = new System.Drawing.Point(653, 97);
+            this.VarList.Location = new System.Drawing.Point(709, 97);
             this.VarList.Name = "VarList";
-            this.VarList.Size = new System.Drawing.Size(227, 356);
+            this.VarList.Size = new System.Drawing.Size(171, 356);
             this.VarList.TabIndex = 15;
             this.VarList.DoubleClick += new System.EventHandler(this.listBox2_DoubleClick);
             // 
@@ -236,10 +236,10 @@
             this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox3.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.textBox3.Enabled = false;
-            this.textBox3.Location = new System.Drawing.Point(108, 78);
+            this.textBox3.Location = new System.Drawing.Point(138, 78);
             this.textBox3.Name = "textBox3";
             this.textBox3.ReadOnly = true;
-            this.textBox3.Size = new System.Drawing.Size(538, 20);
+            this.textBox3.Size = new System.Drawing.Size(564, 20);
             this.textBox3.TabIndex = 22;
             this.textBox3.Text = "Value";
             this.textBox3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -253,7 +253,7 @@
             this.textBox2.Location = new System.Drawing.Point(49, 78);
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(60, 20);
+            this.textBox2.Size = new System.Drawing.Size(93, 20);
             this.textBox2.TabIndex = 21;
             this.textBox2.Text = "Operation";
             this.textBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -278,7 +278,7 @@
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(653, 78);
+            this.textBox1.Location = new System.Drawing.Point(709, 78);
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(61, 20);
@@ -292,10 +292,10 @@
             this.textBox5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox5.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.textBox5.Enabled = false;
-            this.textBox5.Location = new System.Drawing.Point(709, 78);
+            this.textBox5.Location = new System.Drawing.Point(767, 78);
             this.textBox5.Name = "textBox5";
             this.textBox5.ReadOnly = true;
-            this.textBox5.Size = new System.Drawing.Size(171, 20);
+            this.textBox5.Size = new System.Drawing.Size(113, 20);
             this.textBox5.TabIndex = 24;
             this.textBox5.Text = "Value";
             this.textBox5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -364,7 +364,7 @@
             this.commandTable1.Location = new System.Drawing.Point(20, 97);
             this.commandTable1.Margin = new System.Windows.Forms.Padding(4);
             this.commandTable1.Name = "commandTable1";
-            this.commandTable1.Size = new System.Drawing.Size(626, 355);
+            this.commandTable1.Size = new System.Drawing.Size(682, 355);
             this.commandTable1.TabIndex = 32;
             // 
             // MainForm
