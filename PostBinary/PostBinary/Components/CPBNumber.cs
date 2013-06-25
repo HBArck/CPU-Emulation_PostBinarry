@@ -47,7 +47,7 @@ namespace PostBinary.Components
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.Name = "CPBNumber";
-            this.Size = new System.Drawing.Size(260, 20);
+            this.Size = new System.Drawing.Size(160, 20);
             this.ResumeLayout(false);
 
         }
@@ -131,7 +131,7 @@ namespace PostBinary.Components
         #endregion
 
         #region Properties
-        private int width = 522;
+        private int width = 266; // 522
         private int height = 14;
         TextBox tempBox;
         [DefaultValue("")]
@@ -249,13 +249,14 @@ namespace PostBinary.Components
                 M = new System.Drawing.Pen(System.Drawing.Color.FromArgb(205, 115, 107));
                 int count = 0;
 
+                int scaling = 1; 
                 for (int i = 258; i < 0 || count < Number.Length; i--, count++)
                 {
 
-                    Point StartPos1 = new Point(i * 2 + paddingLeftRight, paddingTopBottom);
-                    Point EndPos1 = new Point(i * 2 + paddingLeftRight, height - paddingTopBottom);
-                    Point StartPos2 = new Point((i) * 2 + 1 + paddingLeftRight, paddingTopBottom);
-                    Point EndPos2 = new Point((i) * 2 + 1 + paddingLeftRight, height - paddingTopBottom);
+                    Point StartPos1 = new Point(i * scaling + paddingLeftRight, paddingTopBottom);
+                    Point EndPos1 = new Point(i * scaling + paddingLeftRight, height - paddingTopBottom);
+                    Point StartPos2 = new Point((i) * scaling + 1 + paddingLeftRight, paddingTopBottom);
+                    Point EndPos2 = new Point((i) * scaling + 1 + paddingLeftRight, height - paddingTopBottom);
                     switch (Number[Number.Length - count - 1])
                     {
                         case '0':

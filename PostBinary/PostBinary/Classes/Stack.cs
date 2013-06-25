@@ -11,10 +11,10 @@ namespace PostBinary.Classes
     public class CommandBase
     {
         public enum commVals { Load, Add, Sub, Mul, Div, Exp, Mem };
-        public readonly String[] commNames = { "LOAD", "ADD", "SUB", "MUL", "DIV", "EXP", "M{0}" };
     }
     public class Command : CommandBase
     {
+        public static String[] commNames = new String[]{ "LOAD", "ADD", "SUB", "MUL", "DIV", "EXP", "M{0}" };
         /*public System.Collections.Hashtable commands = new System.Collections.Hashtable();*/
         public int Code;
         public PBNumber leftOperand;
@@ -42,7 +42,13 @@ namespace PostBinary.Classes
                         this.Code = (int)inCommandInstruction;
                         try
                         {
-                            this.leftOperand = (PBNumber)inValue;//new PBNumber(()inValue, IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
+                            if (inValue.GetType() == typeof(int))
+                            {
+                                this.leftOperand = null;
+                                this.MemoryCellNeeded = (int)inValue;
+                            }
+                            else
+                                this.leftOperand = (PBNumber)inValue;//new PBNumber(()inValue, IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
                         }
                         catch (Exception ex)
                         {
@@ -54,13 +60,30 @@ namespace PostBinary.Classes
                         this.Code = (int)inCommandInstruction;
                         try
                         {
-                            this.MemoryCellUsed = int.Parse((String)inValue);
+                            this.MemoryCellUsed = (int)inValue;
                         }
                         catch (Exception ex)
                         {
                             throw new IncorrectMemoryCellAddress("Command(" + inCommandInstruction + ", " + (String)inValue + ")=[ " + ex.Message + " ]");
                         }
 
+                        break;
+                    default :
+                        this.Code = (int)inCommandInstruction;
+                        try
+                        {
+                            if (inValue.GetType() == typeof(int))
+                            {
+                                this.leftOperand = null;
+                                this.MemoryCellNeeded = (int)inValue;
+                            }
+                            else
+                                this.leftOperand = (PBNumber)inValue;//new PBNumber(()inValue, IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new IncorrectOperandType("Command(" + inCommandInstruction + ", " + inValue + ")=[ " + ex.Message + " ]");
+                        }
                         break;
                 }
             }
@@ -297,6 +320,7 @@ namespace PostBinary.Classes
         public Stack<Command> populateStack()
         {
             Stack<Command> returnVal = new Stack<Command>();
+            Stack<Command> tempStack ;
             Command loadCommand;
             Command OperationCommand;
             Command SaveCommand;
@@ -362,8 +386,8 @@ namespace PostBinary.Classes
                     }
                 
             }// foreach
-
-            return returnVal;
+            tempStack = new Stack<Command>(returnVal);
+            return tempStack;
         }
     }
    

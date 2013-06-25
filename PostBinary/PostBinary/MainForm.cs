@@ -314,14 +314,19 @@ namespace PostBinary
 
               rTBLog.Text = test1;
 
-
-
               // Parse the input expression
               Parser parser = new Parser();
               parser.Simplify("123+(3-120)/4-123-(5+20)/3");
-              Stack tempStack = new Stack();
-              //tempStack = parser.GetStack();
-
+              Stack _Stack = parser.GetStack();
+              Stack<Command> pbStack;// = new Stack<Com>();
+              pbStack = _Stack.populateStack();
+              foreach (var currElem in pbStack)
+              {
+                if (currElem.leftOperand != null)
+                    commandTable1.AddItem(Command.commNames[currElem.Code] + " " + currElem.leftOperand.InitValue, currElem.leftOperand.Sign + currElem.leftOperand.Exponent + currElem.leftOperand.Mantissa);
+                else
+                    commandTable1.AddItem(string.Format(Command.commNames[currElem.Code], currElem.MemoryCellNeeded), "0" + PBNumber.EmptyExponent[2] + PBNumber.EmptyMantissa[2]);
+              }
               //DEBUG END
           }
     }

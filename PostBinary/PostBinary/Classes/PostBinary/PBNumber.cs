@@ -18,6 +18,7 @@ namespace PostBinary.Classes.PostBinary
     {
 
         #region Class Properties
+        public String InitValue="";
         private String name;
         public String Name
         {
@@ -163,6 +164,7 @@ namespace PostBinary.Classes.PostBinary
             : this(inCapacity)
         {
             String currentNumber = "";
+            this.InitValue = inDigit;
 
             IPBNumber.IFPartsOfNumber currentPartialNumber;
             IPBNumber.IFPartsOfNumber currentPartialNumber2cc;

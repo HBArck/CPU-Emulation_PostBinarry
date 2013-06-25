@@ -78,7 +78,7 @@ namespace PostBinary.Components
                 for (int i = 0; i <= CommandList.Count - 1; i++)
                 {
                     e.Graphics.DrawString((i + 1).ToString(), Font, Brushes.Black, new PointF(2, i * 20 + ScrollOffset.Height));
-                    e.Graphics.DrawString(CommandList[i].CommandName, Font, Brushes.Black, new PointF(23, i * 20 + ScrollOffset.Height));
+                    e.Graphics.DrawString(CommandList[i].CommandName, Font, Brushes.Black, new PointF(32, i * 20 + ScrollOffset.Height));
                     //this.Controls.Add(CommandList[i].CompactNumber);
                     //CommandList[i].CompactNumber.Location(88, i*20 + ScrollOffset.Height);
                     //CommandList[i].CompactNumber.Show();
@@ -145,7 +145,7 @@ namespace PostBinary.Components
             int len = Controls.Count;
             Size ScrollOffset = new Size(this.AutoScrollPosition);
             this.Controls.Add(newControl);
-            this.Controls[len].Location = new Point(82, 1 + len * 20 + ScrollOffset.Height);
+            this.Controls[len].Location = new Point(190, 1 + len * 20 + ScrollOffset.Height);
             this.Controls[len].Show();
 
         }
