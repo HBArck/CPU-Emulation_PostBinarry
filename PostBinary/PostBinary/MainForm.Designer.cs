@@ -44,7 +44,6 @@
             this.variableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.varListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.listBox1 = new System.Windows.Forms.ListBox();
             this.tResult = new System.Windows.Forms.TextBox();
             this.tInfelicity = new System.Windows.Forms.TextBox();
             this.bStart = new System.Windows.Forms.Button();
@@ -60,6 +59,7 @@
             this.textBox10 = new System.Windows.Forms.TextBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.rTBLog = new System.Windows.Forms.RichTextBox();
+            this.commandTable1 = new PostBinary.Components.CommandTable();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -190,18 +190,6 @@
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(892, 15);
             this.progressBar1.TabIndex = 6;
-            // 
-            // listBox1
-            // 
-            this.listBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 16;
-            this.listBox1.Location = new System.Drawing.Point(20, 97);
-            this.listBox1.Margin = new System.Windows.Forms.Padding(5);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.ScrollAlwaysVisible = true;
-            this.listBox1.Size = new System.Drawing.Size(626, 356);
-            this.listBox1.TabIndex = 8;
             // 
             // tResult
             // 
@@ -368,12 +356,24 @@
             this.rTBLog.TabIndex = 31;
             this.rTBLog.Text = "";
             // 
+            // commandTable1
+            // 
+            this.commandTable1.AutoScroll = true;
+            this.commandTable1.AutoScrollMinSize = new System.Drawing.Size(250, 350);
+            this.commandTable1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.commandTable1.Location = new System.Drawing.Point(20, 97);
+            this.commandTable1.Margin = new System.Windows.Forms.Padding(4);
+            this.commandTable1.Name = "commandTable1";
+            this.commandTable1.Size = new System.Drawing.Size(626, 355);
+            this.commandTable1.TabIndex = 32;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.ClientSize = new System.Drawing.Size(892, 699);
+            this.Controls.Add(this.commandTable1);
             this.Controls.Add(this.rTBLog);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.textBox9);
@@ -382,7 +382,6 @@
             this.Controls.Add(this.VarList);
             this.Controls.Add(this.tInfelicity);
             this.Controls.Add(this.tResult);
-            this.Controls.Add(this.listBox1);
             this.Controls.Add(this.bStart);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.statusStrip1);
@@ -421,7 +420,6 @@
         private System.Windows.Forms.ToolStripStatusLabel tSSLStatus;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button bStart;
-        private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.TextBox tResult;
         private System.Windows.Forms.TextBox tInfelicity;
         private System.Windows.Forms.ToolStripMenuItem helperToolStripMenuItem;
@@ -442,6 +440,7 @@
         private System.Windows.Forms.ToolStripMenuItem varListToolStripMenuItem;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.RichTextBox rTBLog;
+        private Components.CommandTable commandTable1;
     }
 }
 

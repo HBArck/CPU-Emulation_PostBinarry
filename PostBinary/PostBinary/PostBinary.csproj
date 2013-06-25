@@ -87,6 +87,12 @@
     <Compile Include="Classes\Utils\Parser\ParserExceptions\VariableAlreadyDefinedException.cs" />
     <Compile Include="Classes\Utils\Parser\SimplificationReturnValue.cs" />
     <Compile Include="Classes\Utils\StringUtil.cs" />
+    <Compile Include="Components\CommandTable.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\CPBNumber.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\HelperForm.cs">
       <SubType>Form</SubType>
     </Compile>

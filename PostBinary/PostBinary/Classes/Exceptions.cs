@@ -134,5 +134,35 @@ namespace PostBinary.Classes
     }
     /* PALU EXCEPTIONS END*/
 
+    /* STACK EXCEPTIONS BEGIN*/
+    class IncorrectMemoryCellAddress :  System.Exception
+    {
+        public IncorrectMemoryCellAddress()
+        {
+        }
+        public IncorrectMemoryCellAddress(string message)
+            : base(message)
+        {
+        }
+        public IncorrectMemoryCellAddress(string message, Exception inner)
+            : base(message, inner)
+        {
+        }
+    }
+    class IncorrectOperandType : System.Exception
+    {
+        public IncorrectOperandType()
+        {
+        }
+        public IncorrectOperandType(string message)
+            : base(message)
+        {
+        }
+        public IncorrectOperandType(string message, Exception inner)
+            : base(message, inner)
+        {
+        }
+    }
+    /* STACK EXCEPTIONS END*/
 
 }

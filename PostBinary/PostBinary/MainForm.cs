@@ -320,7 +320,8 @@ namespace PostBinary
               Parser parser = new Parser();
               parser.Simplify("123+(3-120)/4-123-(5+20)/3");
               Stack tempStack = new Stack();
-              tempStack = parser.GetStack();
+              //tempStack = parser.GetStack();
+
               //DEBUG END
           }
     }

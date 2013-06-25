@@ -903,7 +903,7 @@ namespace PostBinary.Classes.Utils.Parser
                     {
                         
                         // Stack filling
-                        if ((dblStack.Peek() > 0) && (dblStack.ElementAt<double>(dblStack.Count - 1) > 0))
+                        if ((dblStack.Peek() > 0) && (dblStack.ElementAt<double>(1) > 0))
                             _pbStack.PushCommand(nc.Operator, dblStack.Pop().ToString(), dblStack.Pop().ToString());
                         else
                         {
