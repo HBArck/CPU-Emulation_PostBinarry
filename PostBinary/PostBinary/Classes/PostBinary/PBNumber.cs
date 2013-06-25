@@ -367,13 +367,6 @@ namespace PostBinary.Classes.PostBinary
             this.name = "Name-" + this.width.ToString() + "[S={" + inSign + "} | E={" + this.Exponent + "} | M={" + this.Mantissa + "} ]";
         }
 
-        #endregion
-
-
-     
-        
-
-     
         /// <summary>
         /// Based on Number Exp and Mantisa function calculates Correct Value 
         /// Uses: Number.E, Number.M
@@ -875,6 +868,8 @@ namespace PostBinary.Classes.PostBinary
                 throw new PBFunctionException("Exception in Func ['selectMantissa'] Mess=[" + ex.Message + "]");
             }
         }
+      
+        #endregion
 
     }
 

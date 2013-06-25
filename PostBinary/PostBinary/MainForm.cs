@@ -303,19 +303,25 @@ namespace PostBinary
           private void bStart_Click(object sender, EventArgs e)
           {
               //DEBUG BEGIN
-                // NumberUtil numberUtil = new NumberUtil(this.ProgCore);
-                // tResult.Text = numberUtil.CreateNumber(richTextBox1.Text).Name;
-              /// Parse the input expression
               
               //rTBLog.Text += temp1.ToString();
               //rTBLog.Text += "\r\n" + temp.ToString();
-              //DEBUG END
+              
               String testNumber = "11.25121312";
               PBNumber pbNumber = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
               String test1 = pbNumber.toDigit(3, true);
               PBConvertion pbc = new PBConvertion();
 
-              richTextBox1.Text = pbNumber.ToString();
+              rTBLog.Text = test1;
+
+
+
+              // Parse the input expression
+              Parser parser = new Parser();
+              parser.Simplify("123+(3-120)/4-123-(5+20)/3");
+              Stack tempStack = new Stack();
+              tempStack = parser.GetStack();
+              //DEBUG END
           }
     }
 }

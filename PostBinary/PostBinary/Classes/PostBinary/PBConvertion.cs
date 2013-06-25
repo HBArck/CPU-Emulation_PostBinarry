@@ -930,6 +930,7 @@ namespace PostBinary.Classes.PostBinary
             }
             return IPBNumber.NumberMantissaLength.PB128;
         }
+   
         /// <summary>
         /// Gets empty mantissa depending on number capacity.
         /// </summary>

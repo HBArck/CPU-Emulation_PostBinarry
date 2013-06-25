@@ -11,7 +11,7 @@ namespace PostBinary.Classes.Utils.Parser
         private readonly Dictionary<string, NumberClass> _variables;
         private readonly List<FunctionClass> _functions;
         private readonly Dictionary<string, Delegate> _customFunctions;
-
+        private Stack _pbStack;
         public enum RoundingMethods
         {
             Round,
@@ -27,6 +27,12 @@ namespace PostBinary.Classes.Utils.Parser
             _variables = new Dictionary<string, NumberClass>();
             _functions = new List<FunctionClass>();
             _customFunctions = new Dictionary<string, Delegate>();
+            _pbStack = new Stack();
+        }
+
+        public Stack GetStack()
+        {
+            return _pbStack;
         }
 
         public void UnregisterCustomFunction(string functionName)
@@ -359,7 +365,7 @@ namespace PostBinary.Classes.Utils.Parser
         public SimplificationReturnValue Simplify(string equation)
         {
             var retval = new SimplificationReturnValue { OriginalEquation = equation };
-
+            
             if (equation.Trim().StartsWith("-") || equation.Trim().StartsWith("+"))
                 equation = "0" + equation;
             equation = equation.Replace("(+", "(0+");
@@ -387,6 +393,7 @@ namespace PostBinary.Classes.Utils.Parser
 
             while (token != null)
             {
+                #region Sqare Root
                 if (token.TokenName == TokenParser.Tokens.Sqrt)
                 {
                     string expression = token.TokenValue.Substring(4, token.TokenValue.Length - 4);
@@ -410,6 +417,9 @@ namespace PostBinary.Classes.Utils.Parser
                             break;
                     }
                 }
+                #endregion
+
+                #region Sinus
                 if (token.TokenName == TokenParser.Tokens.Sin)
                 {
                     string expression = token.TokenValue.Substring(3, token.TokenValue.Length - 3);
@@ -433,6 +443,9 @@ namespace PostBinary.Classes.Utils.Parser
                             break;
                     }
                 }
+                #endregion
+                
+                #region Log
                 if (token.TokenName == TokenParser.Tokens.Log)
                 {
                     string expression = token.TokenValue.Substring(3, token.TokenValue.Length - 3);
@@ -456,6 +469,9 @@ namespace PostBinary.Classes.Utils.Parser
                             break;
                     }
                 }
+                #endregion
+              
+                #region Log Natural
                 if (token.TokenName == TokenParser.Tokens.LogN)
                 {
                     string expression = token.TokenValue.Substring(4, token.TokenValue.Length - 4);
@@ -479,6 +495,9 @@ namespace PostBinary.Classes.Utils.Parser
                             break;
                     }
                 }
+                #endregion
+                
+                #region Tangens
                 if (token.TokenName == TokenParser.Tokens.Tan)
                 {
                     string expression = token.TokenValue.Substring(3, token.TokenValue.Length - 3);
@@ -502,6 +521,9 @@ namespace PostBinary.Classes.Utils.Parser
                             break;
                     }
                 }
+                #endregion
+
+                #region Absulute Value
                 if (token.TokenName == TokenParser.Tokens.Abs)
                 {
                     string expression = token.TokenValue.Substring(3, token.TokenValue.Length - 3);
@@ -525,6 +547,9 @@ namespace PostBinary.Classes.Utils.Parser
                             break;
                     }
                 }
+                #endregion
+
+                #region Cosinus
                 if (token.TokenName == TokenParser.Tokens.Cos)
                 {
                     string expression = token.TokenValue.Substring(3, token.TokenValue.Length - 3);
@@ -548,6 +573,8 @@ namespace PostBinary.Classes.Utils.Parser
                             break;
                     }
                 }
+                #endregion
+                
                 if ((int)token.TokenName >= 100)
                 {
                     int ndx1 = token.TokenValue.IndexOf("(");
@@ -853,6 +880,8 @@ namespace PostBinary.Classes.Utils.Parser
             }
 
             bool floatAnswer = _outputQueue.Any(v => v.NumberType == NumberClass.NumberTypes.Float);
+            var intStack = new Stack<int>();
+            int lastMemoryCell = 0;
 
             if (floatAnswer || _outputQueue.Any(v => v.Operator == "/"))
             {
@@ -861,14 +890,33 @@ namespace PostBinary.Classes.Utils.Parser
                 foreach (var nc in _outputQueue)
                 {
                     if (nc.NumberType == NumberClass.NumberTypes.Integer)
+                    {
                         dblStack.Push(nc.IntNumber);
+                        continue;
+                    }
                     if (nc.NumberType == NumberClass.NumberTypes.Float)
+                    {
                         dblStack.Push(nc.FloatNumber);
+                        continue;
+                    }
                     if (nc.NumberType == NumberClass.NumberTypes.Operator)
                     {
-                        double val = DoMath(nc.Operator, dblStack.Pop(), dblStack.Pop());
+                        
+                        // Stack filling
+                        if ((dblStack.Peek() > 0) && (dblStack.ElementAt<double>(dblStack.Count - 1) > 0))
+                            _pbStack.PushCommand(nc.Operator, dblStack.Pop().ToString(), dblStack.Pop().ToString());
+                        else
+                        {
+                            if (dblStack.Peek() < 0)
+                                _pbStack.PushCommand(nc.Operator, (int)-(dblStack.Pop() + 1), dblStack.Pop().ToString());
+                            else
+                                _pbStack.PushCommand(nc.Operator, dblStack.Pop().ToString(), (int)-(dblStack.Pop()+1));
+                        }
+                        //double val = DoMath(nc.Operator, dblStack.Pop(), dblStack.Pop());
 
-                        dblStack.Push(val);
+                        lastMemoryCell = _pbStack.PeekCommand().MemoryCellUsed;
+                        dblStack.Push( -lastMemoryCell - 1 );
+                        
                     }
                 }
 
@@ -881,8 +929,7 @@ namespace PostBinary.Classes.Utils.Parser
             }
             else
             {
-                var intStack = new Stack<int>();
-
+              
                 foreach (var nc in _outputQueue)
                 {
                     if (nc.NumberType == NumberClass.NumberTypes.Integer)
@@ -891,9 +938,16 @@ namespace PostBinary.Classes.Utils.Parser
                         intStack.Push((int)nc.FloatNumber);
                     if (nc.NumberType == NumberClass.NumberTypes.Operator)
                     {
-                        int val = DoMath(nc.Operator, intStack.Pop(), intStack.Pop());
-
-                        intStack.Push(val);
+                        // Stack filling
+                        if (intStack.Count == 2)
+                            _pbStack.PushCommand(nc.Operator, intStack.Pop().ToString(), intStack.Pop().ToString());
+                        else
+                            if (intStack.Count == 1)
+                                _pbStack.PushCommand(nc.Operator, intStack.Pop().ToString(), lastMemoryCell);
+                        // Delete this and add stack filling
+                        //int val = DoMath(nc.Operator, intStack.Pop(), intStack.Pop());
+                        lastMemoryCell = _pbStack.PeekCommand().MemoryCellUsed;
+                        //intStack.Push(val);
                     }
                 }
 
