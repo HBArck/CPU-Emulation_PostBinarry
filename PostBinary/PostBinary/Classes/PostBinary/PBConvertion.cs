@@ -1485,6 +1485,7 @@ namespace PostBinary.Classes.PostBinary
                     else
                         signExp = "";
                     inputStr = inputStr.Replace(",", "");
+                    
                     outString = deleteNonSignificantBits(inputStr.Substring(0, 2) + "," + inputStr.Substring(2)) + "e" + signExp + offset.ToString();
 
                     outString = outString.Substring(1);
@@ -1516,7 +1517,7 @@ namespace PostBinary.Classes.PostBinary
             }
 
             int lastZero = inString.LastIndexOf('0');
-            while ((lastZero == inString.Length - 1) && (lastZero > indexDot))
+            while ((lastZero == inString.Length - 1) && (lastZero > indexDot + 1))
             {
                 inString = inString.Substring(0, inString.Length - 1);
                 lastZero = inString.LastIndexOf('0');
