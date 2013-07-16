@@ -14,11 +14,11 @@ namespace PostBinary.Classes.PostBinary
         public String Exponent;
         public String Mantissa;
     }
-    public class PBNumber : IPBNumber
+    public class PBNumber : IPBNumber, ICloneable
     {
 
         #region Class Properties
-        public String InitValue="";
+        public String InitValue = "";
         private String name;
         public String Name
         {
@@ -117,7 +117,7 @@ namespace PostBinary.Classes.PostBinary
                 };
             }
         }
-
+        
         private String mantissa;
         public String Mantissa
         {
@@ -143,6 +143,7 @@ namespace PostBinary.Classes.PostBinary
                 }
             }
         }
+        
         private String mf;
         public String MF
         {
@@ -348,6 +349,10 @@ namespace PostBinary.Classes.PostBinary
         #endregion
 
         #region Class Functions
+        public object Clone()
+        {
+            return new PBNumber(this.width, this.sign, this.exponent, this.mantissa, this.roundingType);
+        }
         public void SetFields(String inSign, String inExponent, String inMantissa)
         {
             if (inSign != "")
@@ -368,6 +373,7 @@ namespace PostBinary.Classes.PostBinary
             }
             this.name = "Name-" + this.width.ToString() + "[S={" + inSign + "} | E={" + this.Exponent + "} | M={" + this.Mantissa + "} ]";
         }
+
 
         /// <summary>
         /// Based on Number Exp and Mantisa function calculates Correct Value 
@@ -443,7 +449,7 @@ namespace PostBinary.Classes.PostBinary
         /// <returns>Returns digit accordingly parameters</returns>
         public string toDigit(int number, bool scientificNotation)
         {
-            String digit = ""; 
+            String digit = "";
             int signConsider = 1; // toDigit() always returns digit with sign
             int dotConsider;
             String resultDigit;
@@ -608,33 +614,17 @@ namespace PostBinary.Classes.PostBinary
         /// <returns>Returns Mantissa in 2cc</returns>
         private void selectMantissa(IFPartsOfNumber inStringNumber, IPBNumber.NumberCapacity inCapacity, IPBNumber.NumberFormat inNumberFormat, IPBNumber.RoundingType inRoundingType)// PBNumber inObjectNumber, 
         {
-            int i, l, z = 0;
+            int i, l = 0;
             int currMBits;
             String result = "";
-            String M = "";
             String[] tempArray;
             int offsetDot = 1;
-            String Sign;
             String bynaryStringInt = "", bynaryStringFloat = "";
 
             if (inNumberFormat == 0)
             {
                 bynaryStringInt = inStringNumber.IntegerPart;
                 bynaryStringFloat = inStringNumber.FloatPart;
-            }
-            else
-            {
-                /*
-                if (Left_Right == PartOfNumber.Left)
-                {// Left part of number
-                    bynaryStringInt = inNumber.BinaryIntPartFILeft;
-                    bynaryStringFloat = inNumber.BinaryFloatPartFILeft;
-                }
-                else
-                {// Right part of number
-                    bynaryStringInt = inNumber.BinaryIntPartFIRight;
-                    bynaryStringFloat = inNumber.BinaryFloatPartFIRight;
-                }*/
             }
 
             try
@@ -660,13 +650,6 @@ namespace PostBinary.Classes.PostBinary
                             else
                             {
                                 currMBits = (int)pbConvertion.getNumberMantissaLength(inCapacity);
-                                /*switch (inNumberFormat)
-                                {
-                                    case 0: currMBits = (int)getNumberMantissaLength(inCapacity); break;
-                                    case 1:
-                                      case 2: currMBits = inNumber.MBitsFI; break;
-                                    default: currMBits = (int)getNumberMantissaLength(inCapacity); break;
-                                }*/
                                 tempArray = new String[currMBits];
                                 for (i = 0; i < currMBits; i++)
                                     tempArray[i] = "0";
@@ -684,13 +667,7 @@ namespace PostBinary.Classes.PostBinary
                 }
 
                 currMBits = (int)pbConvertion.getNumberMantissaLength(inCapacity);
-                /*switch (inNumberFormat)
-                {
-                    case 0: currMBits = (int)inObjectNumber.MantissaLenght; break;
-                    case 1:
-                      case 2: currMBits = inNumber.MBitsFI; break;
-                    default: currMBits = (int)inObjectNumber.MantissaLenght; break;
-                }*/
+
                 if (result.Length <= (int)currMBits)
                 {
                     // After Research Modification HERE NEEDED !
@@ -702,175 +679,157 @@ namespace PostBinary.Classes.PostBinary
                     }
                     result = result + String.Join("", tempArray);
                 }
-                switch (inRoundingType)
-                {
-                    case IPBNumber.RoundingType.ZERO: // to ZERO
-                        M = result.Substring(0, currMBits);
-                        break;
-                    case IPBNumber.RoundingType.NEAR_INTEGER:// to INTEGER
-                        if (pbConvertion.isStringZero(Exponent))
-                        {
-                            tempArray = new String[offsetDot];
-                            for (i = 0; i < offsetDot; i++)
-                                tempArray[i] = "0";
-                            M = M + String.Join("", tempArray);
+                Round(inRoundingType, result, currMBits, inStringNumber, offsetDot, inCapacity);
 
-                            M += result.Substring(0, currMBits + 1 - offsetDot);
-                        }
-                        else
-                            M = result.Substring(0, currMBits + 0);
-                        if ((result[currMBits] == '1') && (inStringNumber.Sign[0] == '+'))
-                        {
-                            if (!pbConvertion.checkStringFull(M))
-                            {
-                                M = pbConvertion.convert2to10IPart(M);
-                                //M = sumIPart(M, "1");
-                                M = pbConvertion.Addition(M, "1");
-                            }
-                            else
-                            {
-                                M = "0";
-                                if (pbConvertion.checkStringFull(Exponent))
-                                {
-                                    //if (NumberFormat == 0)
-                                    //inObjectNumber.NumberState = stateOfNumber.NAN;
-                                    //else
-                                    //  inNumber.NumberStateRight = stateOfNumber.NAN;
-                                }
-                                else
-                                {
-                                    pbConvertion.sumExp(Exponent, "1", inCapacity);
-                                }
-                            }
-                            M = pbConvertion.convert10to2IPart(M);
-                            if (M.Length + 1 == currMBits)
-                            {
-                                M = "0" + M;
-                            }
-                            else
-                                if (M.Length < currMBits)
-                                {
-                                    l = currMBits - M.Length;
-                                    tempArray = new String[l];
-                                    for (i = 0; i < l; i++)
-                                        tempArray[i] = "0";
-                                    M = String.Join("", tempArray) + M;
-                                }
-                        }
-                        // inNumber.Mantisa = M;
-                        break;
 
-                    case IPBNumber.RoundingType.POSITIVE_INFINITY:// +Inf 
-                        M = result.Substring(0, currMBits);
-                        if (inStringNumber.Sign[0] == '0')
-                        {
-                            if (!pbConvertion.checkStringFull(M))
-                            {
-                                M = pbConvertion.convert2to10IPart(M);
-                                //M = sumIPart(M, "1");
-                                M = pbConvertion.Addition(M, "1");
-                            }
-                            else
-                            {
-                                M = "0";
-                                if (pbConvertion.checkStringFull(Exponent))
-                                {
-                                    //if (NumberFormat == 0)
-                                    //inObjectNumber.NumberState = stateOfNumber.NAN;
-                                    //else
-                                    //   inNumber.NumberStateRight = stateOfNumber.NAN;
-                                }
-                                else
-                                {
-                                    pbConvertion.sumExp(Exponent, "1", inCapacity);
-                                }
-                            }
-                            M = pbConvertion.convert10to2IPart(M);
-                        }
-                        break;
-
-                    case IPBNumber.RoundingType.NEGATIVE_INFINITY:
-                        // -Inf
-                        M = result.Substring(0, currMBits);
-                        if (inStringNumber.Sign[0] == '1')
-                        {
-                            if (!pbConvertion.checkStringFull(M))
-                            {
-                                M = pbConvertion.convert2to10IPart(M);
-                                M = pbConvertion.Addition(M, "1");
-                                //M = sumIPart(M, "1");
-                            }
-                            else
-                            {
-                                M = "0";
-                                if (pbConvertion.checkStringFull(Exponent))
-                                {
-                                    // if (NumberFormat == 0)
-                                    //inObjectNumber.NumberState = stateOfNumber.NAN;
-                                    //else
-                                    //  inNumber.NumberStateRight = stateOfNumber.NaN;
-                                }
-                                else
-                                {
-                                    pbConvertion.sumExp(Exponent, "1", inCapacity);
-                                }
-                            }
-                            M = pbConvertion.convert10to2IPart(M);
-                        }
-                        break;
-                    case IPBNumber.RoundingType.POST_BINARY:
-                        if (result.Length >= currMBits)
-                        {
-                            M = result.Substring(0, currMBits);
-                        }
-                        else
-                        {
-                            M = result;
-                            while (M.Length < currMBits)
-                            {
-                                M = "0" + M;
-                            }
-                        }
-
-                        if (result.Length >= currMBits + 2)
-                        {
-                            String nonSignificantBits = result.Substring(currMBits, 2);
-                            if ((nonSignificantBits == "01") || (nonSignificantBits == "10"))
-                            {
-                                int lastZero = M.LastIndexOf('0');
-                                if (lastZero == -1)
-                                {
-                                    if (nonSignificantBits == "10")
-                                    {
-                                        M = pbConvertion.getEmptyMantissa(inCapacity).ToString();
-
-                                        // TODO: Create function for addition in binary, and delete next 3th lines of code
-                                        String tempExponent = pbConvertion.convert2to10IPart(this.Exponent);// 
-                                        tempExponent = pbConvertion.Addition(tempExponent, "1");            // ADD 1 to Exponent
-                                        this.Exponent = pbConvertion.convert10to2IPart(tempExponent);       //
-                                    }
-                                }
-                                else
-                                {
-                                    M = M.Substring(0, lastZero) + "M";
-                                    while (M.Length < currMBits)
-                                    {
-                                        M += "A";
-                                    }
-                                }
-                            }
-                        }
-                        break;
-                }
-
-                this.Mantissa = M;
             }
             catch (Exception ex)
             {
                 throw new PBFunctionException("Exception in Func ['selectMantissa'] Mess=[" + ex.Message + "]");
             }
         }
-      
+
+        public void Round(IPBNumber.RoundingType inRoundingType, String result, int currMBits, IFPartsOfNumber inStringNumber, int offsetDot, IPBNumber.NumberCapacity inCapacity)
+        {
+            String M = "";
+
+            switch (inRoundingType)
+            {
+                case IPBNumber.RoundingType.ZERO: // to ZERO
+                    M = result.Substring(0, currMBits);
+                    break;
+                case IPBNumber.RoundingType.NEAR_INTEGER:// to INTEGER
+                    if (pbConvertion.isStringZero(Exponent))
+                    {
+                        String[] tempArray = new String[offsetDot];
+                        for (int i = 0; i < offsetDot; i++)
+                            tempArray[i] = "0";
+                        M = M + String.Join("", tempArray);
+
+                        M += result.Substring(0, currMBits + 1 - offsetDot);
+                    }
+                    else
+                        M = result.Substring(0, currMBits + 0);
+                    if ((result[currMBits] == '1') && (inStringNumber.Sign[0] == '+'))
+                    {
+                        if (!pbConvertion.checkStringFull(M))
+                        {
+                            M = pbConvertion.convert2to10IPart(M);
+                            M = pbConvertion.Addition(M, "1");
+                        }
+                        else
+                        {
+                            M = "0";
+                            if (!pbConvertion.checkStringFull(Exponent))
+                            {
+                                pbConvertion.sumExp(Exponent, "1", inCapacity);
+                            }
+                        }
+                        M = pbConvertion.convert10to2IPart(M);
+                        if (M.Length + 1 == currMBits)
+                        {
+                            M = "0" + M;
+                        }
+                        else
+                            if (M.Length < currMBits)
+                            {
+                                int l = currMBits - M.Length;
+                                String[] tempArray = new String[l];
+                                for (int i = 0; i < l; i++)
+                                    tempArray[i] = "0";
+                                M = String.Join("", tempArray) + M;
+                            }
+                    }
+                    break;
+
+                case IPBNumber.RoundingType.POSITIVE_INFINITY:// +Inf 
+                    M = result.Substring(0, currMBits);
+                    if (inStringNumber.Sign[0] == '0')
+                    {
+                        if (!pbConvertion.checkStringFull(M))
+                        {
+                            M = pbConvertion.convert2to10IPart(M);
+                            M = pbConvertion.Addition(M, "1");
+                        }
+                        else
+                        {
+                            M = "0";
+                            if (!pbConvertion.checkStringFull(Exponent))
+                            {
+                                pbConvertion.sumExp(Exponent, "1", inCapacity);
+                            }
+                        }
+                        M = pbConvertion.convert10to2IPart(M);
+                    }
+                    break;
+
+                case IPBNumber.RoundingType.NEGATIVE_INFINITY:
+                    // -Inf
+                    M = result.Substring(0, currMBits);
+                    if (inStringNumber.Sign[0] == '1')
+                    {
+                        if (!pbConvertion.checkStringFull(M))
+                        {
+                            M = pbConvertion.convert2to10IPart(M);
+                            M = pbConvertion.Addition(M, "1");
+                        }
+                        else
+                        {
+                            M = "0";
+                            if (!pbConvertion.checkStringFull(Exponent))
+                            {
+                                pbConvertion.sumExp(Exponent, "1", inCapacity);
+                            }
+                        }
+                        M = pbConvertion.convert10to2IPart(M);
+                    }
+                    break;
+                case IPBNumber.RoundingType.POST_BINARY:
+                    if (result.Length >= currMBits)
+                    {
+                        M = result.Substring(0, currMBits);
+                    }
+                    else
+                    {
+                        M = result;
+                        while (M.Length < currMBits)
+                        {
+                            M = "0" + M;
+                        }
+                    }
+
+                    if (result.Length >= currMBits + 2)
+                    {
+                        String nonSignificantBits = result.Substring(currMBits, 2);
+                        if ((nonSignificantBits == "01") || (nonSignificantBits == "10"))
+                        {
+                            int lastZero = M.LastIndexOf('0');
+                            if (lastZero == -1)
+                            {
+                                if (nonSignificantBits == "10")
+                                {
+                                    M = pbConvertion.getEmptyMantissa(inCapacity).ToString();
+
+                                    // TODO: Create function for addition in binary, and delete next 3th lines of code
+                                    String tempExponent = pbConvertion.convert2to10IPart(this.Exponent);// 
+                                    tempExponent = pbConvertion.Addition(tempExponent, "1");            // ADD 1 to Exponent
+                                    this.Exponent = pbConvertion.convert10to2IPart(tempExponent);       //
+                                }
+                            }
+                            else
+                            {
+                                M = M.Substring(0, lastZero) + "M";
+                                while (M.Length < currMBits)
+                                {
+                                    M += "A";
+                                }
+                            }
+                        }
+                    }
+                    break;
+            }
+            this.Mantissa = M;
+        }
         #endregion
 
     }

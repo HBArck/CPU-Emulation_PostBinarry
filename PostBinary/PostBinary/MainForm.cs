@@ -309,10 +309,18 @@ namespace PostBinary
               
               String testNumber = "11.25121312";
               PBNumber pbNumber = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
+              
+              PBNumber pbNumber1 = new PBNumber("11", IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
+              PBNumber pbNumber2 = new PBNumber("878", IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
+              PBNumber pbNumber3 = new PBNumber("0", IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
+              PBNumber pbNumber4 = new PBNumber("889", IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
+              
               String test1 = pbNumber.toDigit(3, true);
               PBConvertion pbc = new PBConvertion();
+              PBMath pbmath = new PBMath();
+              pbNumber3 = pbmath.ADD(pbNumber1, pbNumber2);
 
-              rTBLog.Text = test1;
+              //rTBLog.Text = test1;
 
               // Parse the input expression
               Parser parser = new Parser();
