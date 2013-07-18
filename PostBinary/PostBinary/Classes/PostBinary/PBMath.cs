@@ -15,12 +15,69 @@ namespace PostBinary.Classes.PostBinary
         #endregion
         #region Functions
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="leftOperand"></param>
+        /// <param name="rightOperand"></param>
+        /// <returns></returns>
+        public PBNumber pADD(PBNumber leftOperand, PBNumber rightOperand)
+        {
+            //if (pCMP(leftOperand, rightOperand))
+            if (leftOperand.Sign != rightOperand.Sign)
+            {
+
+            }
+            else
+            {
+                return ADD(leftOperand, rightOperand);
+            }
+
+
+            return ADD(leftOperand, rightOperand);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="leftOperand"></param>
+        /// <param name="rightOperand"></param>
+        /// <returns></returns>
+        private PBNumber SUB(PBNumber leftOperand, PBNumber rightOperand)
+        {
+            return ADD(leftOperand, rightOperand);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="leftOperand"></param>
+        /// <param name="rightOperand"></param>
+        /// <returns></returns>
+        public int pCMP(PBNumber leftOperand, PBNumber rightOperand)
+        {
+            if (leftOperand.Sign != rightOperand.Sign)
+            {
+                return (leftOperand.Sign == "0") ? 1 : -1;
+            }
+            else
+            {
+                int cmpExponent = tCMP(leftOperand.Exponent, rightOperand.Exponent);
+                if (cmpExponent != 0)
+                {
+                    return cmpExponent;
+                }
+                else
+                {
+                    return tCMP(leftOperand.Mantissa, rightOperand.Mantissa);
+                }
+            }
+        }
+
+        /// <summary>
         /// Postbinary numeric addition
         /// </summary>
         /// <param name="leftOperand">Left operand of operation.</param>
         /// <param name="rightOperand">Right operand of operation.</param>
         /// <returns>Result of operation</returns>
-        public PBNumber ADD(PBNumber leftOperand, PBNumber rightOperand)
+        private PBNumber ADD(PBNumber leftOperand, PBNumber rightOperand)
         {
             PBNumber opA = (PBNumber)leftOperand.Clone();
             PBNumber opB = (PBNumber)rightOperand.Clone();
@@ -28,7 +85,7 @@ namespace PostBinary.Classes.PostBinary
 
             String iuA = "";
             String iuB = "";
-            switch (CMP(opA.Exponent, opB.Exponent)) // Exponent align
+            switch (tCMP(opA.Exponent, opB.Exponent)) // Exponent align
             {
                 case 1:
                     opB = ExponentAlign(opA, opB);
@@ -51,18 +108,18 @@ namespace PostBinary.Classes.PostBinary
             PBConvertion pbconvertion = new PBConvertion();
             int a = Int32.Parse(pbconvertion.convert2to10IPart(opA.Exponent));
 
-            String str = ADDTetra(iuA + opA.Mantissa, iuB + opB.Mantissa, false);
+            String str = tADD(iuA + opA.Mantissa, iuB + opB.Mantissa, false);
             int iuPosition = str.IndexOf('1');
             a -= iuPosition;
             str = str.Substring(iuPosition);
-           
+
             opC.Mantissa = str.Substring(1);
-            
+
             opC.Exponent = pbconvertion.convert10to2IPart(a.ToString());
             // log here C
             return opC;
         }
-        
+
         /// <summary>
         /// Returns aligned rightOperand relative to leftOperand.
         /// IMPORTANT: leftOperand must be greater or equal (>=) to rightOperand
@@ -139,9 +196,9 @@ namespace PostBinary.Classes.PostBinary
         /// <param name="leftOperand">Operand to compare.</param>
         /// <param name="rightOperand">Operand to compare.</param>
         /// <returns> -1 - leftOperand less (<) then rightOperand; 0 - leftOperand equal (=) to rightOperand; 1 - leftOperand greater (>) then rightOperand. </returns>
-        public static int CMP(String leftOperand, String rightOperand)
+        public static int tCMP(String leftOperand, String rightOperand)
         {
-            PBConvertion pbconvertion = new PBConvertion();
+            /*PBConvertion pbconvertion = new PBConvertion();
             if ((leftOperand.Length > 31) || (rightOperand.Length > 31))
                 throw new ArithmeticException("Length of operands should not be longer, than 31 bits");
             int a = Int32.Parse(pbconvertion.convert2to10IPart(leftOperand));
@@ -154,6 +211,293 @@ namespace PostBinary.Classes.PostBinary
                 result = -1;
 
             return result;
+             */
+            String equal = tNOT(tOR(tXOR(leftOperand, rightOperand)).ToString());
+            String great = tCMPG(leftOperand, rightOperand);
+
+            if (equal == "1")
+            {
+                return 0;
+            }
+            else
+            {
+                return (tCMPG(leftOperand, rightOperand) == "1") ? 1 : -1;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="leftOperand"></param>
+        /// <param name="rightOperand"></param>
+        /// <returns></returns>
+        private static char tCMPG_bit(char leftOperand, char rightOperand)
+        {
+            switch (leftOperand)
+            {
+                case '0':
+                    {
+                        return '0';
+                    }
+                case '1':
+                    {
+                        return '1';
+                    }
+                case 'A':
+                    {
+                        return (rightOperand == '0') ? '1' : '0';
+                    }
+                case 'M':
+                    {
+                        return ((rightOperand == '0') || (rightOperand == 'A')) ? '1' : '0';
+                    }
+                default:
+                    return '0';
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="leftOperand"></param>
+        /// <param name="rightOperand"></param>
+        /// <returns></returns>
+        private static String tCMPG(String leftOperand, String rightOperand)
+        {
+            // rounding lenghts of inputted strings
+            int lenghtSub = leftOperand.Length - rightOperand.Length;
+            if (lenghtSub != 0)
+            {
+                if (lenghtSub > 0)
+                {
+                    rightOperand = AddSymbols("0", rightOperand, lenghtSub, true);
+                }
+                else
+                {
+                    leftOperand = AddSymbols("0", leftOperand, Math.Abs(lenghtSub), true);
+                }
+            }
+
+            char[] great = new char[leftOperand.Length];
+
+            for (int i = 0; i < leftOperand.Length; i++)
+            {
+                great[i] = tCMPG_bit(leftOperand[i], rightOperand[i]);
+            }
+
+            String result = "0";
+            String equal = tNOT(tXOR(leftOperand, rightOperand));
+
+            int n = great.Length;
+            for (int i = n - 1; i >= 0; i--)
+            {
+                String and_result = "0";
+                String equal_and_result = "1";
+                if (i < n - 1)
+                {
+                    for (int j = i + 1; j < n - 1; j++)
+                    {
+                        equal_and_result = tAND(equal_and_result, equal[j].ToString()).ToString();
+                    }
+                }
+                and_result = tAND(great[i].ToString(), equal_and_result).ToString();
+
+                result = tOR(result, and_result).ToString();
+            }
+            return tNOT(result);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="leftOperand"></param>
+        /// <param name="rightOperand"></param>
+        /// <returns></returns>
+        public static String tXOR(String leftOperand, String rightOperand)
+        {
+            // rounding lenghts of inputted strings
+            int lenghtSub = leftOperand.Length - rightOperand.Length;
+            if (lenghtSub != 0)
+            {
+                if (lenghtSub > 0)
+                {
+                    rightOperand = AddSymbols("0", rightOperand, lenghtSub, true);
+                }
+                else
+                {
+                    leftOperand = AddSymbols("0", leftOperand, Math.Abs(lenghtSub), true);
+                }
+            }
+
+            char[] result = new char[leftOperand.Length];
+            for (int i = 0; i < leftOperand.Length; i++)
+            {
+                switch (leftOperand[i])
+                {
+                    case '0':
+                        {
+                            result[i] = rightOperand[i];
+                            break;
+                        }
+                    case '1':
+                        {
+                            result[i] = tNOT(rightOperand[i].ToString())[0];
+                            break;
+                        }
+                    case 'A':
+                        {
+                            switch (rightOperand[i])
+                            {
+                                case '0':
+                                    {
+                                        result[i] = 'A';
+                                        break;
+                                    }
+                                case '1':
+                                    {
+                                        result[i] = 'M';
+                                        break;
+                                    }
+                                case 'A':
+                                    {
+                                        result[i] = '0';
+                                        break;
+                                    }
+                                case 'M':
+                                    {
+                                        result[i] = '1';
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        break;
+                                    }
+                            }
+                            break;
+                        }
+                    case 'M':
+                        {
+                            switch (rightOperand[i])
+                            {
+                                case '0':
+                                    {
+                                        result[i] = 'M';
+                                        break;
+                                    }
+                                case '1':
+                                    {
+                                        result[i] = 'A';
+                                        break;
+                                    }
+                                case 'A':
+                                    {
+                                        result[i] = '1';
+                                        break;
+                                    }
+                                case 'M':
+                                    {
+                                        result[i] = '0';
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        break;
+                                    }
+                            }
+                            break;
+                        }
+                    default:
+                        {
+                            break;
+                        }
+                }
+            }
+
+            return new string(result);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="leftOperand"></param>
+        /// <param name="rightOperand"></param>
+        /// <returns></returns>
+        public static char tOR(String leftOperand, String rightOperand)
+        {
+            if ((leftOperand.IndexOf('1') != -1) || (rightOperand.IndexOf('1') != -1))
+                return '1';
+
+            if ((leftOperand.IndexOf('M') != -1) || (rightOperand.IndexOf('M') != -1))
+                return '1';
+
+            if ((leftOperand.IndexOf('A') != -1) || (rightOperand.IndexOf('A') != -1))
+                return '1';
+
+            return '0';
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="leftOperand"></param>
+        /// <returns></returns>
+        public static char tOR(String operand)
+        {
+            return tOR(operand, "0");
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="leftOperand"></param>
+        /// <param name="rightOperand"></param>
+        /// <returns></returns>
+        public static String tAND_string(String leftOperand, String rightOperand)
+        {
+            // rounding lenghts of inputted strings
+            int lenghtSub = leftOperand.Length - rightOperand.Length;
+            if (lenghtSub != 0)
+            {
+                if (lenghtSub > 0)
+                {
+                    rightOperand = AddSymbols("0", rightOperand, lenghtSub, true);
+                }
+                else
+                {
+                    leftOperand = AddSymbols("0", leftOperand, Math.Abs(lenghtSub), true);
+                }
+            }
+
+            char[] result = new char[leftOperand.Length];
+
+            for (int i = 0; i < leftOperand.Length; i++)
+            {
+                result[i] = tANDBit(leftOperand[i], rightOperand[i]);
+            }
+
+            return new string(result);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="leftOperand"></param>
+        /// <param name="rightOperand"></param>
+        /// <returns></returns>
+        public static char tAND(String leftOperand, String rightOperand)
+        {
+            return tOR(tAND_string(leftOperand, rightOperand));
+        }
+        public static char tAND(String operand)
+        {
+            return tAND(operand, "1");
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="leftOperand"></param>
+        /// <param name="rightOperand"></param>
+        /// <returns></returns>
+        private static char tANDBit(char leftOperand, char rightOperand)
+        {
+            return (leftOperand == rightOperand) ? leftOperand : '0';
         }
 
         /// <summary>
@@ -164,7 +508,7 @@ namespace PostBinary.Classes.PostBinary
         /// <param name="rightOperand">Input operand. Tetralogic number.</param>
         /// <param name="carryFlag">Flag that define carring. True - conside carry; False - don't conside carry.</param>
         /// <returns>Sum of tetra addition.</returns>
-        public static String ADDTetra(String opA, String opB, bool carryFlag)
+        public static String tADD(String opA, String opB, bool carryFlag)
         {
             String opC = "";	// result string
 
@@ -176,7 +520,7 @@ namespace PostBinary.Classes.PostBinary
             if (opA.Length > opB.Length) for (int i = 0; i < Al - Bl; i++) opB = opB.Insert(0, "0");
             else if (opA.Length != opB.Length) for (int i = 0; i < Bl - Al; i++) opA = opA.Insert(0, "0");
 
-            Char buf = '0';  // carry for sum
+            Char buf = carryFlag ? '0' : '1';  // SUM: carry = 0; SUB: carry = 1 
 
             // Add start
             for (int i = opA.Length - 1; i >= 0; i--)
@@ -502,12 +846,22 @@ namespace PostBinary.Classes.PostBinary
         }
 
         /// <summary>
+        /// Inverts inputted number according tetralogic rules.
+        /// </summary>
+        /// <param name="operand">Input number.</param>
+        /// <returns>Inverted value of inputted number.</returns>
+        public static String tNOT(String operand)
+        {
+            operand = operand.Replace('0', 'O').Replace('1', 'I').Replace('A', 'a').Replace('M', 'm');// replace by analog symbols
+            return operand.Replace('O', '1').Replace('I', '0').Replace('a', 'M').Replace('m', 'A'); // inverting
+        }
+        /// <summary>
         /// Postbinary numeric substraction
         /// </summary>
         /// <param name="leftOperand"></param>
         /// <param name="rightOperand"></param>
         /// <returns></returns>
-        public PBNumber SUB(PBNumber leftOperand, PBNumber rightOperand)
+        public PBNumber pSUB(PBNumber leftOperand, PBNumber rightOperand)
         {
             return null;
         }
@@ -537,12 +891,12 @@ namespace PostBinary.Classes.PostBinary
         /// <summary>
         /// Postbinary numeric negative
         /// </summary>
-        /// <param name="leftOperand"></param>
+        /// <param name="operand"></param>
         /// <returns></returns>
-        public PBNumber NEG(PBNumber leftOperand)
+        public PBNumber NEG(PBNumber operand)
         {
-            leftOperand.Sign = leftOperand.Sign == "0" ? "1" : "0";
-            return leftOperand;
+            operand.Sign = operand.Sign == "0" ? "1" : "0";
+            return operand;
         }
 
         #endregion

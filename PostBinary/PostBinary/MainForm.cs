@@ -307,20 +307,24 @@ namespace PostBinary
               //rTBLog.Text += temp1.ToString();
               //rTBLog.Text += "\r\n" + temp.ToString();
               
-              String testNumber = "11.25121312";
+              String testNumber = "11.2";
               PBNumber pbNumber = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
               
-              PBNumber pbNumber1 = new PBNumber("11", IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
+              PBNumber pbNumber1 = new PBNumber("11000000000", IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
               PBNumber pbNumber2 = new PBNumber("878", IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
               PBNumber pbNumber3 = new PBNumber("0", IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
               PBNumber pbNumber4 = new PBNumber("889", IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
               
-              String test1 = pbNumber.toDigit(3, true);
+              String test1 = pbNumber.toDigit(30, true);
               PBConvertion pbc = new PBConvertion();
               PBMath pbmath = new PBMath();
-              pbNumber3 = pbmath.ADD(pbNumber1, pbNumber2);
+           //   pbNumber3 = pbmath.pADD(pbNumber1, pbNumber2);
 
-              //rTBLog.Text = test1;
+              String test = pbmath.pCMP(pbNumber1, pbNumber1).ToString();
+              String test2 = pbmath.pCMP(pbNumber1, pbNumber2).ToString();
+              String test3 = pbmath.pCMP(pbNumber2, pbNumber1).ToString();
+              
+              //rTBLog.Text = test1; 
 
               // Parse the input expression
               Parser parser = new Parser();
