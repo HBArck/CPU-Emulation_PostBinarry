@@ -14,6 +14,7 @@ namespace PostBinary.Classes.PostBinary
         #region Constructors
         #endregion
         #region Functions
+        
         /// <summary>
         /// 
         /// </summary>
@@ -35,6 +36,7 @@ namespace PostBinary.Classes.PostBinary
 
             return ADD(leftOperand, rightOperand);
         }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -45,6 +47,7 @@ namespace PostBinary.Classes.PostBinary
         {
             return ADD(leftOperand, rightOperand);
         }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -135,6 +138,7 @@ namespace PostBinary.Classes.PostBinary
 
             return Shift(rightOperand, leftExponentValue - rightExponentValue);
         }
+        
         /// <summary>
         /// Shifts PBNumber number with regard to shiftValue sign(shift direction) and modulus(counts of shifts).
         /// </summary>
@@ -167,6 +171,7 @@ namespace PostBinary.Classes.PostBinary
             operand.Exponent = pbconvertion.convert10to2IPart(expA.ToString());
             return operand;
         }
+        
         /// <summary>
         /// Adds number of symbols to input string. 
         /// </summary>
@@ -415,6 +420,7 @@ namespace PostBinary.Classes.PostBinary
 
             return new string(result);
         }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -444,6 +450,7 @@ namespace PostBinary.Classes.PostBinary
         {
             return tOR(operand, "0");
         }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -475,6 +482,7 @@ namespace PostBinary.Classes.PostBinary
 
             return new string(result);
         }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -489,6 +497,7 @@ namespace PostBinary.Classes.PostBinary
         {
             return tAND(operand, "1");
         }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -855,6 +864,7 @@ namespace PostBinary.Classes.PostBinary
             operand = operand.Replace('0', 'O').Replace('1', 'I').Replace('A', 'a').Replace('M', 'm');// replace by analog symbols
             return operand.Replace('O', '1').Replace('I', '0').Replace('a', 'M').Replace('m', 'A'); // inverting
         }
+        
         /// <summary>
         /// Postbinary numeric substraction
         /// </summary>
