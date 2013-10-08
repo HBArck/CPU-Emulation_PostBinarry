@@ -1060,43 +1060,19 @@ namespace PostBinary.Classes.PostBinary
 
                 /* Sign */
                 Sign = inNumber.Sign;
-                /*if ((z == 0) || (NumberFormat == 0))
-                    Sign = SignCharacterLeft;
-                else
-                    Sign = SignCharacterRight;
-                */
-                IPBNumber.NumberFormat NumberFormat = IPBNumber.NumberFormat.INTEGER;
-                switch (NumberFormat)
+
+                if (binFPartOut.IndexOf('M') == -1)
                 {
-                    case 0:
-                        CorrectResult = Sign + convert2to10IPart(binIPartOut) + "," + convert2to10FPart(binFPartOut, precision);
-                        CorrectResult2cc = Sign + binIPartOut + "," + binFPartOut;
-                        break;
-                    /*
-                case 1:
-                    if (z == 0)
-                    {
-                        inNumber.CorrectResultFractionL = Sign + convert2to10IPart(binIPartOut) + "," + convert2to10FPart(binFPartOut, precision);
-                        inNumber.CorrectResultFraction2ccL = Sign + binIPartOut + "," + binFPartOut;
-                    }
-                    else
-                    {
-                        inNumber.CorrectResultFractionR = Sign + convert2to10IPart(binIPartOut) + "," + convert2to10FPart(binFPartOut, precision);
-                        inNumber.CorrectResultFraction2ccR = Sign + binIPartOut + "," + binFPartOut;
-                    }
-                    break;
-                case 2:
-                    if (z == 0)
-                    {
-                        inNumber.CorrectResultIntervalL = Sign + convert2to10IPart(binIPartOut) + "," + convert2to10FPart(binFPartOut, precision);
-                        inNumber.CorrectResultInterval2ccL = Sign + binIPartOut + "," + binFPartOut;
-                    }
-                    else
-                    {
-                        inNumber.CorrectResultIntervalR = Sign + convert2to10IPart(binIPartOut) + "," + convert2to10FPart(binFPartOut, precision);
-                        inNumber.CorrectResultInterval2ccR = Sign + binIPartOut + "," + binFPartOut;
-                    }
-                    break;*/
+                    return deleteNonSignificantBits(Sign + convert2to10IPart(binIPartOut) + "," + convert2to10FPart(binFPartOut, precision));
+                    //CorrectResult2cc = Sign + binIPartOut + "," + binFPartOut;
+                }else
+                {
+                    // split binary float part to 2 parts //  ex. 0101m1 -> [010101:010111]
+                    String lowBound = binFPartOut.Replace('M', '0');
+                    String highBound = binFPartOut.Replace('M', '1');
+                    CorrectResult = deleteNonSignificantBits( (Sign == "1" ? "-" : "") + convert2to10IPart(binIPartOut) + "," + convert2to10FPart(lowBound, precision));
+                    CorrectResult += ':' + deleteNonSignificantBits( (Sign == "1" ? "-" : "") + convert2to10IPart(binIPartOut) + "," + convert2to10FPart(highBound, precision));
+                    return CorrectResult;
                 }
             }
             catch (Exception ex)
@@ -1104,9 +1080,8 @@ namespace PostBinary.Classes.PostBinary
                 throw new FCCoreFunctionException("Func 'calcResForNorm' = [ " + ex.Message + " ]");
             }
 
-            CorrectResult = deleteNonSignificantBits(CorrectResult);
-            return CorrectResult;
-            //break;
+            //CorrectResult = deleteNonSignificantBits(CorrectResult);
+            //return CorrectResult;
         }
         public void calcResForDenorm(PBNumber inNumber, int precision)
         {

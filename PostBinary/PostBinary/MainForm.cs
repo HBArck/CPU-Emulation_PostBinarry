@@ -307,15 +307,28 @@ namespace PostBinary
               //rTBLog.Text += temp1.ToString();
               //rTBLog.Text += "\r\n" + temp.ToString();
               
-              String testNumber = "11.2";
-              PBNumber pbNumber = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
+              String testNumber = "-10.11";
+              PBNumber pbNumber1 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB256, IPBNumber.RoundingType.POST_BINARY);
+              PBNumber pbNumber2 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.ZERO);
+              PBNumber pbNumber3 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.NEGATIVE_INFINITY);
+              PBNumber pbNumber4 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POSITIVE_INFINITY);
+              PBNumber pbNumber5 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.NEAR_INTEGER);
+
+              String test1 = pbNumber1.toDigit(30, true);
+              rTBLog.Text += "PB " + test1 + "\r\n";
               
-              PBNumber pbNumber1 = new PBNumber("11000000000", IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
-              PBNumber pbNumber2 = new PBNumber("878", IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
-              PBNumber pbNumber3 = new PBNumber("0", IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
-              PBNumber pbNumber4 = new PBNumber("889", IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
+              test1 = pbNumber2.toDigit(30, true);
+              rTBLog.Text += "ZERO " + test1 + "\r\n";
               
-              String test1 = pbNumber.toDigit(30, true);
+              test1 = pbNumber3.toDigit(30, true);
+              rTBLog.Text += "NInf " + test1 + "\r\n";
+              
+              test1 = pbNumber4.toDigit(30, true);
+              rTBLog.Text += "PInf " + test1 + "\r\n";
+              
+              test1 = pbNumber5.toDigit(30, true);
+              rTBLog.Text += "NInt " + test1 + "\r\n";
+
               PBConvertion pbc = new PBConvertion();
               PBMath pbmath = new PBMath();
            //   pbNumber3 = pbmath.pADD(pbNumber1, pbNumber2);

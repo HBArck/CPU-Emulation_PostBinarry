@@ -426,7 +426,13 @@ namespace PostBinary.Classes.PostBinary
                 {
                     if (NumberFormat == 0)
                     {
-                        CorrectResultExp = pbconvertion.convertToExp(CorrectResult);
+                        if (CorrectResult.IndexOf(':') == -1)
+                            CorrectResultExp = pbconvertion.convertToExp(CorrectResult);
+                        else
+                        {
+                            CorrectResultExp = pbconvertion.convertToExp(CorrectResult.Split(':')[0]);
+                            CorrectResultExp += ":" + pbconvertion.convertToExp(CorrectResult.Split(':')[1]);
+                        }
                     }
                 }
 
@@ -507,69 +513,13 @@ namespace PostBinary.Classes.PostBinary
             int Offset = 0;
             String temp, result = "";
             String bynaryStringInt = "", bynaryStringFloat = "";
-            if (inNumberFormat == 0)
-            {
-                bynaryStringInt = inStingNumber.IntegerPart;
-                bynaryStringFloat = inStingNumber.FloatPart;
-            }
-            else
-            {
-                /*
-                if (Left_Right == PartOfNumber.Left)
-                {// Left part of number
-                    bynaryStringInt = inNumber.BinaryIntPartFILeft;
-                    bynaryStringFloat = inNumber.BinaryFloatPartFILeft;
-                }
-                else
-                {// Right part of number
-                    bynaryStringInt = inNumber.BinaryIntPartFIRight;
-                    bynaryStringFloat = inNumber.BinaryFloatPartFIRight;
-                }*/
-            }
+            bynaryStringInt = inStingNumber.IntegerPart;
+            bynaryStringFloat = inStingNumber.FloatPart;
 
-            //if (bynaryStringInt != null)
-            //{
-            //    if (bynaryStringInt != "")
-            //    {
-            //        temp = bynaryStringInt + bynaryStringFloat;
-            //    }
-            //    else
-            //    {
-            //        //inNumber.CalcStatus = Flexible_computing.CalculationStatus.Exception;
-            //        if (inNumberFormat == 0)
-            //        { inObjectNumber.NumberState = stateOfNumber.ERROR; }
-            //        /*else
-            //            if (Left_Right == PartOfNumber.Left)
-            //            { inNumber.NumberState = stateOfNumber.error; }
-            //            else
-            //            { inNumber.NumberStateRight = stateOfNumber.error; }*/
-            //        throw new PBArithmeticException("Exception in Func ['selectExp'] Mess=[ Empty String - BynaryIntPart ] (" + inObjectNumber.Name + ")");
-            //    }
-            //}
-            //else
-            //{
-            //    //inNumber.CalcStatus = Flexible_computing.CalculationStatus.Exception;
-
-            //    if (inNumberFormat == 0)
-            //    { inObjectNumber.NumberState = stateOfNumber.ERROR; }
-            //    /*else
-            //        if (Left_Right == PartOfNumber.Left)
-            //        { inNumber.NumberState = stateOfNumber.error; }
-            //        else
-            //        { inNumber.NumberStateRight = stateOfNumber.error; }*/
-            //    throw new PBArithmeticException("Exception in Func ['selectExp'] Mess=[ Null - BynaryIntPart ] (" + inObjectNumber.Name + ")");
-            //}
             try
             {
                 Offset = (int)pbConvertion.getNumberOffset(inCapacity);
-                /*switch (inNumberFormat)
-                {
-                    case 0: Offset = inObjectNumber.Offset; break;
-                    case 1:
-                      case 2: Offset = inNumber.OffsetFI; break;
-                      case 3: Offset = inNumber.OffsetTetra; break;
-                      case 4: Offset = inNumber.OffsetFITetra; break;
-                }*/
+                
                 if (bynaryStringInt.IndexOf('1') != -1)
                 {
                     temp = bynaryStringInt;
@@ -595,7 +545,6 @@ namespace PostBinary.Classes.PostBinary
                     }
 
                 result = pbConvertion.convert10to2IPart((z + Offset).ToString());
-                //inNumber.Exponenta = result;
                 this.Exponent = result;
             }
             catch (Exception ex)
@@ -810,7 +759,7 @@ namespace PostBinary.Classes.PostBinary
                                 {
                                     M = pbConvertion.getEmptyMantissa(inCapacity).ToString();
 
-                                    // TODO: Create function for addition in binary, and delete next 3th lines of code
+                                    //TODO: Create function for addition in binary, and delete next 3th lines of code
                                     String tempExponent = pbConvertion.convert2to10IPart(this.Exponent);// 
                                     tempExponent = pbConvertion.Addition(tempExponent, "1");            // ADD 1 to Exponent
                                     this.Exponent = pbConvertion.convert10to2IPart(tempExponent);       //
@@ -818,13 +767,24 @@ namespace PostBinary.Classes.PostBinary
                             }
                             else
                             {
+                                //TODO: Control here 
                                 M = M.Substring(0, lastZero) + "M";
                                 while (M.Length < currMBits)
                                 {
                                     M += "A";
                                 }
                             }
-                        }
+                        }else
+                            if (nonSignificantBits == "11")
+                            {
+                                if (M.LastIndexOf('0')!=-1)
+                                {
+                                   M = pbConvertion.convert10to2IPart( pbConvertion.Addition(pbConvertion.convert2to10IPart(M), "1") );
+                                }else
+                                {
+                                    Round(IPBNumber.RoundingType.NEAR_INTEGER, result, currMBits, inStringNumber, offsetDot, inCapacity);
+                                }
+                            }
                     }
                     break;
             }

@@ -386,8 +386,9 @@ namespace PostBinary.Classes
                     }
                 
             }// foreach
-            tempStack = new Stack<Command>(returnVal);
-            return tempStack;
+            //tempStack = new Stack<Command>(returnVal);
+            //return tempStack;
+            return returnVal;
         }
     }
    
