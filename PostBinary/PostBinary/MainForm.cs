@@ -309,10 +309,10 @@ namespace PostBinary
               
               String testNumber = "-10.11";
               PBNumber pbNumber1 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB256, IPBNumber.RoundingType.POST_BINARY);
-              PBNumber pbNumber2 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.ZERO);
-              PBNumber pbNumber3 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.NEGATIVE_INFINITY);
-              PBNumber pbNumber4 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POSITIVE_INFINITY);
-              PBNumber pbNumber5 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.NEAR_INTEGER);
+              PBNumber pbNumber2 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB256, IPBNumber.RoundingType.ZERO);
+              PBNumber pbNumber3 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB256, IPBNumber.RoundingType.NEGATIVE_INFINITY);
+              PBNumber pbNumber4 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB256, IPBNumber.RoundingType.POSITIVE_INFINITY);
+              PBNumber pbNumber5 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB256, IPBNumber.RoundingType.NEAR_INTEGER);
 
               String test1 = pbNumber1.toDigit(30, true);
               rTBLog.Text += "PB " + test1 + "\r\n";

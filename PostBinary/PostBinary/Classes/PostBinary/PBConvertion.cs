@@ -1063,7 +1063,7 @@ namespace PostBinary.Classes.PostBinary
 
                 if (binFPartOut.IndexOf('M') == -1)
                 {
-                    return deleteNonSignificantBits(Sign + convert2to10IPart(binIPartOut) + "," + convert2to10FPart(binFPartOut, precision));
+                    return deleteNonSignificantBits((Sign == "1" ? "-" : "") + convert2to10IPart(binIPartOut) + "," + convert2to10FPart(binFPartOut, precision));
                     //CorrectResult2cc = Sign + binIPartOut + "," + binFPartOut;
                 }else
                 {
