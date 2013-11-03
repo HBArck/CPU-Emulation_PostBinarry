@@ -298,6 +298,7 @@ namespace PostBinary.Classes.PostBinary
             String outString = "";
             int plusOne = 0;
             int countAccuracy, i, currNumber;
+            AdditionalAccurancy = 0;
 
             try
             {
@@ -329,23 +330,21 @@ namespace PostBinary.Classes.PostBinary
                         }
                     }
 
-                    if (countAccuracy != ACCURANCY + AdditionalAccurancy - 1)
+                    if (outString.Length > inString.Length)
                     {
-                        if (outString.Length > inString.Length)
-                        {
-                            result = result + "1";
-                            outString = outString.Substring(1);
-                        }
-                        else
-                        {
-                            result = result + "0";
-                        }
-
+                        result = result + "1";
+                        outString = outString.Substring(1);
                     }
                     else
+                    {
+                        result = result + "0";
+                    }
+
+                    if (countAccuracy == ACCURANCY + AdditionalAccurancy - 1)
+                    {
                         if (isStringZero(result))
                             AdditionalAccurancy += 200;
-
+                    }
                     inString = outString;
                 }
             }

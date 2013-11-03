@@ -391,6 +391,7 @@ namespace PostBinary.Classes.Utils.Parser
             _operatorStack.Clear();
             _outputQueue.Clear();
 
+            #region Filling _outputQueue
             while (token != null)
             {
                 #region Sqare Root
@@ -865,6 +866,8 @@ namespace PostBinary.Classes.Utils.Parser
                 token = tp.GetToken();
             }
 
+            #endregion
+
             while (_operatorStack.Count > 0)
             {
                 var op = _operatorStack.Pop();
@@ -1017,6 +1020,11 @@ namespace PostBinary.Classes.Utils.Parser
             return op == "*" || op == "+" || op == "-" || op == "/" || op == "%";
         }
 
+        /// <summary>
+        /// Return priority of operations
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
         private static int GetPrecedence(TokenParser.Tokens token)
         {
             if (token == TokenParser.Tokens.Add || token == TokenParser.Tokens.Subtract)

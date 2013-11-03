@@ -7,7 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using System.Diagnostics;
+using System.Collections.Generic;
+using System.Reflection;
 
 using PostBinary.Classes;
 using PostBinary.Classes.Utils.Parser;
@@ -306,8 +308,8 @@ namespace PostBinary
               
               //rTBLog.Text += temp1.ToString();
               //rTBLog.Text += "\r\n" + temp.ToString();
-              
-              String testNumber = "-10.11";
+
+              String testNumber = "-10000000,1379999e-1055";
               PBNumber pbNumber1 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB256, IPBNumber.RoundingType.POST_BINARY);
               PBNumber pbNumber2 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB256, IPBNumber.RoundingType.ZERO);
               PBNumber pbNumber3 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB256, IPBNumber.RoundingType.NEGATIVE_INFINITY);
@@ -328,18 +330,43 @@ namespace PostBinary
               
               test1 = pbNumber5.toDigit(30, true);
               rTBLog.Text += "NInt " + test1 + "\r\n";
+              
 
+              /*
               PBConvertion pbc = new PBConvertion();
               PBMath pbmath = new PBMath();
-           //   pbNumber3 = pbmath.pADD(pbNumber1, pbNumber2);
+              pbNumber3 = pbmath.pADD(pbNumber1, pbNumber2);
 
               String test = pbmath.pCMP(pbNumber1, pbNumber1).ToString();
               String test2 = pbmath.pCMP(pbNumber1, pbNumber2).ToString();
               String test3 = pbmath.pCMP(pbNumber2, pbNumber1).ToString();
               
-              //rTBLog.Text = test1; 
+              rTBLog.Text = test1; 
+              */
 
               // Parse the input expression
+              /*YAMP.Parser.Load();
+              
+              YAMP.Parser.LoadPlugin(Assembly.LoadFile(Environment.CurrentDirectory + "\\YAMP.Physics.dll"));
+              YAMP.Parser parser = YAMP.Parser.Parse("123+3");
+              
+              //YAMP.Parser.Parse("123+3").Execute();
+              //parser.Simplify("123+");
+              rTBLog.Text += parser.Execute();
+              if (parser.Context.Parser.HasErrors && !parser.Context.Parser.IsParsed)
+              {
+                  rTBLog.Text += "Parsed Error\n\r";
+                 IEnumerable<YAMP.YAMPParseError> it  = parser.Context.Parser.Errors;
+                  foreach(YAMP.YAMPParseError error in parser.Context.Parser.Errors)
+                  {
+                      rTBLog.Text += error.Message + "\r\n";
+                  }
+                  return;
+              }
+              rTBLog.Text += parser.Context.Result;
+              */
+
+              /*
               Parser parser = new Parser();
               parser.Simplify("123+(3-120)/4-123-(5+20)/3");
               Stack _Stack = parser.GetStack();
@@ -359,6 +386,7 @@ namespace PostBinary
                       commandTable1.AddItem(temp, "0" + PBNumber.EmptyExponent[2] + PBNumber.EmptyMantissa[2]);
                   }
               }
+              */
               //DEBUG END
           }
     }
