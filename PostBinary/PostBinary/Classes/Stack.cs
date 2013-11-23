@@ -14,18 +14,15 @@ namespace PostBinary.Classes
     }
     public class Command : CommandBase
     {
-        public static String[] commNames = new String[]{ "LOAD", "ADD", "SUB", "MUL", "DIV", "EXP", "M{0}" };
-        /*public System.Collections.Hashtable commands = new System.Collections.Hashtable();*/
+        public static String[] commNames = new String[]{ "LOAD", "ADD", "SUB", "MUL", "DIV", "EXP", "SAVE M{0}" };
+
         public int Code;
         public PBNumber leftOperand;
         public PBNumber rightOperand;
         private PBNumber result;
         public PBNumber Result
         {
-            get
-            {
-                return result;
-            }
+            get { return result; }
             set{}
         }
         public int MemoryCellUsed;
@@ -48,7 +45,7 @@ namespace PostBinary.Classes
                                 this.MemoryCellNeeded = (int)inValue;
                             }
                             else
-                                this.leftOperand = (PBNumber)inValue;//new PBNumber(()inValue, IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
+                                this.leftOperand = (PBNumber)inValue;
                         }
                         catch (Exception ex)
                         {
@@ -78,7 +75,7 @@ namespace PostBinary.Classes
                                 this.MemoryCellNeeded = (int)inValue;
                             }
                             else
-                                this.leftOperand = (PBNumber)inValue;//new PBNumber(()inValue, IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
+                                this.leftOperand = (PBNumber)inValue;
                         }
                         catch (Exception ex)
                         {
@@ -204,10 +201,9 @@ namespace PostBinary.Classes
         {
             CommandStack = new Stack<Command>();
             StackMemory = new List<MemoryCell>();
-            
         }
     
-        public void PushCommand(Command comm)
+        private void PushCommand(Command comm)
         {
             CommandStack.Push(comm);
         }
@@ -226,6 +222,7 @@ namespace PostBinary.Classes
             {
                 if (StackMemory[index].CanBeErased == true) 
                 {
+                    StackMemory[index].CanBeErased = false;
                     returnValue = index;
                     break;
                 }
@@ -237,6 +234,7 @@ namespace PostBinary.Classes
             }
             return returnValue;
         }
+
         /// <summary>
         /// Push new Command for evaluation in stack.
         /// </summary>
@@ -252,6 +250,7 @@ namespace PostBinary.Classes
             Command currCommand = new Command(inOperation, inLeftOperand, requiredCellMemory, currEmptyCellMemory);
             commandStack.Push(currCommand);
         }
+
         /// <summary>
         /// Push new Command for evaluation in stack.
         /// </summary>
@@ -298,9 +297,16 @@ namespace PostBinary.Classes
         /// <returns>Command that was last added to stack, and was removed.</returns>
         public Command PopCommand()
         {
-            Command retValue = CommandStack.Pop();
-            this.freeMemory(retValue.MemoryCellUsed);
-
+            Command retValue;
+            try
+            {
+                retValue = CommandStack.Pop();
+                this.freeMemory(retValue.MemoryCellUsed);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
             return retValue;
         }
 
@@ -330,65 +336,69 @@ namespace PostBinary.Classes
                 {
                     // if Right points direct to value and Left operand stores in MemoryCell
 
-                    // Load left operand
-                    // KOP  |LOAD |M{#}|
-                    loadCommand = new Command(CommandBase.commVals.Load, currCommand.MemoryCellNeeded);
-                    returnVal.Push(loadCommand);
-
+                    // Save result to Memory Cell
+                    // KOP  |MEM  |M{#}|
+                    SaveCommand = new Command(CommandBase.commVals.Mem, currCommand.MemoryCellUsed);
+                    returnVal.Push(SaveCommand); 
+                    
                     // Load Right operand and Evaluate Operation
                     // KOP  |OP   |RO|
                     OperationCommand = new Command((CommandBase.commVals)currCommand.Code, currCommand.rightOperand);
                     returnVal.Push(OperationCommand);
 
-                    // Save result to Memory Cell
-                    // KOP  |MEM  |M{#}|
-                    SaveCommand = new Command(CommandBase.commVals.Mem, currCommand.MemoryCellUsed);
-                    returnVal.Push(SaveCommand); 
+                    // Load left operand
+                    // KOP  |LOAD |M{#}|
+                    loadCommand = new Command(CommandBase.commVals.Load, currCommand.MemoryCellNeeded);
+                    returnVal.Push(loadCommand);
                 }
                 else
                     if (currCommand.rightOperand == null)
                     {
                         // if Left points direct to value and Right operand stores in MemoryCell
 
-                        // Load left operand
-                        // KOP  |LOAD |LO|
-                        loadCommand = new Command(CommandBase.commVals.Load, currCommand.leftOperand);
-                        returnVal.Push(loadCommand);
+                        // Save result to Memory Cell
+                        // KOP  |MEM  |M{#}|
+                        SaveCommand = new Command(CommandBase.commVals.Mem, currCommand.MemoryCellUsed);
+                        returnVal.Push(SaveCommand); 
 
                         // Load Right operand and Evaluate Operation
                         // KOP  |OP   |M{#}|
                         OperationCommand = new Command((CommandBase.commVals)currCommand.Code, currCommand.MemoryCellNeeded);
                         returnVal.Push(OperationCommand);
 
-                        // Save result to Memory Cell
-                        // KOP  |MEM  |M{#}|
-                        SaveCommand = new Command(CommandBase.commVals.Mem, currCommand.MemoryCellUsed);
-                        returnVal.Push(SaveCommand); 
+                        // Load left operand
+                        // KOP  |LOAD |LO|
+                        loadCommand = new Command(CommandBase.commVals.Load, currCommand.leftOperand);
+                        returnVal.Push(loadCommand);
                     }
                     else
                     { 
                         // if Left and Right Operands are points direct to their values.
 
-                        // Load left operand
-                        // KOP  |LOAD |LO|
-                        loadCommand = new Command(CommandBase.commVals.Load, currCommand.leftOperand);
-                        returnVal.Push(loadCommand);
+                        // Save result to Memory Cell
+                        // KOP  |MEM  |M{#}|
+                        SaveCommand = new Command(CommandBase.commVals.Mem, currCommand.MemoryCellUsed);
+                        returnVal.Push(SaveCommand); 
 
                         // Load Right operand and Evaluate Operation
                         // KOP  |OP   |RO|
                         OperationCommand = new Command((CommandBase.commVals)currCommand.Code, currCommand.rightOperand);
                         returnVal.Push(OperationCommand);
 
-                        // Save result to Memory Cell
-                        // KOP  |MEM  |M{#}|
-                        SaveCommand = new Command(CommandBase.commVals.Mem, currCommand.MemoryCellUsed);
-                        returnVal.Push(SaveCommand); 
+                        // Load left operand
+                        // KOP  |LOAD |LO|
+                        loadCommand = new Command(CommandBase.commVals.Load, currCommand.leftOperand);
+                        returnVal.Push(loadCommand);
                     }
                 
             }// foreach
             //tempStack = new Stack<Command>(returnVal);
             //return tempStack;
             return returnVal;
+        }
+        public void clearStack()
+        {
+            while (this.PopCommand() != null){ }
         }
     }
    

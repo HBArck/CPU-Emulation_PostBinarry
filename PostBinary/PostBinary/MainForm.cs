@@ -19,31 +19,36 @@ namespace PostBinary
     public partial class MainForm : Form
     {
         #region Variables
-       
-            #region VarList Variables
-            // VarList Global Variables for control interconnection
-            int selectedListIndex;        
-            /// <summary>
-            /// Dynamic moving TextBox component for change selected item text of VarList
-            /// </summary>
-            TextBox dynamicTextBox; // this TextBox Should appear 
-            /// <summary>
-            /// Name of variable in VarList component
-            /// </summary>
-            String varName;
 
-            /// <summary>
-            /// Selected item Text in VarList component before changing
-            /// </summary>
-            String prevText; 
+            #region Form Members
+                //Parser _validationParser = new Parser();
+                MathExpParser _validationParser = new MathExpParser();
+            #endregion
+
+            #region VarList Variables
+                // VarList Global Variables for control interconnection
+                int selectedListIndex;        
+                /// <summary>
+                /// Dynamic moving TextBox component for change selected item text of VarList
+                /// </summary>
+                TextBox dynamicTextBox; // this TextBox Should appear 
+                /// <summary>
+                /// Name of variable in VarList component
+                /// </summary>
+                String varName;
+
+                /// <summary>
+                /// Selected item Text in VarList component before changing
+                /// </summary>
+                String prevText; 
         
             #endregion
 
             #region MainCore Variables
-            //Main Core
-            Classes.ProgramCore ProgCore;
-            Classes.Validator Validator;
-            //Parser muParser;
+                //Main Core
+                Classes.ProgramCore ProgCore;
+                Classes.Validator Validator;
+                //Parser muParser;
             #endregion
 
         #endregion
@@ -55,14 +60,14 @@ namespace PostBinary
 
         private void bStart_EnabledChanged(object sender, EventArgs e)
         {
-        /*    if (!bStart.Enabled)
+            if (!bStart.Enabled)
             {
                 bStart.BackgroundImage = Properties.Resources.bStartGray;
             }
             else
             {
                 bStart.BackgroundImage = Properties.Resources.bStart;
-            }*/
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -259,8 +264,7 @@ namespace PostBinary
             ProgCore = new Classes.ProgramCore();
             Validator = new Classes.Validator();
             #endregion
-          
-            bStart.Enabled = true;
+
         }
 
      
@@ -298,7 +302,7 @@ namespace PostBinary
               currentresponce = Validator.validate(this.richTextBox1.Text);
               if (!currentresponce.Error)
               {*/
-                  bStart.Enabled = true;
+                  //bStart.Enabled = true;
               //}
           }
 
@@ -308,7 +312,7 @@ namespace PostBinary
               
               //rTBLog.Text += temp1.ToString();
               //rTBLog.Text += "\r\n" + temp.ToString();
-
+              /*
               String testNumber = "-10000000,1379999e-1055";
               PBNumber pbNumber1 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB256, IPBNumber.RoundingType.POST_BINARY);
               PBNumber pbNumber2 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB256, IPBNumber.RoundingType.ZERO);
@@ -330,7 +334,7 @@ namespace PostBinary
               
               test1 = pbNumber5.toDigit(30, true);
               rTBLog.Text += "NInt " + test1 + "\r\n";
-              
+              */
 
               /*
               PBConvertion pbc = new PBConvertion();
@@ -344,50 +348,116 @@ namespace PostBinary
               rTBLog.Text = test1; 
               */
 
-              // Parse the input expression
-              /*YAMP.Parser.Load();
-              
-              YAMP.Parser.LoadPlugin(Assembly.LoadFile(Environment.CurrentDirectory + "\\YAMP.Physics.dll"));
-              YAMP.Parser parser = YAMP.Parser.Parse("123+3");
-              
-              //YAMP.Parser.Parse("123+3").Execute();
-              //parser.Simplify("123+");
-              rTBLog.Text += parser.Execute();
-              if (parser.Context.Parser.HasErrors && !parser.Context.Parser.IsParsed)
-              {
-                  rTBLog.Text += "Parsed Error\n\r";
-                 IEnumerable<YAMP.YAMPParseError> it  = parser.Context.Parser.Errors;
-                  foreach(YAMP.YAMPParseError error in parser.Context.Parser.Errors)
-                  {
-                      rTBLog.Text += error.Message + "\r\n";
-                  }
-                  return;
-              }
-              rTBLog.Text += parser.Context.Result;
-              */
+              MathExpParser mpar = new MathExpParser(this.rTBInput.Text);
 
-              /*
-              Parser parser = new Parser();
-              parser.Simplify("123+(3-120)/4-123-(5+20)/3");
-              Stack _Stack = parser.GetStack();
-              Stack<Command> pbStack;// = new Stack<Com>();
-              pbStack = _Stack.populateStack();
-              String temp = "";
-              foreach (var currElem in pbStack)
+              if (mpar.compile(this.rTBInput.Text) == 0)
               {
-                  if (currElem.leftOperand != null)
-                      commandTable1.AddItem(Command.commNames[currElem.Code] + " " + currElem.leftOperand.InitValue, currElem.leftOperand.Sign + currElem.leftOperand.Exponent + currElem.leftOperand.Mantissa);
-                  else
+                  rTBLog.Text = "";
+                  Parser parser = new Parser();
+                  try
                   {
-                      if (currElem.Code != (int)CommandBase.commVals.Mem)
-                        temp = string.Format(Command.commNames[currElem.Code] +" "+ Command.commNames[(int)CommandBase.commVals.Mem], currElem.MemoryCellNeeded);
+                      parser.Simplify(this.rTBInput.Text);
+                  }
+                  catch (Exception ex)
+                  {
+                      // Highlight input string
+                      rTBLog.Text += "Done";
+                      return;
+                  }
+
+                  /*
+                  Parser parser = new Parser();
+                  parser.Simplify("123+(3-120)/4-123-(5+20)/3");*/
+                  try
+                  {
+                      Stack _Stack = parser.GetStack();
+                      Stack<Command> pbStack;// = new Stack<Com>();
+                      pbStack = _Stack.populateStack();
+                      
+                      String temp = "";
+                      commandTable1.clearTable();
+                      if (pbStack.Count > 0)
+                      {
+                          foreach (var currElem in pbStack)
+                          {
+                              if (currElem.leftOperand != null)
+                                  commandTable1.AddItem(Command.commNames[currElem.Code] + " " + currElem.leftOperand.InitValue, currElem.leftOperand.Sign + currElem.leftOperand.Exponent + currElem.leftOperand.Mantissa);
+                              else
+                              {
+                                  if (currElem.Code != (int)CommandBase.commVals.Mem)
+                                      temp = string.Format(Command.commNames[currElem.Code] + " " + Command.commNames[(int)CommandBase.commVals.Mem].Substring(4), currElem.MemoryCellNeeded);//
+                                  else
+                                      temp = string.Format(Command.commNames[currElem.Code], currElem.MemoryCellNeeded);
+                                  commandTable1.AddItem(temp, "0" + PBNumber.EmptyExponent[2] + PBNumber.EmptyMantissa[2]);
+                              }
+                          }
+                          rTBLog.Text += "Stack filling Done!";
+                      }
                       else
-                          temp = string.Format(Command.commNames[currElem.Code] , currElem.MemoryCellNeeded);
-                      commandTable1.AddItem(temp, "0" + PBNumber.EmptyExponent[2] + PBNumber.EmptyMantissa[2]);
+                      {
+                          this.rTBLog.Text += "Operation Require!";
+                      }
+                  }
+                  catch (Exception ex)
+                  {
+                      this.rTBLog.Text += "Stack Filling failed!";
+                      return;
                   }
               }
-              */
+              
               //DEBUG END
           }
+
+          private void richTextBox1_KeyPress(object sender, KeyPressEventArgs e)
+          {
+              if (validationTimer.Enabled)
+              {
+                  validationTimer.Stop();
+              }
+              bStart.Enabled = false;
+              validationTimer.Start();
+          }
+
+          private void validationTimer_Tick(object sender, EventArgs e)
+          {
+              bool _error = false;
+              try{
+                  if (_validationParser.compile(this.rTBInput.Text) == -1)
+                      _error = true;
+                  //_validationParser.Simplify(this.rTBInput.Text);
+              }
+              catch(Exception ex)
+              {
+                  this.rTBInput.ForeColor = Color.Red;
+                  this.rTBLog.Text += "Validation Failed! \n\r";
+                  _error = true;
+                  bStart.Enabled = false;
+              }
+              finally
+              {
+                  validationTimer.Stop();
+              }
+              if (!_error)
+              {
+                  this.rTBLog.Text += "Validation Success. \n\r";
+                  this.rTBInput.ForeColor = Color.Black;
+                  bStart.Enabled = true;
+              }
+              else
+              {
+                  this.rTBInput.ForeColor = Color.Red;
+                  this.rTBLog.Text += "Validation Failed! \n\r";
+                  _error = true;
+                  bStart.Enabled = false;
+              }
+              validationTimer.Stop();
+          }
+
+          private void stepListToolStripMenuItem_Click(object sender, EventArgs e)
+          {
+              this.rTBInput.Text = "123-9/334+(222/999)-(90-9)";
+              this.richTextBox1_KeyPress(sender, new KeyPressEventArgs('e'));
+          }
+          
     }
 }

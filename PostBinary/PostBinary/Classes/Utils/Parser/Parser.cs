@@ -4,6 +4,20 @@ using System.Linq;
 
 namespace PostBinary.Classes.Utils.Parser 
 {
+    /// <summary>
+    /// Saves data when stack willing
+    /// </summary>
+    public class StackData 
+    {
+        public String dataType;
+        public double dataValue;
+        public StackData(String _dataType, double _dataValue)
+        {
+            this.dataType = _dataType;
+            this.dataValue = _dataValue;
+        }
+    }
+
     public class Parser
     {
         private readonly Queue<NumberClass> _outputQueue;
@@ -361,11 +375,27 @@ namespace PostBinary.Classes.Utils.Parser
 
             return double.Parse(retval.IntValue.ToString());
         }
+        public bool validateExpression(string expression)
+        {
+            // Find empty brackets
+            // Find brackets without operands and operations
+            // Operator without one operands(left or right side)
+            // Dublicated operations
+            var tp = new TokenParser();
+            tp.InputString = expression;
 
+            Token token = tp.GetToken();
+            while (token != null)
+            {
+                System.Console.WriteLine("Name= "+token.TokenName + " Value="+ token.TokenValue);
+                token = tp.GetToken();
+            }
+            return false;
+        }
         public SimplificationReturnValue Simplify(string equation)
         {
             var retval = new SimplificationReturnValue { OriginalEquation = equation };
-            
+            validateExpression(equation);
             if (equation.Trim().StartsWith("-") || equation.Trim().StartsWith("+"))
                 equation = "0" + equation;
             equation = equation.Replace("(+", "(0+");
@@ -394,7 +424,7 @@ namespace PostBinary.Classes.Utils.Parser
             #region Filling _outputQueue
             while (token != null)
             {
-                #region Sqare Root
+                #region Sqare Root Token
                 if (token.TokenName == TokenParser.Tokens.Sqrt)
                 {
                     string expression = token.TokenValue.Substring(4, token.TokenValue.Length - 4);
@@ -420,7 +450,7 @@ namespace PostBinary.Classes.Utils.Parser
                 }
                 #endregion
 
-                #region Sinus
+                #region Sinus Token
                 if (token.TokenName == TokenParser.Tokens.Sin)
                 {
                     string expression = token.TokenValue.Substring(3, token.TokenValue.Length - 3);
@@ -445,8 +475,8 @@ namespace PostBinary.Classes.Utils.Parser
                     }
                 }
                 #endregion
-                
-                #region Log
+
+                #region Log Token
                 if (token.TokenName == TokenParser.Tokens.Log)
                 {
                     string expression = token.TokenValue.Substring(3, token.TokenValue.Length - 3);
@@ -471,8 +501,8 @@ namespace PostBinary.Classes.Utils.Parser
                     }
                 }
                 #endregion
-              
-                #region Log Natural
+
+                #region Log Natural Token
                 if (token.TokenName == TokenParser.Tokens.LogN)
                 {
                     string expression = token.TokenValue.Substring(4, token.TokenValue.Length - 4);
@@ -497,8 +527,8 @@ namespace PostBinary.Classes.Utils.Parser
                     }
                 }
                 #endregion
-                
-                #region Tangens
+
+                #region Tangens Token
                 if (token.TokenName == TokenParser.Tokens.Tan)
                 {
                     string expression = token.TokenValue.Substring(3, token.TokenValue.Length - 3);
@@ -524,7 +554,7 @@ namespace PostBinary.Classes.Utils.Parser
                 }
                 #endregion
 
-                #region Absulute Value
+                #region Absulute Value Token
                 if (token.TokenName == TokenParser.Tokens.Abs)
                 {
                     string expression = token.TokenValue.Substring(3, token.TokenValue.Length - 3);
@@ -550,7 +580,7 @@ namespace PostBinary.Classes.Utils.Parser
                 }
                 #endregion
 
-                #region Cosinus
+                #region Cosinus Token
                 if (token.TokenName == TokenParser.Tokens.Cos)
                 {
                     string expression = token.TokenValue.Substring(3, token.TokenValue.Length - 3);
@@ -575,7 +605,8 @@ namespace PostBinary.Classes.Utils.Parser
                     }
                 }
                 #endregion
-                
+
+                #region Unknown Token
                 if ((int)token.TokenName >= 100)
                 {
                     int ndx1 = token.TokenValue.IndexOf("(");
@@ -676,7 +707,9 @@ namespace PostBinary.Classes.Utils.Parser
                         throw new NoSuchFunctionException();//StringResources.No_such_function_defined + ": " + fn);
                     }
                 }
+                #endregion
 
+                #region Function Token
                 if (token.TokenName == TokenParser.Tokens.Function)
                 {
                     int ndx1 = token.TokenValue.IndexOf("(");
@@ -765,7 +798,9 @@ namespace PostBinary.Classes.Utils.Parser
                         }
                     }
                 }
+                #endregion
 
+                #region Variable Token
                 if (token.TokenName == TokenParser.Tokens.Variable)
                 {
                     if (_variables.ContainsKey(token.TokenValue))
@@ -788,12 +823,17 @@ namespace PostBinary.Classes.Utils.Parser
                         throw new NoSuchVariableException();//StringResources.Undefined_Variable + ": " + token.TokenValue);
                     }
                 }
+                #endregion
 
+                #region White space or NewLine Token
                 if (token.TokenName == TokenParser.Tokens.Whitespace || token.TokenName == TokenParser.Tokens.Newline)
                 {
                     token = tp.GetToken();
                     continue;
                 }
+                #endregion
+
+                #region Integer or Float token
                 if (token.TokenName == TokenParser.Tokens.Integer || token.TokenName == TokenParser.Tokens.Float)
                 {
                     var nc = new NumberClass();
@@ -811,6 +851,9 @@ namespace PostBinary.Classes.Utils.Parser
                     }
                     _outputQueue.Enqueue(nc);
                 }
+                #endregion
+
+                #region IsOperator Token
                 if (IsOperator(token.TokenName))
                 {
                     if (_operatorStack.Count > 0)
@@ -836,8 +879,14 @@ namespace PostBinary.Classes.Utils.Parser
                     }
                     _operatorStack.Push(token.TokenValue);
                 }
+                #endregion
+
+                #region Lparen Token
                 if (token.TokenName == TokenParser.Tokens.Lparen)
                     _operatorStack.Push(token.TokenValue);
+                #endregion
+
+                #region Rparen Token
                 if (token.TokenName == TokenParser.Tokens.Rparen)
                 {
                     if (_operatorStack.Count > 0)
@@ -863,6 +912,8 @@ namespace PostBinary.Classes.Utils.Parser
                         throw new MismatchedParenthesisException();
                     }
                 }
+                #endregion
+
                 token = tp.GetToken();
             }
 
@@ -885,95 +936,119 @@ namespace PostBinary.Classes.Utils.Parser
             bool floatAnswer = true;// _outputQueue.Any(v => v.NumberType == NumberClass.NumberTypes.Float);
             var intStack = new Stack<int>();
             int lastMemoryCell = 0;
-
-            if (floatAnswer || _outputQueue.Any(v => v.Operator == "/"))
+            /*
+             * Clearing stack before use it;
+             */
+            try
             {
-                var dblStack = new Stack<double>();
-                String leftOperand, rightOperand;
-                int leftOperandInt, rightOperandInt;
-                foreach (var nc in _outputQueue)
+                _pbStack.clearStack();
+                if (floatAnswer || _outputQueue.Any(v => v.Operator == "/"))
                 {
-                    if (nc.NumberType == NumberClass.NumberTypes.Integer)
+                    //var dblStack = new Stack<double>();
+
+                    // Type{integer,float,operator, memory},{value/mem index}
+                    var newStack = new Stack<StackData>();
+                    String leftOperand, rightOperand;
+                    int leftOperandInt, rightOperandInt;
+                    foreach (var nc in _outputQueue)
                     {
-                        dblStack.Push(nc.IntNumber);
-                        continue;
-                    }
-                    if (nc.NumberType == NumberClass.NumberTypes.Float)
-                    {
-                        dblStack.Push(nc.FloatNumber);
-                        continue;
-                    }
-                    if (nc.NumberType == NumberClass.NumberTypes.Operator)
-                    {
-                       
-                        // Stack filling
-                        if ((dblStack.Peek() > 0) && (dblStack.ElementAt<double>(1) > 0))
+                        if (nc.NumberType == NumberClass.NumberTypes.Integer)
                         {
-                            rightOperand = dblStack.Pop().ToString();
-                            leftOperand = dblStack.Pop().ToString();
-                            _pbStack.PushCommand(nc.Operator, leftOperand, rightOperand);
+                            //dblStack.Push(nc.IntNumber);
+                            newStack.Push(new StackData("int", nc.IntNumber));
+                            continue;
                         }
-                        else
+                        if (nc.NumberType == NumberClass.NumberTypes.Float)
                         {
-                            if (dblStack.Peek() < 0)
+                            //dblStack.Push(nc.FloatNumber);
+                            newStack.Push(new StackData("float", nc.IntNumber));
+                            continue;
+                        }
+                        if (nc.NumberType == NumberClass.NumberTypes.Operator)
+                        {
+
+                            // Stack filling
+                            // if left operand aren't memory cell and right aren't memory cell
+                            if ((newStack.Peek().dataType != "mem") && (newStack.ElementAt(newStack.Count-2).dataType != "mem"))
                             {
-                                leftOperandInt = (int)-(dblStack.Pop() + 1);
-                                rightOperand = dblStack.Pop().ToString();
-                                _pbStack.PushCommand(nc.Operator, leftOperandInt, rightOperand);
+                                rightOperand = newStack.Pop().dataValue.ToString();
+                                leftOperand = newStack.Pop().dataValue.ToString();
+                                
+                                _pbStack.PushCommand(nc.Operator, leftOperand, rightOperand);
                             }
                             else
                             {
-                                
-                                leftOperand = dblStack.Pop().ToString();
-                                rightOperandInt = (int)-(dblStack.Pop() + 1);
-                                _pbStack.PushCommand(nc.Operator, leftOperand, rightOperandInt);
+                                // if left operand stored in memory
+                                if (newStack.Peek().dataType == "mem")
+                                {
+                                    
+                                    leftOperandInt = (int)newStack.Pop().dataValue;
+                                    rightOperand = newStack.Pop().dataValue.ToString();
+
+                                    // use push with memory index for left operand
+                                    _pbStack.PushCommand(nc.Operator, leftOperandInt, rightOperand);
+                                }
+                                else
+                                {
+                                    /* If right operand stored in memory */
+                                    // Get left operand value
+                                    leftOperand = newStack.Pop().dataValue.ToString();
+                                    // Get right operand memory index
+                                    rightOperandInt = (int)newStack.Pop().dataValue;
+                                    // Use push with memory index for right operand
+                                    _pbStack.PushCommand(nc.Operator, leftOperand, rightOperandInt);
+                                }
                             }
+                            //double val = DoMath(nc.Operator, dblStack.Pop(), dblStack.Pop());
+
+                            lastMemoryCell = _pbStack.PeekCommand().MemoryCellUsed;
+                            //dblStack.Push(-lastMemoryCell - 1);
+                            newStack.Push(new StackData("mem", lastMemoryCell));
                         }
-                        //double val = DoMath(nc.Operator, dblStack.Pop(), dblStack.Pop());
-
-                        lastMemoryCell = _pbStack.PeekCommand().MemoryCellUsed;
-                        dblStack.Push( -lastMemoryCell - 1 );
-                        
                     }
-                }
 
-                if (dblStack.Count == 0)
-                {
-                    throw new CouldNotParseExpressionException();
-                }
-                retval.DoubleValue = dblStack.Pop();
-                retval.ReturnType = SimplificationReturnValue.ReturnTypes.Float;
-            }
-            else
-            {
-              
-                foreach (var nc in _outputQueue)
-                {
-                    if (nc.NumberType == NumberClass.NumberTypes.Integer)
-                        intStack.Push(nc.IntNumber);
-                    if (nc.NumberType == NumberClass.NumberTypes.Float)
-                        intStack.Push((int)nc.FloatNumber);
-                    if (nc.NumberType == NumberClass.NumberTypes.Operator)
+                    if (newStack.Count == 0)
                     {
-                        // Stack filling
-                        if (intStack.Count == 2)
-                            _pbStack.PushCommand(nc.Operator, intStack.Pop().ToString(), intStack.Pop().ToString());
-                        else
-                            if (intStack.Count == 1)
-                                _pbStack.PushCommand(nc.Operator, intStack.Pop().ToString(), lastMemoryCell);
-                        // Delete this and add stack filling
-                        //int val = DoMath(nc.Operator, intStack.Pop(), intStack.Pop());
-                        lastMemoryCell = _pbStack.PeekCommand().MemoryCellUsed;
-                        //intStack.Push(val);
+                        throw new CouldNotParseExpressionException();
                     }
+                    retval.DoubleValue = newStack.Pop().dataValue;
+                    retval.ReturnType = SimplificationReturnValue.ReturnTypes.Float;
                 }
-
-                if (intStack.Count == 0)
+                else
                 {
-                    throw new CouldNotParseExpressionException();
+
+                    foreach (var nc in _outputQueue)
+                    {
+                        if (nc.NumberType == NumberClass.NumberTypes.Integer)
+                            intStack.Push(nc.IntNumber);
+                        if (nc.NumberType == NumberClass.NumberTypes.Float)
+                            intStack.Push((int)nc.FloatNumber);
+                        if (nc.NumberType == NumberClass.NumberTypes.Operator)
+                        {
+                            // Stack filling
+                            if (intStack.Count == 2)
+                                _pbStack.PushCommand(nc.Operator, intStack.Pop().ToString(), intStack.Pop().ToString());
+                            else
+                                if (intStack.Count == 1)
+                                    _pbStack.PushCommand(nc.Operator, intStack.Pop().ToString(), lastMemoryCell);
+                            // Delete this and add stack filling
+                            //int val = DoMath(nc.Operator, intStack.Pop(), intStack.Pop());
+                            lastMemoryCell = _pbStack.PeekCommand().MemoryCellUsed;
+                            //intStack.Push(val);
+                        }
+                    }
+
+                    if (intStack.Count == 0)
+                    {
+                        throw new CouldNotParseExpressionException();
+                    }
+                    retval.IntValue = intStack.Pop();
+                    retval.ReturnType = SimplificationReturnValue.ReturnTypes.Integer;
                 }
-                retval.IntValue = intStack.Pop();
-                retval.ReturnType = SimplificationReturnValue.ReturnTypes.Integer;
+            }
+            catch (Exception ex)
+            {
+                return null;
             }
 
             return retval;

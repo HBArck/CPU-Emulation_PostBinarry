@@ -56,6 +56,7 @@ namespace PostBinary.Components
 
         private List<CommanTableItem> CommandList;
 
+        #region Constructor
         public CommandTable()
         {
             InitializeComponent();
@@ -64,6 +65,9 @@ namespace PostBinary.Components
             this.HScroll = false;
             this.VScroll = true;
         }
+        #endregion
+
+        #region Events
 
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -112,21 +116,23 @@ namespace PostBinary.Components
             inner.Dispose();
             #endregion
 
-
-
             //base.OnPaint(e);
         }
+
         protected override void OnScroll(ScrollEventArgs se)
         {
             PaintEventArgs ev = new PaintEventArgs(this.CreateGraphics(), ClientRectangle);
             this.OnPaint(ev);
             base.OnScroll(se);
         }
+        #endregion
+
+        #region Methods
 
         public void AddItem(CommanTableItem newTableItem)
         {
-            CommandList.Add(newTableItem);
-            AddControl(newTableItem.CompactNumber);
+            this.CommandList.Add(newTableItem);
+            this.AddControl(newTableItem.CompactNumber);
             PaintEventArgs ev = new PaintEventArgs(this.CreateGraphics(), ClientRectangle);
             this.OnPaint(ev);
         }
@@ -134,7 +140,7 @@ namespace PostBinary.Components
         public void AddItem(String CommandName, String Value)
         {
             CommanTableItem tempItem = new CommanTableItem(CommandName, Value);
-            CommandList.Add(tempItem);
+            this.CommandList.Add(tempItem);
             AddControl(tempItem.CompactNumber);
             PaintEventArgs ev = new PaintEventArgs(this.CreateGraphics(), ClientRectangle);
             this.OnPaint(ev);
@@ -147,19 +153,43 @@ namespace PostBinary.Components
             this.Controls.Add(newControl);
             this.Controls[len].Location = new Point(190, 1 + len * 20 + ScrollOffset.Height);
             this.Controls[len].Show();
-
         }
 
+        /// <summary>
+        /// Clears table.
+        /// </summary>
+        public void clearTable() 
+        {
+            this.CommandList.Clear();
+            this.Controls.Clear();
+            PaintEventArgs ev = new PaintEventArgs(this.CreateGraphics(), ClientRectangle);
+            this.OnPaint(ev);
+        }
+
+        /// <summary>
+        /// Retrieves item by index.
+        /// </summary>
+        /// <param name="index">Index of command</param>
+        /// <returns>Table item or null.</returns>
         public CommanTableItem GetItem(int index)
         {
-            return CommandList[index];
+            try
+            {
+                return CommandList[index];
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
+
         public void ChangeItemValue(int index, String newItemValue)
         {
             CommandList[index].CompactNumber.Number = newItemValue;
             PaintEventArgs ev = new PaintEventArgs(this.CreateGraphics(), ClientRectangle);
             this.OnPaint(ev);
         }
+        #endregion
 
     }
 

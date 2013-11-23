@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tSSLStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -43,6 +44,8 @@
             this.validateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.variableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.varListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showTreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.tResult = new System.Windows.Forms.TextBox();
             this.tInfelicity = new System.Windows.Forms.TextBox();
@@ -57,9 +60,11 @@
             this.textBox8 = new System.Windows.Forms.TextBox();
             this.textBox9 = new System.Windows.Forms.TextBox();
             this.textBox10 = new System.Windows.Forms.TextBox();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.rTBInput = new System.Windows.Forms.RichTextBox();
             this.rTBLog = new System.Windows.Forms.RichTextBox();
+            this.validationTimer = new System.Windows.Forms.Timer(this.components);
             this.commandTable1 = new PostBinary.Components.CommandTable();
+            this.stepListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -86,7 +91,8 @@
             this.fileToolStripMenuItem,
             this.optionsToolStripMenuItem,
             this.toolStripMenuItem1,
-            this.debugToolStripMenuItem});
+            this.debugToolStripMenuItem,
+            this.toolsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(892, 24);
@@ -149,7 +155,8 @@
             // 
             this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.validatorToolStripMenuItem,
-            this.varListToolStripMenuItem});
+            this.varListToolStripMenuItem,
+            this.stepListToolStripMenuItem});
             this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
             this.debugToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.debugToolStripMenuItem.Text = "Debug";
@@ -160,7 +167,7 @@
             this.validateToolStripMenuItem,
             this.variableToolStripMenuItem});
             this.validatorToolStripMenuItem.Name = "validatorToolStripMenuItem";
-            this.validatorToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+            this.validatorToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.validatorToolStripMenuItem.Text = "Validator";
             // 
             // validateToolStripMenuItem
@@ -180,9 +187,23 @@
             // varListToolStripMenuItem
             // 
             this.varListToolStripMenuItem.Name = "varListToolStripMenuItem";
-            this.varListToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+            this.varListToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.varListToolStripMenuItem.Text = "VarList";
             this.varListToolStripMenuItem.Click += new System.EventHandler(this.varListToolStripMenuItem_Click);
+            // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showTreeToolStripMenuItem});
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.toolsToolStripMenuItem.Text = "Tools";
+            // 
+            // showTreeToolStripMenuItem
+            // 
+            this.showTreeToolStripMenuItem.Name = "showTreeToolStripMenuItem";
+            this.showTreeToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.showTreeToolStripMenuItem.Text = "Show Tree";
             // 
             // progressBar1
             // 
@@ -207,16 +228,18 @@
             // 
             // bStart
             // 
+            this.bStart.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.bStart.BackgroundImage = global::PostBinary.Properties.Resources.bStartGray;
-            this.bStart.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.bStart.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.bStart.Enabled = false;
             this.bStart.FlatAppearance.BorderSize = 0;
             this.bStart.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.bStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.bStart.Location = new System.Drawing.Point(653, 30);
+            this.bStart.Location = new System.Drawing.Point(651, 27);
             this.bStart.Name = "bStart";
-            this.bStart.Size = new System.Drawing.Size(38, 45);
-            this.bStart.TabIndex = 7;
-            this.bStart.UseVisualStyleBackColor = true;
+            this.bStart.Size = new System.Drawing.Size(51, 48);
+            this.bStart.TabIndex = 2;
+            this.bStart.UseVisualStyleBackColor = false;
             this.bStart.EnabledChanged += new System.EventHandler(this.bStart_EnabledChanged);
             this.bStart.Click += new System.EventHandler(this.bStart_Click);
             // 
@@ -340,13 +363,14 @@
             this.textBox10.TabIndex = 29;
             this.textBox10.Text = "%";
             // 
-            // richTextBox1
+            // rTBInput
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(20, 42);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(626, 20);
-            this.richTextBox1.TabIndex = 30;
-            this.richTextBox1.Text = "";
+            this.rTBInput.Location = new System.Drawing.Point(20, 42);
+            this.rTBInput.Name = "rTBInput";
+            this.rTBInput.Size = new System.Drawing.Size(626, 20);
+            this.rTBInput.TabIndex = 1;
+            this.rTBInput.Text = "";
+            this.rTBInput.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.richTextBox1_KeyPress);
             // 
             // rTBLog
             // 
@@ -355,6 +379,11 @@
             this.rTBLog.Size = new System.Drawing.Size(626, 96);
             this.rTBLog.TabIndex = 31;
             this.rTBLog.Text = "";
+            // 
+            // validationTimer
+            // 
+            this.validationTimer.Interval = 2000;
+            this.validationTimer.Tick += new System.EventHandler(this.validationTimer_Tick);
             // 
             // commandTable1
             // 
@@ -367,6 +396,13 @@
             this.commandTable1.Size = new System.Drawing.Size(682, 355);
             this.commandTable1.TabIndex = 32;
             // 
+            // stepListToolStripMenuItem
+            // 
+            this.stepListToolStripMenuItem.Name = "stepListToolStripMenuItem";
+            this.stepListToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.stepListToolStripMenuItem.Text = "StepList";
+            this.stepListToolStripMenuItem.Click += new System.EventHandler(this.stepListToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -375,7 +411,7 @@
             this.ClientSize = new System.Drawing.Size(892, 699);
             this.Controls.Add(this.commandTable1);
             this.Controls.Add(this.rTBLog);
-            this.Controls.Add(this.richTextBox1);
+            this.Controls.Add(this.rTBInput);
             this.Controls.Add(this.textBox9);
             this.Controls.Add(this.textBox5);
             this.Controls.Add(this.textBox1);
@@ -438,9 +474,13 @@
         private System.Windows.Forms.ToolStripMenuItem validateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem variableToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem varListToolStripMenuItem;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.RichTextBox rTBInput;
         private System.Windows.Forms.RichTextBox rTBLog;
         private Components.CommandTable commandTable1;
+        private System.Windows.Forms.Timer validationTimer;
+        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showTreeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem stepListToolStripMenuItem;
     }
 }
 
