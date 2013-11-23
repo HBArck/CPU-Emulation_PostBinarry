@@ -969,7 +969,7 @@ namespace PostBinary.Classes.Utils.Parser
 
                             // Stack filling
                             // if left operand aren't memory cell and right aren't memory cell
-                            if ((newStack.Peek().dataType != "mem") && (newStack.ElementAt(newStack.Count-2).dataType != "mem"))
+                            if ((newStack.Peek().dataType != "mem") && (newStack.ElementAt(newStack.Count-1).dataType != "mem"))
                             {
                                 rightOperand = newStack.Pop().dataValue.ToString();
                                 leftOperand = newStack.Pop().dataValue.ToString();
