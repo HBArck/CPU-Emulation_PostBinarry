@@ -294,60 +294,67 @@ namespace PostBinary
                 }
             }
             #endregion
-        #endregion
 
-          private void richTextBox1_TextChanged(object sender, EventArgs e)
-          {
-              /*ValidationResponce currentresponce;
-              currentresponce = Validator.validate(this.richTextBox1.Text);
-              if (!currentresponce.Error)
-              {*/
-                  //bStart.Enabled = true;
-              //}
-          }
+            private void stepListToolStripMenuItem_Click(object sender, EventArgs e)
+            {
+                this.rTBInput.Text = "123-9/334+(222/999)-(90-9)";
+                this.richTextBox1_KeyPress(sender, new KeyPressEventArgs('e'));
+            }
+
+            private void tetraMathToolStripMenuItem_Click(object sender, EventArgs e)
+            {
+                rTBLog.Text += "\n\r _________TETRA MATH TESTING BEGIN";
+                String testNumber = "-10000000,1379999e-1055";
+                PBNumber pbNumber1 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB256, IPBNumber.RoundingType.POST_BINARY);
+                PBNumber pbNumber2 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB256, IPBNumber.RoundingType.ZERO);
+                PBNumber pbNumber3 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB256, IPBNumber.RoundingType.NEGATIVE_INFINITY);
+                PBNumber pbNumber4 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB256, IPBNumber.RoundingType.POSITIVE_INFINITY);
+                PBNumber pbNumber5 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB256, IPBNumber.RoundingType.NEAR_INTEGER);
+
+                PBConvertion pbc = new PBConvertion();
+                PBMath pbmath = new PBMath();
+                pbNumber3 = pbmath.pADD(pbNumber1, pbNumber2);
+
+                String test1 = pbmath.pCMP(pbNumber1, pbNumber1).ToString();
+                String test2 = pbmath.pCMP(pbNumber1, pbNumber2).ToString();
+                String test3 = pbmath.pCMP(pbNumber2, pbNumber1).ToString();
+
+                rTBLog.Text += "\r\n" + test1;
+                rTBLog.Text += "\r\n" + test2;
+                rTBLog.Text += "\r\n" + test3;
+                rTBLog.Text += "\n\r _________TETRA MATH TESTING END";
+            }
+
+            private void pBNumberToolStripMenuItem_Click(object sender, EventArgs e)
+            {
+                rTBLog.Text += "\n\r _________PBNumer TESTING BEGIN";
+                String testNumber = "-10000000,1379999e-1055";
+                PBNumber pbNumber1 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB256, IPBNumber.RoundingType.POST_BINARY);
+                PBNumber pbNumber2 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB256, IPBNumber.RoundingType.ZERO);
+                PBNumber pbNumber3 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB256, IPBNumber.RoundingType.NEGATIVE_INFINITY);
+                PBNumber pbNumber4 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB256, IPBNumber.RoundingType.POSITIVE_INFINITY);
+                PBNumber pbNumber5 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB256, IPBNumber.RoundingType.NEAR_INTEGER);
+
+                String test1 = pbNumber1.toDigit(30, true);
+                rTBLog.Text += "PB " + test1 + "\r\n";
+
+                test1 = pbNumber2.toDigit(30, true);
+                rTBLog.Text += "ZERO " + test1 + "\r\n";
+
+                test1 = pbNumber3.toDigit(30, true);
+                rTBLog.Text += "NInf " + test1 + "\r\n";
+
+                test1 = pbNumber4.toDigit(30, true);
+                rTBLog.Text += "PInf " + test1 + "\r\n";
+
+                test1 = pbNumber5.toDigit(30, true);
+                rTBLog.Text += "NInt " + test1 + "\r\n";
+                rTBLog.Text += "\n\r _________PBNumer TESTING END";
+            }
+        #endregion
 
           private void bStart_Click(object sender, EventArgs e)
           {
-              //DEBUG BEGIN
-              
-              //rTBLog.Text += temp1.ToString();
-              //rTBLog.Text += "\r\n" + temp.ToString();
-              /*
-              String testNumber = "-10000000,1379999e-1055";
-              PBNumber pbNumber1 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB256, IPBNumber.RoundingType.POST_BINARY);
-              PBNumber pbNumber2 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB256, IPBNumber.RoundingType.ZERO);
-              PBNumber pbNumber3 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB256, IPBNumber.RoundingType.NEGATIVE_INFINITY);
-              PBNumber pbNumber4 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB256, IPBNumber.RoundingType.POSITIVE_INFINITY);
-              PBNumber pbNumber5 = new PBNumber(testNumber, IPBNumber.NumberCapacity.PB256, IPBNumber.RoundingType.NEAR_INTEGER);
-
-              String test1 = pbNumber1.toDigit(30, true);
-              rTBLog.Text += "PB " + test1 + "\r\n";
-              
-              test1 = pbNumber2.toDigit(30, true);
-              rTBLog.Text += "ZERO " + test1 + "\r\n";
-              
-              test1 = pbNumber3.toDigit(30, true);
-              rTBLog.Text += "NInf " + test1 + "\r\n";
-              
-              test1 = pbNumber4.toDigit(30, true);
-              rTBLog.Text += "PInf " + test1 + "\r\n";
-              
-              test1 = pbNumber5.toDigit(30, true);
-              rTBLog.Text += "NInt " + test1 + "\r\n";
-              */
-
-              /*
-              PBConvertion pbc = new PBConvertion();
-              PBMath pbmath = new PBMath();
-              pbNumber3 = pbmath.pADD(pbNumber1, pbNumber2);
-
-              String test = pbmath.pCMP(pbNumber1, pbNumber1).ToString();
-              String test2 = pbmath.pCMP(pbNumber1, pbNumber2).ToString();
-              String test3 = pbmath.pCMP(pbNumber2, pbNumber1).ToString();
-              
-              rTBLog.Text = test1; 
-              */
-
               MathExpParser mpar = new MathExpParser(this.rTBInput.Text);
 
               if (mpar.compile(this.rTBInput.Text) == 0)
@@ -365,9 +372,6 @@ namespace PostBinary
                       return;
                   }
 
-                  /*
-                  Parser parser = new Parser();
-                  parser.Simplify("123+(3-120)/4-123-(5+20)/3");*/
                   try
                   {
                       Stack _Stack = parser.GetStack();
@@ -404,8 +408,7 @@ namespace PostBinary
                       return;
                   }
               }
-              
-              //DEBUG END
+                            
           }
 
           private void richTextBox1_KeyPress(object sender, KeyPressEventArgs e)
@@ -424,7 +427,7 @@ namespace PostBinary
               try{
                   if (_validationParser.compile(this.rTBInput.Text) == -1)
                       _error = true;
-                  //_validationParser.Simplify(this.rTBInput.Text);
+
               }
               catch(Exception ex)
               {
@@ -453,11 +456,7 @@ namespace PostBinary
               validationTimer.Stop();
           }
 
-          private void stepListToolStripMenuItem_Click(object sender, EventArgs e)
-          {
-              this.rTBInput.Text = "123-9/334+(222/999)-(90-9)";
-              this.richTextBox1_KeyPress(sender, new KeyPressEventArgs('e'));
-          }
+        
           
     }
 }
