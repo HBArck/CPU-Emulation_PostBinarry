@@ -842,7 +842,7 @@ namespace PostBinary.Classes.Utils.Parser
                     {
                         case TokenParser.Tokens.Float:
                             nc.NumberType = NumberClass.NumberTypes.Float;
-                            nc.FloatNumber = double.Parse(token.TokenValue);
+                            nc.FloatNumber = double.Parse(token.TokenValue.Replace('.', ','));
                             break;
                         case TokenParser.Tokens.Integer:
                             nc.NumberType = NumberClass.NumberTypes.Integer;
@@ -954,16 +954,16 @@ namespace PostBinary.Classes.Utils.Parser
                     {
                         if (nc.NumberType == NumberClass.NumberTypes.Integer)
                         {
-                            //dblStack.Push(nc.IntNumber);
                             newStack.Push(new StackData("int", nc.IntNumber));
                             continue;
                         }
-                        if (nc.NumberType == NumberClass.NumberTypes.Float)
-                        {
-                            //dblStack.Push(nc.FloatNumber);
-                            newStack.Push(new StackData("float", nc.IntNumber));
+
+                        if (nc.NumberType == NumberClass.NumberTypes.Float) 
+                        {                         
+                            newStack.Push(new StackData("float", nc.FloatNumber));
                             continue;
                         }
+
                         if (nc.NumberType == NumberClass.NumberTypes.Operator)
                         {
 
@@ -1001,10 +1001,12 @@ namespace PostBinary.Classes.Utils.Parser
                                 else
                                 {
                                     /* If right operand stored in memory */
-                                    // Get right operand memory index
-                                    rightOperandInt = (int)newStack.Pop().dataValue;
                                     // Get left operand value
                                     leftOperand = newStack.Pop().dataValue.ToString();
+
+                                    // Get right operand memory index
+                                    rightOperandInt = (int)newStack.Pop().dataValue;
+                                    
                                     
                                     // Use push with memory index for right operand
                                     _pbStack.PushCommand(nc.Operator, leftOperand, rightOperandInt);

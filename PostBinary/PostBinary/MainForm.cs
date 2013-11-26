@@ -90,6 +90,53 @@ namespace PostBinary
             VarList.Items.Add("      " + varname + "         = " + varValue);
         }
 
+        private void VarList_DoubleClick(object sender, EventArgs e)
+        {
+            // before create new textBox make sure last closed 
+            if (dynamicTextBox.Modified)
+            {
+                if (dynamicTextBox.Text.Length == 0)
+                    dynamicTextBox.Text = "0";
+
+
+                // Validate Test First
+                Classes.Responce tmpResp = ProgCore.ValidatorTool.validateNumber(dynamicTextBox.Text);
+                if (!tmpResp.Error)
+                {
+                    // copy value to selected item
+                    VarList.Items[selectedListIndex] = varName + " " + tmpResp.Result;//dynamicTextBox.Text;
+                    dynamicTextBox.Hide();
+                }
+                dynamicTextBox.Modified = false;
+            }
+            // Create input on item position
+            selectedListIndex = VarList.SelectedIndex;
+
+            // Save previous text
+            prevText = VarList.Items[selectedListIndex].ToString();
+
+            /// <summary>
+            /// Position of "=" symbol to copy correctly name and value of selected item
+            /// </summary>
+            int pos = VarList.Items[selectedListIndex].ToString().IndexOf('=');
+
+            // Size of item
+            int ItemHeight = VarList.ItemHeight;
+            int ItemWidth = VarList.Width;
+
+            // Copied variable name  
+            varName = VarList.Items[selectedListIndex].ToString().Substring(0, pos + 1);
+
+            dynamicTextBox.Location = new Point(VarList.Location.X, VarList.Location.Y + selectedListIndex * ItemHeight);
+            dynamicTextBox.Height = ItemHeight;
+            dynamicTextBox.Width = ItemWidth;
+
+            // copy only value part of item
+            dynamicTextBox.Text = VarList.Items[selectedListIndex].ToString().Substring(pos + 2);
+            dynamicTextBox.BringToFront();
+            dynamicTextBox.Show();
+            dynamicTextBox.Focus();
+        }
         private void dynamicTextBox_KeyPress(Object sender, KeyPressEventArgs e)
         {
             if (Char.IsDigit(e.KeyChar) || e.KeyChar == ',' || e.KeyChar == '.' || e.KeyChar == '-' || e.KeyChar == '\r' || e.KeyChar == '\b' 
@@ -170,6 +217,7 @@ namespace PostBinary
 
         private void dynamicTextBox_LostFocus(object sender, EventArgs e)
         {
+            String NameforParser;
             if (dynamicTextBox.Modified)
             {
                 if (dynamicTextBox.Text.Length == 0)
@@ -179,8 +227,15 @@ namespace PostBinary
                 Classes.Responce tmpResp = ProgCore.ValidatorTool.validateNumber(dynamicTextBox.Text);
                 if (!tmpResp.Error)
                 {
+                    NameforParser = varName.Substring(0, varName.Length - 2).Trim();
+                    try
+                    {
+                        _parser.RemoveVariable(NameforParser);
+                    }
+                    catch (Exception ex) { }
                     // copy value to selected item
                     VarList.Items[selectedListIndex] = varName + " " + tmpResp.Result;//dynamicTextBox.Text;
+                    _parser.AddVariable(NameforParser, tmpResp.Result.ToString());
                     dynamicTextBox.Hide();
                 }
                 dynamicTextBox.Modified = false;
@@ -215,10 +270,8 @@ namespace PostBinary
             ProgCore = new Classes.ProgramCore();
             Validator = new Classes.Validator();
             #endregion
-
         }
  
-
         #region Debug Testers
             #region Validator Testers
             private void validateToolStripMenuItem_Click(object sender, EventArgs e)
@@ -247,7 +300,7 @@ namespace PostBinary
 
             private void stepListToolStripMenuItem_Click(object sender, EventArgs e)
             {
-                this.rTBInput.Text = "123-9/334+(222/999)-(90-9)";
+                this.rTBInput.Text = "123-9/334+(222/999)-(90-9)*c-a";
                 this.richTextBox1_KeyPress(sender, new KeyPressEventArgs('e'));
             }
 
@@ -310,20 +363,9 @@ namespace PostBinary
               String varName;
               if (mpar.compile(this.rTBInput.Text) == 0)
               {
-                  rTBLog.Text = "";
-                  //_parser = new Parser();
+                  rTBLog.Text = "";                  
                   try
-                  {
-                      // Fill all vars for parser and VarList component
-                      /*tempStack = mpar.getVars();
-
-                      while (tempStack.Count > 0)
-                      {
-                          varName = tempStack.Pop();
-                          parser.AddVariable(varName, "1");
-                          addVariable(varName, "1");
-                      }*/
-
+                  {                      
                       _parser.Simplify(this.rTBInput.Text);
                   }
                   catch (Exception ex)
@@ -450,5 +492,6 @@ namespace PostBinary
               }
               validationTimer.Stop();
           }
+
     }
 }

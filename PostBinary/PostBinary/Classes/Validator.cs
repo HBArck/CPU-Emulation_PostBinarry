@@ -29,29 +29,28 @@ namespace PostBinary.Classes
         /// <returns></returns>
         public Responce validateNumber(String inNumber)
         {
-
-            /*
+          /*
            * TODO: find and fill errorBegin / errorEnd 
            */
             Responce resp = new Responce();
 
-            if ((inNumber[0] != '-') && (inNumber[0] != '+'))
-                inNumber = "+" + inNumber;
+            /*if ((inNumber[0] != '-') && (inNumber[0] != '+'))
+                inNumber = "+" + inNumber;*/
 
-            inNumber = inNumber.Replace('.', ',');
+            inNumber = inNumber.Replace(',', '.');
 
-            if (inNumber.IndexOf(',') == -1)
-                inNumber += ",0";
+            if (inNumber.IndexOf('.') == -1)
+                inNumber += ".0";
 
-            if (inNumber[1] == ',')
+            if (inNumber[1] == '.')
                 inNumber = inNumber[0] + "0" + inNumber.Substring(1);
 
-            if (inNumber[inNumber.Length - 1] == ',')
+            if (inNumber[inNumber.Length - 1] == '.')
                 inNumber += "0";
 
             inNumber = deleteZero(inNumber);
 
-            Regex rgx = new Regex(@"[\+\-]\d+,\d+");
+            Regex rgx = new Regex(@"\d+.\d+"); //(@"[\+\-]\d+,\d+")
             MatchCollection mc = rgx.Matches(inNumber);
             resp.Error = (mc.Count != 1);
             resp.Result = inNumber;

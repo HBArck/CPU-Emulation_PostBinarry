@@ -44,6 +44,9 @@
             this.validateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.variableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.varListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stepListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tetraMathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pBNumberToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showTreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
@@ -63,9 +66,6 @@
             this.rTBInput = new System.Windows.Forms.RichTextBox();
             this.rTBLog = new System.Windows.Forms.RichTextBox();
             this.validationTimer = new System.Windows.Forms.Timer(this.components);
-            this.stepListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tetraMathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pBNumberToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.commandTable1 = new PostBinary.Components.CommandTable();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -171,7 +171,7 @@
             this.validateToolStripMenuItem,
             this.variableToolStripMenuItem});
             this.validatorToolStripMenuItem.Name = "validatorToolStripMenuItem";
-            this.validatorToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.validatorToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.validatorToolStripMenuItem.Text = "Validator";
             // 
             // validateToolStripMenuItem
@@ -191,9 +191,30 @@
             // varListToolStripMenuItem
             // 
             this.varListToolStripMenuItem.Name = "varListToolStripMenuItem";
-            this.varListToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.varListToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.varListToolStripMenuItem.Text = "VarList";
             this.varListToolStripMenuItem.Click += new System.EventHandler(this.varListToolStripMenuItem_Click);
+            // 
+            // stepListToolStripMenuItem
+            // 
+            this.stepListToolStripMenuItem.Name = "stepListToolStripMenuItem";
+            this.stepListToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.stepListToolStripMenuItem.Text = "StepList";
+            this.stepListToolStripMenuItem.Click += new System.EventHandler(this.stepListToolStripMenuItem_Click);
+            // 
+            // tetraMathToolStripMenuItem
+            // 
+            this.tetraMathToolStripMenuItem.Name = "tetraMathToolStripMenuItem";
+            this.tetraMathToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.tetraMathToolStripMenuItem.Text = "Tetra_Math";
+            this.tetraMathToolStripMenuItem.Click += new System.EventHandler(this.tetraMathToolStripMenuItem_Click);
+            // 
+            // pBNumberToolStripMenuItem
+            // 
+            this.pBNumberToolStripMenuItem.Name = "pBNumberToolStripMenuItem";
+            this.pBNumberToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.pBNumberToolStripMenuItem.Text = "PBNumber";
+            this.pBNumberToolStripMenuItem.Click += new System.EventHandler(this.pBNumberToolStripMenuItem_Click);
             // 
             // toolsToolStripMenuItem
             // 
@@ -255,7 +276,7 @@
             this.VarList.Name = "VarList";
             this.VarList.Size = new System.Drawing.Size(171, 356);
             this.VarList.TabIndex = 15;
-            
+            this.VarList.DoubleClick += new System.EventHandler(this.VarList_DoubleClick);
             // 
             // textBox3
             // 
@@ -388,27 +409,6 @@
             // 
             this.validationTimer.Interval = 2000;
             this.validationTimer.Tick += new System.EventHandler(this.validationTimer_Tick);
-            // 
-            // stepListToolStripMenuItem
-            // 
-            this.stepListToolStripMenuItem.Name = "stepListToolStripMenuItem";
-            this.stepListToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.stepListToolStripMenuItem.Text = "StepList";
-            this.stepListToolStripMenuItem.Click += new System.EventHandler(this.stepListToolStripMenuItem_Click);
-            // 
-            // tetraMathToolStripMenuItem
-            // 
-            this.tetraMathToolStripMenuItem.Name = "tetraMathToolStripMenuItem";
-            this.tetraMathToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.tetraMathToolStripMenuItem.Text = "Tetra_Math";
-            this.tetraMathToolStripMenuItem.Click += new System.EventHandler(this.tetraMathToolStripMenuItem_Click);
-            // 
-            // pBNumberToolStripMenuItem
-            // 
-            this.pBNumberToolStripMenuItem.Name = "pBNumberToolStripMenuItem";
-            this.pBNumberToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.pBNumberToolStripMenuItem.Text = "PBNumber";
-            this.pBNumberToolStripMenuItem.Click += new System.EventHandler(this.pBNumberToolStripMenuItem_Click);
             // 
             // commandTable1
             // 
