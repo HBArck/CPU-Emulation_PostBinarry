@@ -23,6 +23,7 @@ namespace PostBinary
             #region Form Members
                 //Parser _validationParser = new Parser();
                 MathExpParser _validationParser = new MathExpParser();
+                Parser _parser = new Parser();
             #endregion
 
             #region VarList Variables
@@ -89,56 +90,8 @@ namespace PostBinary
             VarList.Items.Add("      " + varname + "         = " + varValue);
         }
 
-        private void listBox2_DoubleClick(object sender, EventArgs e)
-        {
-            // before create new textBox make sure last closed 
-            if (dynamicTextBox.Modified)
-            {
-                if (dynamicTextBox.Text.Length == 0)
-                    dynamicTextBox.Text = "0";
-
-
-                // Validate Test First
-                Classes.Responce tmpResp = ProgCore.ValidatorTool.validateNumber(dynamicTextBox.Text);
-                if (!tmpResp.Error)
-                {
-                    // copy value to selected item
-                    VarList.Items[selectedListIndex] = varName + " " + tmpResp.Result;//dynamicTextBox.Text;
-                    dynamicTextBox.Hide();
-                }
-                dynamicTextBox.Modified = false;
-            }
-            // Create input on item position
-            selectedListIndex = VarList.SelectedIndex;
-
-            // Save previous text
-            prevText = VarList.Items[selectedListIndex].ToString();
-
-            /// <summary>
-            /// Position of "=" symbol to copy correctly name and value of selected item
-            /// </summary>
-            int pos = VarList.Items[selectedListIndex].ToString().IndexOf('=');
-
-            // Size of item
-            int ItemHeight = VarList.ItemHeight;
-            int ItemWidth = VarList.Width;
-
-            // Copied variable name  
-            varName = VarList.Items[selectedListIndex].ToString().Substring(0, pos + 1);
-           
-            dynamicTextBox.Location = new Point(VarList.Location.X, VarList.Location.Y + selectedListIndex * ItemHeight);
-            dynamicTextBox.Height = ItemHeight;
-            dynamicTextBox.Width = ItemWidth;
-
-            // copy only value part of item
-            dynamicTextBox.Text = VarList.Items[selectedListIndex].ToString().Substring(pos + 2);
-            dynamicTextBox.BringToFront();
-            dynamicTextBox.Show();
-            dynamicTextBox.Focus();
-        }
         private void dynamicTextBox_KeyPress(Object sender, KeyPressEventArgs e)
         {
-
             if (Char.IsDigit(e.KeyChar) || e.KeyChar == ',' || e.KeyChar == '.' || e.KeyChar == '-' || e.KeyChar == '\r' || e.KeyChar == '\b' 
                 || e.KeyChar == 27)
             {
@@ -208,15 +161,13 @@ namespace PostBinary
                         VarList.Items[selectedListIndex] = prevText;
                         dynamicTextBox.Hide();
                         VarList.Focus();
-                        break;
-                    
-
+                        break;                 
                 }
-                   
             }
             else
                 e.KeyChar = '\0';
         }
+
         private void dynamicTextBox_LostFocus(object sender, EventArgs e)
         {
             if (dynamicTextBox.Modified)
@@ -266,8 +217,7 @@ namespace PostBinary
             #endregion
 
         }
-
-     
+ 
 
         #region Debug Testers
             #region Validator Testers
@@ -356,14 +306,25 @@ namespace PostBinary
           private void bStart_Click(object sender, EventArgs e)
           {
               MathExpParser mpar = new MathExpParser(this.rTBInput.Text);
-
+              Stack<String> tempStack;
+              String varName;
               if (mpar.compile(this.rTBInput.Text) == 0)
               {
                   rTBLog.Text = "";
-                  Parser parser = new Parser();
+                  //_parser = new Parser();
                   try
                   {
-                      parser.Simplify(this.rTBInput.Text);
+                      // Fill all vars for parser and VarList component
+                      /*tempStack = mpar.getVars();
+
+                      while (tempStack.Count > 0)
+                      {
+                          varName = tempStack.Pop();
+                          parser.AddVariable(varName, "1");
+                          addVariable(varName, "1");
+                      }*/
+
+                      _parser.Simplify(this.rTBInput.Text);
                   }
                   catch (Exception ex)
                   {
@@ -374,8 +335,8 @@ namespace PostBinary
 
                   try
                   {
-                      Stack _Stack = parser.GetStack();
-                      Stack<Command> pbStack;// = new Stack<Com>();
+                      Stack _Stack = _parser.GetStack();
+                      Stack<Command> pbStack;
                       pbStack = _Stack.populateStack();
                       
                       String temp = "";
@@ -385,13 +346,29 @@ namespace PostBinary
                           foreach (var currElem in pbStack)
                           {
                               if (currElem.leftOperand != null)
+                              {
                                   commandTable1.AddItem(Command.commNames[currElem.Code] + " " + currElem.leftOperand.InitValue, currElem.leftOperand.Sign + currElem.leftOperand.Exponent + currElem.leftOperand.Mantissa);
+                              }
                               else
                               {
-                                  if (currElem.Code != (int)CommandBase.commVals.Mem)
-                                      temp = string.Format(Command.commNames[currElem.Code] + " " + Command.commNames[(int)CommandBase.commVals.Mem].Substring(4), currElem.MemoryCellNeeded);//
+                                  if (currElem.rightOperand == null)
+                                  {
+                                      if (currElem.Code != (int)CommandBase.commVals.Mem)
+                                      {
+                                          temp = string.Format(Command.commNames[currElem.Code] + " " + Command.commNames[(int)CommandBase.commVals.Mem].Substring(4), currElem.MemoryCellNeeded);
+                                      }
+                                      else
+                                      {
+                                          temp = string.Format(Command.commNames[currElem.Code], currElem.MemoryCellNeededExtra);
+                                      }
+                                  }
                                   else
-                                      temp = string.Format(Command.commNames[currElem.Code], currElem.MemoryCellNeeded);
+                                  {
+                                      if (currElem.Code != (int)CommandBase.commVals.Mem)
+                                          temp = string.Format(Command.commNames[currElem.Code] + " " + Command.commNames[(int)CommandBase.commVals.Mem].Substring(4), currElem.MemoryCellNeeded);
+                                      else
+                                          temp = string.Format(Command.commNames[currElem.Code], currElem.MemoryCellNeeded);
+                                  }
                                   commandTable1.AddItem(temp, "0" + PBNumber.EmptyExponent[2] + PBNumber.EmptyMantissa[2]);
                               }
                           }
@@ -424,10 +401,28 @@ namespace PostBinary
           private void validationTimer_Tick(object sender, EventArgs e)
           {
               bool _error = false;
+              Stack<String> tempStack;
+              String varName;
               try{
                   if (_validationParser.compile(this.rTBInput.Text) == -1)
                       _error = true;
+                  else
+                  {
+                      _parser.RemoveAllVariables();
+                      VarList.Items.Clear();
+                      tempStack = _validationParser.getVars();
 
+                      if (tempStack != null)
+                      {
+                          while (tempStack.Count > 0)
+                          {
+                              varName = tempStack.Pop();
+
+                              _parser.AddVariable(varName, "1");
+                              addVariable(varName, "1");
+                          }
+                      }
+                  }
               }
               catch(Exception ex)
               {
@@ -455,8 +450,5 @@ namespace PostBinary
               }
               validationTimer.Stop();
           }
-
-        
-          
     }
 }

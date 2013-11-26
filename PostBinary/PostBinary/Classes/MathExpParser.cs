@@ -54,11 +54,13 @@ namespace PostBinary.Classes
         Stack<nodeValue> _operatorsStackCopy;
         Stack<nodeValue> _tempOperStack;
         nodeValue _curStackValue;
+        Stack<String> _variable;
         public MathExpParser()
         {
             _operatorStack = countOperators(_inputEquation);
             _operatorsStackCopy = new Stack<nodeValue>(_operatorStack);
             _operatorStack = new Stack<nodeValue>(_operatorStack);
+            _variable = new Stack<string>();
         }
         public MathExpParser(String equation)
         {
@@ -66,8 +68,28 @@ namespace PostBinary.Classes
             _operatorStack = countOperators(_inputEquation);
             _operatorsStackCopy = new Stack<nodeValue>(_operatorStack);
             _operatorStack = new Stack<nodeValue>(_operatorStack);
+            _variable = new Stack<string>();
         }
 
+        public Stack<String> getVars()
+        {
+            Stack<String> tempStack = new Stack<string>();
+            MatchCollection mc = Regex.Matches(_inputEquation, @"[a-zA-z]");
+            if (mc.Count > 0)
+            {
+                foreach (Match match in mc)
+	            {
+	                foreach (Capture capture in match.Captures)
+	                {
+                        tempStack.Push(capture.Value);
+	                }
+                }
+                return tempStack;
+            }  
+            else
+                return null;
+
+        }
         public int compile(String equation)
         {
             _inputEquation = equation;
@@ -94,7 +116,9 @@ namespace PostBinary.Classes
             DTreeNode<String>[] tempNodeArray = null;
             // DEBUG Operators position and index
             if (verifyAlpha())
-                return -1;
+            { 
+
+            }
             while (_operatorStack.Count > 0)
             {
                 _curStackValue.ind = _operatorStack.Peek().ind;

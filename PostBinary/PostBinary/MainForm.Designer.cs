@@ -64,9 +64,9 @@
             this.rTBLog = new System.Windows.Forms.RichTextBox();
             this.validationTimer = new System.Windows.Forms.Timer(this.components);
             this.stepListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.commandTable1 = new PostBinary.Components.CommandTable();
             this.tetraMathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pBNumberToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.commandTable1 = new PostBinary.Components.CommandTable();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -255,7 +255,7 @@
             this.VarList.Name = "VarList";
             this.VarList.Size = new System.Drawing.Size(171, 356);
             this.VarList.TabIndex = 15;
-            this.VarList.DoubleClick += new System.EventHandler(this.listBox2_DoubleClick);
+            
             // 
             // textBox3
             // 
@@ -396,17 +396,6 @@
             this.stepListToolStripMenuItem.Text = "StepList";
             this.stepListToolStripMenuItem.Click += new System.EventHandler(this.stepListToolStripMenuItem_Click);
             // 
-            // commandTable1
-            // 
-            this.commandTable1.AutoScroll = true;
-            this.commandTable1.AutoScrollMinSize = new System.Drawing.Size(250, 350);
-            this.commandTable1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.commandTable1.Location = new System.Drawing.Point(20, 97);
-            this.commandTable1.Margin = new System.Windows.Forms.Padding(4);
-            this.commandTable1.Name = "commandTable1";
-            this.commandTable1.Size = new System.Drawing.Size(682, 355);
-            this.commandTable1.TabIndex = 32;
-            // 
             // tetraMathToolStripMenuItem
             // 
             this.tetraMathToolStripMenuItem.Name = "tetraMathToolStripMenuItem";
@@ -420,6 +409,17 @@
             this.pBNumberToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.pBNumberToolStripMenuItem.Text = "PBNumber";
             this.pBNumberToolStripMenuItem.Click += new System.EventHandler(this.pBNumberToolStripMenuItem_Click);
+            // 
+            // commandTable1
+            // 
+            this.commandTable1.AutoScroll = true;
+            this.commandTable1.AutoScrollMinSize = new System.Drawing.Size(250, 350);
+            this.commandTable1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.commandTable1.Location = new System.Drawing.Point(20, 97);
+            this.commandTable1.Margin = new System.Windows.Forms.Padding(4);
+            this.commandTable1.Name = "commandTable1";
+            this.commandTable1.Size = new System.Drawing.Size(682, 355);
+            this.commandTable1.TabIndex = 32;
             // 
             // MainForm
             // 

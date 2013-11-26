@@ -11,26 +11,13 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms.VisualStyles;
 using System.Windows.Forms.Design;
 namespace MyControls
-{
-    //public interface ITest { int testAttr(); }
-    public partial class CustomTextBox : UserControl//TextBox,ITest
+{    
+    public partial class CustomTextBox : UserControl
     {
         private int startPosition = 0;
         private int endPosition = 0;
         private bool displayError = false;
         private float displayableLettersNumber;
-        /*
-        private String text;
-        [Category("Отображение"), Description("Текст, отображаемый в элементе управления"), DisplayName("Text")]
-        [DefaultValue("")]
-        public String Text
-        {
-            get { return text; }
-            set { 
-                if (value.Length <= maxTextLength)
-                text = value; 
-            }
-        }*/
         
         private int length;
         [Category("Отображение"), Description("Текущее количество символов"), DisplayName("TextLength")]
@@ -78,7 +65,6 @@ namespace MyControls
                     maxTextLength = 0;
             }
         }
-
        
         private Size windowSize;
         public Size WindowSize
@@ -131,13 +117,6 @@ namespace MyControls
                 }
             }
         }
-
-        //[Description("Цвет текста")]
-        //public Color ForeColor 
-        //{
-        //    get { return forecolor; }
-        //    set { forecolor = value;}
-        //}
         
         protected override void OnEnter(EventArgs e)
         {
@@ -222,10 +201,7 @@ namespace MyControls
         protected override void OnKeyDown(KeyEventArgs e)
         {
             Console.WriteLine("OnKeyDown["+Text+"]");
-            //Console.WriteLine(e.KeyCode);
-            //Console.WriteLine(e.KeyData);
             Console.WriteLine(e.KeyValue);
-            //base.OnKeyDown(e);
               
             base.OnKeyDown(e);
             switch (e.KeyCode)
@@ -249,15 +225,15 @@ namespace MyControls
                 if ((e.KeyCode == Keys.Left) && (currCaretPos > 0))
                 {
                     if (currCaretPos > 0)
-                        currCaretPos--; //e.KeyChar = '\0';
-                    //flag = false;
+                        currCaretPos--;
+                    
                     e.SuppressKeyPress = true;
                 }
                 if ((e.KeyCode == Keys.Right) && (currCaretPos < 30)) // count Width CORRECTLY
                 {
                     if (currCaretPos < Text.Length)
                         currCaretPos++;
-                    //flag = false;
+                    
                     e.SuppressKeyPress = true;
                 }
             }
@@ -275,14 +251,7 @@ namespace MyControls
             if ((e.KeyChar == 37) || (e.KeyChar == 38) || (e.KeyChar == 38) || (e.KeyChar == 40))
                 e.KeyChar = '\0';
             
-           // base.OnKeyPress(e);
-
-           // if (Length + 1 >= maxTextLength)
-            //    e.KeyChar = '\0';
             Console.WriteLine(e.KeyChar);
-            //Text = Text + e.KeyChar;
-            //Length++;
-            //Invalidate();
         }
         protected override void OnKeyUp(KeyEventArgs e)
         {
@@ -296,11 +265,9 @@ namespace MyControls
                     String tempText = Text.Substring(0, currCaretPos);
                     tempText = String.Concat(tempText, ((char)(e.KeyValue)).ToString());
                     Text = tempText + Text.Substring(currCaretPos);
-                    //this.Text += (char)(e.KeyValue);
                     currCaretPos++;
                 }
-            }
-            //base.OnTextChanged(e);
+            }            
 
             Invalidate();
         }
@@ -418,66 +385,5 @@ namespace MyControls
             displayableLettersNumber = g.MeasureString("1", fnt).Width;
         }
 
-        
-
     }
 }
-
-
-/*UNUSED*/
-/*
-       private Size size;
-       [Category("Отображение"), Description("Размер поля"), DisplayName("Size")]
-       [DefaultValue(typeof(Size),"Size(260,20)")]
-       public Size Size 
-       {
-           get { return size; }
-           set {
-               if (value.Width < 260)
-                   size.Width = 260;
-               if (value.Height < 20)
-                   size.Height = 20;
-           }
-       }
-
-       protected override void OnSizeChanged(EventArgs e)
-       {
-           Size s = new Size(260, 20);
-           if (Size.Width < s.Width)
-               Size.Width = s.Width;
-           if (Size.Width > 260)
-               Size.Width = 260;
-           base.OnSizeChanged(e);
-       }
-
-       private int windowH;
-       [Category("Отображение"), Description("Высота выпадающего окна"), DisplayName("WindowHeight")]
-       [DefaultValue(200)]
-       public int WindowHeight
-       {
-           get { return windowH; }
-           set { 
-               if (value < 19)
-                   windowH = value;
-               if (value > 500)
-                   windowH = 500;
-           }
-       }
-
-       private int windowW;
-       [Category("Отображение"), Description("Ширина выпадающего окна"), DisplayName("WindowWidth")]
-       [DefaultValue(260)]
-       public int WindowWidth
-       {
-           get { return windowW; }
-           set
-           {
-                
-               if (value < ClientSize.Width)
-                   windowW = ClientSize.Width;
-               if (value > 500)
-                   windowW = 500;
-           }
-       }
-       //private Color forecolor;
-       */

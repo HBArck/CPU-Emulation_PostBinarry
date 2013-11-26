@@ -969,7 +969,7 @@ namespace PostBinary.Classes.Utils.Parser
 
                             // Stack filling
                             // if left operand aren't memory cell and right aren't memory cell
-                            if ((newStack.Peek().dataType != "mem") && (newStack.ElementAt(newStack.Count-1).dataType != "mem"))
+                            if ((newStack.Peek().dataType != "mem") && (newStack.ElementAt(1).dataType != "mem"))
                             {
                                 rightOperand = newStack.Pop().dataValue.ToString();
                                 leftOperand = newStack.Pop().dataValue.ToString();
@@ -981,20 +981,31 @@ namespace PostBinary.Classes.Utils.Parser
                                 // if left operand stored in memory
                                 if (newStack.Peek().dataType == "mem")
                                 {
-                                    
-                                    leftOperandInt = (int)newStack.Pop().dataValue;
-                                    rightOperand = newStack.Pop().dataValue.ToString();
+                                    if (newStack.ElementAt(1).dataType != "mem")
+                                    {
+                                        leftOperandInt = (int)newStack.Pop().dataValue;
+                                        rightOperand = newStack.Pop().dataValue.ToString();
 
-                                    // use push with memory index for left operand
-                                    _pbStack.PushCommand(nc.Operator, leftOperandInt, rightOperand);
+                                        // use push with memory index for left operand
+                                        _pbStack.PushCommand(nc.Operator, leftOperandInt, rightOperand);
+                                    }
+                                    else
+                                    {
+                                        leftOperandInt = (int)newStack.Pop().dataValue;
+                                        rightOperandInt = (int)newStack.Pop().dataValue;
+                                        // use push with memory index for left operand
+                                        // TODO: Implement Push Command for KOP MEM MEM
+                                        _pbStack.PushCommand(nc.Operator, leftOperandInt, rightOperandInt);
+                                    }
                                 }
                                 else
                                 {
                                     /* If right operand stored in memory */
-                                    // Get left operand value
-                                    leftOperand = newStack.Pop().dataValue.ToString();
                                     // Get right operand memory index
                                     rightOperandInt = (int)newStack.Pop().dataValue;
+                                    // Get left operand value
+                                    leftOperand = newStack.Pop().dataValue.ToString();
+                                    
                                     // Use push with memory index for right operand
                                     _pbStack.PushCommand(nc.Operator, leftOperand, rightOperandInt);
                                 }

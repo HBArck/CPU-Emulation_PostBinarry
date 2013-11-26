@@ -16,17 +16,18 @@ namespace PostBinary.Classes
     {
         public static String[] commNames = new String[]{ "LOAD", "ADD", "SUB", "MUL", "DIV", "EXP", "SAVE M{0}" };
 
-        public int Code;
-        public PBNumber leftOperand;
-        public PBNumber rightOperand;
+        public  int Code;
+        public  PBNumber leftOperand;
+        public  PBNumber rightOperand;
         private PBNumber result;
-        public PBNumber Result
+        public  PBNumber Result
         {
             get { return result; }
             set{}
         }
         public int MemoryCellUsed;
         public int MemoryCellNeeded;
+        public int MemoryCellNeededExtra;
 
         #region Constructors
             public Command() {}
@@ -85,6 +86,60 @@ namespace PostBinary.Classes
                 }
             }
 
+            public Command(CommandBase.commVals inCommandInstruction, Object inValue, bool usedExtraMemory)
+            {
+                switch (inCommandInstruction)
+                {
+                    case commVals.Load:
+                        this.Code = (int)inCommandInstruction;
+                        try
+                        {
+                            if (inValue.GetType() == typeof(int))
+                            {
+                                this.leftOperand = null;
+                                this.MemoryCellNeededExtra = (int)inValue;
+                            }
+                            else
+                                this.leftOperand = (PBNumber)inValue;
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new IncorrectOperandType("Command(" + inCommandInstruction + ", " + inValue + ")=[ " + ex.Message + " ]");
+                        }
+
+                        break;
+                    case commVals.Mem:
+                        this.Code = (int)inCommandInstruction;
+                        try
+                        {
+                            this.MemoryCellNeededExtra = (int)inValue;
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new IncorrectMemoryCellAddress("Command(" + inCommandInstruction + ", " + (String)inValue + ")=[ " + ex.Message + " ]");
+                        }
+
+                        break;
+                    default:
+                        this.Code = (int)inCommandInstruction;
+                        try
+                        {
+                            if (inValue.GetType() == typeof(int))
+                            {
+                                this.leftOperand = null;
+                                this.MemoryCellNeededExtra = (int)inValue;
+                            }
+                            else
+                                this.leftOperand = (PBNumber)inValue;
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new IncorrectOperandType("Command(" + inCommandInstruction + ", " + inValue + ")=[ " + ex.Message + " ]");
+                        }
+                        break;
+                }
+            }
+
             public Command(String inOperation, String inLeftOperand, String inRightOperand)
             {
                 switch (inOperation)
@@ -101,37 +156,42 @@ namespace PostBinary.Classes
                 this.rightOperand = new PBNumber(inRightOperand, IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
             }
 
-            public Command(String inOperation, String inLeftOperand, int inRightOperandFromMemory)
+            private int getOperationCode(String inOperation)
             {
+                int code = 0;
                 switch (inOperation)
                 {
-                    case "+": this.Code = 1; break;
-                    case "-": this.Code = 2; break;
-                    case "*": this.Code = 3; break;
-                    case "/": this.Code = 4; break;
+                    case "+": code = 1; break;
+                    case "-": code = 2; break;
+                    case "*": code = 3; break;
+                    case "/": code = 4; break;
                     // Exponent need to be checked in Parser.cs
-                    case "^": this.Code = 5; break;
-                    default: break;
+                    case "^": code = 5; break;
+                    default: code = -1;  break;
                 }
+                return code;
+            }
+            public Command(String inOperation, String inLeftOperand, int inRightOperandFromMemory)
+            {
+                this.Code = getOperationCode(inOperation);
                 this.leftOperand = new PBNumber(inLeftOperand, IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
-
                 this.MemoryCellNeeded = inRightOperandFromMemory;
-                //this.rightOperand = new PBNumber(inRightOperand, IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
             }
             public Command(String inOperation, int inLeftOperandFromMemory, String inRightOperand)
             {
-                switch (inOperation)
-                {
-                    case "+": this.Code = 1; break;
-                    case "-": this.Code = 2; break;
-                    case "*": this.Code = 3; break;
-                    case "/": this.Code = 4; break;
-                    // Exponent need to be checked in Parser.cs
-                    case "^": this.Code = 5; break;
-                    default: break;
-                }
-            
+                this.Code = getOperationCode(inOperation);
                 this.rightOperand = new PBNumber(inRightOperand, IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
+                this.MemoryCellNeeded = inLeftOperandFromMemory;
+            }
+
+            public Command(String inOperation, int inLeftOperandFromMemory, int inRightOperandFromMemory)
+            {
+                this.Code = getOperationCode(inOperation);
+
+                this.leftOperand = null;
+                this.rightOperand = null;
+
+                this.MemoryCellNeededExtra = inRightOperandFromMemory;
                 this.MemoryCellNeeded = inLeftOperandFromMemory;
             }
 
@@ -142,6 +202,11 @@ namespace PostBinary.Classes
             }
             public Command(String inOperation, String inLeftOperand, int inRightOperand, int inCellUsed) 
                 : this(inOperation,inLeftOperand, inRightOperand)
+            {
+                this.MemoryCellUsed = inCellUsed;
+            }
+            public Command(String inOperation, int inLeftOperand, int inRightOperand, int inCellUsed)
+                : this(inOperation, inLeftOperand, inRightOperand)
             {
                 this.MemoryCellUsed = inCellUsed;
             }
@@ -185,10 +250,6 @@ namespace PostBinary.Classes
             set 
             {
                 commandStack = value;
-                /*if (value.GetType() == Type.GetType("Command"))
-                {
-                    OnCommandStackChanged.Invoke();
-                }*/
             }
         }
         
@@ -207,13 +268,6 @@ namespace PostBinary.Classes
         {
             CommandStack.Push(comm);
         }
-
-        /*public void pushCommand(String inOperation, int inLeftOperand, int inRightOperand)
-        {
-            String leftOperand = inLeftOperand.ToString();
-            String rightOperand = inRightOperand.ToString();
-            pushCommand(inOperation, leftOperand, rightOperand);
-        }*/
 
         private int GetUnusedMemoryCell()
         {
@@ -258,6 +312,22 @@ namespace PostBinary.Classes
         /// <param name="inLeftOperand">Left operand.</param>
         /// <param name="requiredCellMemory">Memory Cell in StackMemory, that stores needed value.</param>
         public void PushCommand(String inOperation,  int requiredCellMemory, String inLeftOperand)
+        {
+            freeMemory(requiredCellMemory);
+
+            int currEmptyCellMemory = GetUnusedMemoryCell();
+
+            Command currCommand = new Command(inOperation, inLeftOperand, requiredCellMemory, currEmptyCellMemory);
+            commandStack.Push(currCommand);
+        }
+
+        /// <summary>
+        /// Push new Command for evaluation in stack.
+        /// </summary>
+        /// <param name="inOperation">Operation to evaluate.</param>
+        /// <param name="inLeftOperand">Left operand.</param>
+        /// <param name="requiredCellMemory">Memory Cell in StackMemory, that stores needed value.</param>
+        public void PushCommand(String inOperation, int requiredCellMemory, int inLeftOperand)
         {
             freeMemory(requiredCellMemory);
 
@@ -334,22 +404,44 @@ namespace PostBinary.Classes
             {
                 if (currCommand.leftOperand == null)
                 {
-                    // if Right points direct to value and Left operand stores in MemoryCell
+                    if (currCommand.rightOperand == null)
+                    {
+                        // if Right points direct to value and Left operand stores in MemoryCell
 
-                    // Save result to Memory Cell
-                    // KOP  |MEM  |M{#}|
-                    SaveCommand = new Command(CommandBase.commVals.Mem, currCommand.MemoryCellUsed);
-                    returnVal.Push(SaveCommand); 
-                    
-                    // Load Right operand and Evaluate Operation
-                    // KOP  |OP   |RO|
-                    OperationCommand = new Command((CommandBase.commVals)currCommand.Code, currCommand.rightOperand);
-                    returnVal.Push(OperationCommand);
+                        // Save result to Memory Cell
+                        // KOP  |MEM  |M{#}|
+                        SaveCommand = new Command(CommandBase.commVals.Mem, currCommand.MemoryCellUsed);
+                        returnVal.Push(SaveCommand);
 
-                    // Load left operand
-                    // KOP  |LOAD |M{#}|
-                    loadCommand = new Command(CommandBase.commVals.Load, currCommand.MemoryCellNeeded);
-                    returnVal.Push(loadCommand);
+                        // Load Right operand and Evaluate Operation
+                        // KOP  |OP   |RO|
+                        OperationCommand = new Command((CommandBase.commVals)currCommand.Code, currCommand.MemoryCellNeededExtra, true);
+                        returnVal.Push(OperationCommand);
+
+                        // Load left operand
+                        // KOP  |LOAD |M{#}|
+                        loadCommand = new Command(CommandBase.commVals.Load, currCommand.MemoryCellNeeded);
+                        returnVal.Push(loadCommand);
+                    }
+                    else 
+                    {
+                        // if Right points direct to value and Left operand stores in MemoryCell
+
+                        // Save result to Memory Cell
+                        // KOP  |MEM  |M{#}|
+                        SaveCommand = new Command(CommandBase.commVals.Mem, currCommand.MemoryCellUsed);
+                        returnVal.Push(SaveCommand);
+
+                        // Load Right operand and Evaluate Operation
+                        // KOP  |OP   |RO|
+                        OperationCommand = new Command((CommandBase.commVals)currCommand.Code, currCommand.MemoryCellNeeded);
+                        returnVal.Push(OperationCommand);
+
+                        // Load left operand
+                        // KOP  |LOAD |M{#}|
+                        loadCommand = new Command(CommandBase.commVals.Load, currCommand.MemoryCellNeeded);
+                        returnVal.Push(loadCommand);
+                    }
                 }
                 else
                     if (currCommand.rightOperand == null)
@@ -398,8 +490,9 @@ namespace PostBinary.Classes
         }
         public void clearStack()
         {
-            while (this.PopCommand() != null){ }
-        }
+            CommandStack.Clear();   
+            StackMemory.Clear(); 
+        }        
     }
    
 
