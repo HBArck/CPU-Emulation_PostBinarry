@@ -884,6 +884,79 @@ namespace PostBinary.Classes.PostBinary
         /// <returns></returns>
         public PBNumber MUL(PBNumber leftOperand, PBNumber rightOperand)
         {
+            PBNumber opA = (PBNumber)leftOperand.Clone();
+            PBNumber opB = (PBNumber)rightOperand.Clone();
+            String result = "";
+            for (int i = 0; i < 10; i++)//change 10 to Mantissa lenght 
+            {
+                switch (opA.Mantissa[i])
+                {
+                    case '0':
+                        {
+                            result += '0';
+                            break;
+                        }
+                    case '1':
+                        {
+                            result += '1';
+                            break;
+                        }
+                    case 'A':
+                        {
+                            switch (opB.Mantissa[i])
+                            {
+                                case '0':
+                                    {
+                                        result += '0';
+                                        break;
+                                    }
+                                case '1':
+                                    {
+                                        result += 'A';
+                                        break;
+                                    }
+                                case 'A':
+                                    {
+                                        result += 'A';
+                                        break;
+                                    }
+                                case 'M':
+                                    {
+                                        result += 'M';
+                                        break;
+                                    }
+                            }
+                            break;
+                        }
+                    case 'M':
+                        {
+                            switch (opB.Mantissa[i])
+                            {
+                                case '0':
+                                    {
+                                        result += '0';
+                                        break;
+                                    }
+                                case '1':
+                                    {
+                                        result += 'M';
+                                        break;
+                                    }
+                                case 'A':
+                                    {
+                                        result += 'M';
+                                        break;
+                                    }
+                                case 'M':
+                                    {
+                                        result += 'M';
+                                        break;
+                                    }
+                            }
+                            break;
+                        }
+                }
+            }
             return null;
         }
 
