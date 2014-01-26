@@ -14,7 +14,7 @@ namespace PostBinary.Classes.PostBinary
         #region Constructors
         #endregion
         #region Functions
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -36,7 +36,7 @@ namespace PostBinary.Classes.PostBinary
 
             return ADD(leftOperand, rightOperand);
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -47,7 +47,7 @@ namespace PostBinary.Classes.PostBinary
         {
             return ADD(leftOperand, rightOperand);
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -73,6 +73,25 @@ namespace PostBinary.Classes.PostBinary
                 }
             }
         }
+        private static PBNumber[] exponentsAlign(PBNumber opA, PBNumber opB)
+        {
+           
+            switch (tCMP(opA.Exponent, opB.Exponent)) // Exponent align
+            {
+                case 1:
+                    opB = ExponentAlign(opA, opB);
+                    break;
+                case -1:
+                    opA = ExponentAlign(opB, opA);
+                    break;
+                case 0:
+                default:
+                    break;
+            }
+
+            PBNumber[] result = { opA, opB };
+            return result;
+        }
 
         /// <summary>
         /// Postbinary numeric addition
@@ -82,31 +101,34 @@ namespace PostBinary.Classes.PostBinary
         /// <returns>Result of operation</returns>
         private PBNumber ADD(PBNumber leftOperand, PBNumber rightOperand)
         {
+           
             PBNumber opA = (PBNumber)leftOperand.Clone();
             PBNumber opB = (PBNumber)rightOperand.Clone();
             PBNumber opC = new PBNumber("0", IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
 
             String iuA = "";
             String iuB = "";
+
+            
             switch (tCMP(opA.Exponent, opB.Exponent)) // Exponent align
-            {
-                case 1:
-                    opB = ExponentAlign(opA, opB);
-                    // log here A, B
-                    iuA = "1";
-                    iuB = "";
-                    break;
-                case -1:
-                    opA = ExponentAlign(opB, opA);
-                    // log here A, B
-                    iuA = "";
-                    iuB = "1";
-                    break;
-                case 0:
-                default:
-                    // log here A, B
-                    break;
-            }
+                {
+                    case 1:
+                        opB = ExponentAlign(opA, opB);
+                        // log here A, B
+                        iuA = "1";
+                        iuB = "";
+                        break;
+                    case -1:
+                        opA = ExponentAlign(opB, opA);
+                        // log here A, B
+                        iuA = "";
+                        iuB = "1";
+                        break;
+                    case 0:
+                    default:
+                        // log here A, B
+                        break;
+                }
 
             PBConvertion pbconvertion = new PBConvertion();
             int a = Int32.Parse(pbconvertion.convert2to10IPart(opA.Exponent));
@@ -130,7 +152,7 @@ namespace PostBinary.Classes.PostBinary
         /// <param name="leftOperand">Operand, relative to which rightOperand will be aligned.</param>
         /// <param name="rightOperand">Operand, that will be aligned</param>
         /// <returns>Aligned operand.</returns>
-        public PBNumber ExponentAlign(PBNumber leftOperand, PBNumber rightOperand)
+        public static PBNumber ExponentAlign(PBNumber leftOperand, PBNumber rightOperand)
         {
             PBConvertion pbconvertion = new PBConvertion();
             int leftExponentValue = Int32.Parse(pbconvertion.convert2to10IPart(leftOperand.Exponent));
@@ -138,7 +160,7 @@ namespace PostBinary.Classes.PostBinary
 
             return Shift(rightOperand, leftExponentValue - rightExponentValue);
         }
-        
+
         /// <summary>
         /// Shifts PBNumber number with regard to shiftValue sign(shift direction) and modulus(counts of shifts).
         /// </summary>
@@ -171,7 +193,7 @@ namespace PostBinary.Classes.PostBinary
             operand.Exponent = pbconvertion.convert10to2IPart(expA.ToString());
             return operand;
         }
-        
+
         /// <summary>
         /// Adds number of symbols to input string. 
         /// </summary>
@@ -420,7 +442,7 @@ namespace PostBinary.Classes.PostBinary
 
             return new string(result);
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -450,7 +472,7 @@ namespace PostBinary.Classes.PostBinary
         {
             return tOR(operand, "0");
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -482,7 +504,7 @@ namespace PostBinary.Classes.PostBinary
 
             return new string(result);
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -497,7 +519,7 @@ namespace PostBinary.Classes.PostBinary
         {
             return tAND(operand, "1");
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -864,7 +886,7 @@ namespace PostBinary.Classes.PostBinary
             operand = operand.Replace('0', 'O').Replace('1', 'I').Replace('A', 'a').Replace('M', 'm');// replace by analog symbols
             return operand.Replace('O', '1').Replace('I', '0').Replace('a', 'M').Replace('m', 'A'); // inverting
         }
-        
+
         /// <summary>
         /// Postbinary numeric substraction
         /// </summary>
@@ -877,12 +899,13 @@ namespace PostBinary.Classes.PostBinary
         }
 
         /// <summary>
-        /// Postbinary numeric multiplication
+
         /// </summary>
         /// <param name="leftOperand"></param>
         /// <param name="rightOperand"></param>
         /// <returns></returns>
-        public PBNumber MUL(PBNumber leftOperand, PBNumber rightOperand)
+        //TODO: add exponent align
+        public PBNumber pAND(PBNumber leftOperand, PBNumber rightOperand)
         {
             PBNumber opA = (PBNumber)leftOperand.Clone();
             PBNumber opB = (PBNumber)rightOperand.Clone();
@@ -958,6 +981,126 @@ namespace PostBinary.Classes.PostBinary
                 }
             }
             return null;
+        }
+
+
+        /// <summary>
+        /// One tetrit multiplication 
+        /// </summary>
+        /// <param name="leftOperand"></param>
+        /// <param name="rightOperand"></param>
+        /// <returns></returns>
+        public static String tMUL(String leftOperand, String rightOperand)
+        {
+            String result = "";
+            char firstTetrit = tOR(leftOperand[0].ToString(), rightOperand[1].ToString());
+            char secondTetrit = tAND(leftOperand[0].ToString(), rightOperand[1].ToString());
+            result = firstTetrit.ToString() + secondTetrit.ToString();
+            return result;
+        }
+
+        /// <summary>
+        /// N-tetrits multiplication
+        /// </summary>
+        /// <param name="leftOperand"></param>
+        /// <param name="rightOperand"></param>
+        /// <returns></returns>
+        public static String tnMUL(String leftOperand, String rightOperand)
+        {
+            String result = "";
+            for (int i = 0; i < leftOperand.Length; i += 2)
+            {
+                result += tMUL(leftOperand.Substring(i, 2), rightOperand.Substring(0, 2));
+            }
+            return result;
+        }
+
+
+        /// <summary>
+        /// Mantissa multiplication
+        /// </summary>
+        /// <param name="A"></param>
+        /// <param name="B"></param>
+        /// <returns></returns>
+        public static String pMUL_mantissa(String A, String B)
+        {
+            String C = "0";
+            String zeroString = "";
+            for (int i = 0; i < A.Length; i++)
+            {
+                zeroString += "0";
+            }
+
+            String tnMULResult = "";
+            for (int i = 0; i < A.Length; i += 2)
+            {
+                tnMULResult = tnMUL(A, B.Substring(B.Length - 2, 2));
+                String sumResult = zeroString + tnMULResult;
+                C = tADD(sumResult, C, false);
+                B = tShift(B, -2);
+                C = tShift(C, 2);
+            }
+
+            return C;
+        }
+
+        /// <summary>
+        /// PBNumber multiplication
+        /// </summary>
+        /// <param name="leftOperand"></param>
+        /// <param name="rightOperand"></param>
+        /// <returns></returns>
+        public static PBNumber pMUL(PBNumber leftOperand, PBNumber rightOperand)
+        {
+            PBNumber result = new PBNumber("0", IPBNumber.NumberCapacity.PB128, IPBNumber.RoundingType.POST_BINARY);
+            PBNumber[] alignedExponent = exponentsAlign((PBNumber)leftOperand.Clone(), (PBNumber)rightOperand.Clone());
+            PBNumber opA = alignedExponent[0];
+            PBNumber opB = alignedExponent[1];
+
+            result.Exponent = tADD(leftOperand.Exponent, rightOperand.Exponent, false);
+            result.Mantissa = pMUL_mantissa(leftOperand.Mantissa, rightOperand.Mantissa);
+            result.Sign = tXOR(leftOperand.Sign, rightOperand.Sign);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Shift string value
+        /// </summary>
+        /// <param name="operand"></param>
+        /// <param name="number"> negetive value - shl, positive value - shr</param>
+        /// <returns></returns>
+        public static String tShift(String operand, int number)
+        {
+            if (Math.Abs(number) > operand.Length)
+            {
+                //TODO: change exception
+                throw new Exception();
+            }
+            String result = "";
+            String zeroString = "";
+            for (int i = 0; i < Math.Abs(number); i++)
+            {
+                zeroString += "0";
+            }
+
+            if (number > 0)
+            {
+                operand = operand.Substring(number);
+                result = operand + zeroString;
+            }
+            else
+            {
+                operand = operand.Substring(0, operand.Length + number);
+                result = zeroString + operand;
+            }
+
+            return result;
+        }
+
+        private Exception Exception()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

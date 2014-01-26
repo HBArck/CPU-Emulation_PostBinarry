@@ -493,5 +493,14 @@ namespace PostBinary
               validationTimer.Stop();
           }
 
+          private void srzToolStripMenuItem_Click(object sender, EventArgs e)
+          {
+              PBNumber A = new PBNumber("1", IPBNumber.NumberCapacity.PB64, IPBNumber.RoundingType.POST_BINARY);
+              PBNumber B = new PBNumber("1", IPBNumber.NumberCapacity.PB64, IPBNumber.RoundingType.POST_BINARY);
+              PBNumber C = new PBNumber("0", IPBNumber.NumberCapacity.PB64, IPBNumber.RoundingType.POST_BINARY);
+              C = PBMath.pMUL(A, B);
+              Console.WriteLine("A+B=C="+C.toDigit());
+          }
+
     }
 }

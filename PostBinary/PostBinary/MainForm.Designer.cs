@@ -67,6 +67,7 @@
             this.rTBLog = new System.Windows.Forms.RichTextBox();
             this.validationTimer = new System.Windows.Forms.Timer(this.components);
             this.commandTable1 = new PostBinary.Components.CommandTable();
+            this.srzToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -75,7 +76,7 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tSSLStatus});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 677);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 676);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(892, 22);
             this.statusStrip1.TabIndex = 2;
@@ -160,7 +161,8 @@
             this.varListToolStripMenuItem,
             this.stepListToolStripMenuItem,
             this.tetraMathToolStripMenuItem,
-            this.pBNumberToolStripMenuItem});
+            this.pBNumberToolStripMenuItem,
+            this.srzToolStripMenuItem});
             this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
             this.debugToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.debugToolStripMenuItem.Text = "Debug";
@@ -171,7 +173,7 @@
             this.validateToolStripMenuItem,
             this.variableToolStripMenuItem});
             this.validatorToolStripMenuItem.Name = "validatorToolStripMenuItem";
-            this.validatorToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.validatorToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.validatorToolStripMenuItem.Text = "Validator";
             // 
             // validateToolStripMenuItem
@@ -191,28 +193,28 @@
             // varListToolStripMenuItem
             // 
             this.varListToolStripMenuItem.Name = "varListToolStripMenuItem";
-            this.varListToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.varListToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.varListToolStripMenuItem.Text = "VarList";
             this.varListToolStripMenuItem.Click += new System.EventHandler(this.varListToolStripMenuItem_Click);
             // 
             // stepListToolStripMenuItem
             // 
             this.stepListToolStripMenuItem.Name = "stepListToolStripMenuItem";
-            this.stepListToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.stepListToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.stepListToolStripMenuItem.Text = "StepList";
             this.stepListToolStripMenuItem.Click += new System.EventHandler(this.stepListToolStripMenuItem_Click);
             // 
             // tetraMathToolStripMenuItem
             // 
             this.tetraMathToolStripMenuItem.Name = "tetraMathToolStripMenuItem";
-            this.tetraMathToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.tetraMathToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.tetraMathToolStripMenuItem.Text = "Tetra_Math";
             this.tetraMathToolStripMenuItem.Click += new System.EventHandler(this.tetraMathToolStripMenuItem_Click);
             // 
             // pBNumberToolStripMenuItem
             // 
             this.pBNumberToolStripMenuItem.Name = "pBNumberToolStripMenuItem";
-            this.pBNumberToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.pBNumberToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.pBNumberToolStripMenuItem.Text = "PBNumber";
             this.pBNumberToolStripMenuItem.Click += new System.EventHandler(this.pBNumberToolStripMenuItem_Click);
             // 
@@ -227,7 +229,7 @@
             // showTreeToolStripMenuItem
             // 
             this.showTreeToolStripMenuItem.Name = "showTreeToolStripMenuItem";
-            this.showTreeToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.showTreeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.showTreeToolStripMenuItem.Text = "Show Tree";
             // 
             // progressBar1
@@ -421,13 +423,19 @@
             this.commandTable1.Size = new System.Drawing.Size(682, 355);
             this.commandTable1.TabIndex = 32;
             // 
+            // srzToolStripMenuItem
+            // 
+            this.srzToolStripMenuItem.Name = "srzToolStripMenuItem";
+            this.srzToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.srzToolStripMenuItem.Text = "srz";
+            this.srzToolStripMenuItem.Click += new System.EventHandler(this.srzToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.ClientSize = new System.Drawing.Size(892, 699);
-            this.Controls.Add(this.commandTable1);
+            this.ClientSize = new System.Drawing.Size(892, 698);
             this.Controls.Add(this.rTBLog);
             this.Controls.Add(this.rTBInput);
             this.Controls.Add(this.textBox9);
@@ -501,6 +509,7 @@
         private System.Windows.Forms.ToolStripMenuItem stepListToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tetraMathToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pBNumberToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem srzToolStripMenuItem;
     }
 }
 
