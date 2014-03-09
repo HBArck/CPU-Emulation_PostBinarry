@@ -470,10 +470,13 @@ namespace PostBinary.Classes.PostBinary
                 exp = digit.Substring(expIndex);
                 digit = digit.Substring(0, expIndex);
             }
-
+            return digit;
+            //TODO: is it needed code? All works right without it
+            /*
             int digitLengthWithOffset = number + signConsider + dotConsider;
             resultDigit = (digit.Length > digitLengthWithOffset) ? PBConvertion.deleteNonSignificantBits(digit.Substring(0, digitLengthWithOffset)) : digit;
             return resultDigit + exp;
+             */
         }
 
         /// <summary>

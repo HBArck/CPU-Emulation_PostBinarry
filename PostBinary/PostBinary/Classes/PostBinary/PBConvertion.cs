@@ -1069,8 +1069,9 @@ namespace PostBinary.Classes.PostBinary
                     // split binary float part to 2 parts //  ex. 0101m1 -> [010101:010111]
                     String lowBound = binFPartOut.Replace('M', '0').Replace('A', '1');
                     String highBound = binFPartOut.Replace('M', '1').Replace('A', '0');
-                    CorrectResult = deleteNonSignificantBits( (Sign == "1" ? "-" : "") + convert2to10IPart(binIPartOut) + "," + convert2to10FPart(lowBound, precision));
-                    CorrectResult += ':' + deleteNonSignificantBits( (Sign == "1" ? "-" : "") + convert2to10IPart(binIPartOut) + "," + convert2to10FPart(highBound, precision));
+                    String iPart = convert2to10IPart(binIPartOut);
+                    CorrectResult = deleteNonSignificantBits((Sign == "1" ? "-" : "") + iPart + "," + convert2to10FPart(lowBound, precision));
+                    CorrectResult += ':' + deleteNonSignificantBits((Sign == "1" ? "-" : "") + iPart + "," + convert2to10FPart(highBound, precision));
                     return CorrectResult;
                 }
             }
@@ -1484,12 +1485,15 @@ namespace PostBinary.Classes.PostBinary
             int indexDot = inString.IndexOf(',');
 
             int firstZero = inString.IndexOf('0');
-            while ((firstZero == 0) && (firstZero < indexDot))
+            if (firstZero == 0)
             {
-                inString = inString.Substring(1);
-                firstZero = inString.IndexOf('0');
+                while ((firstZero == 0) && (firstZero < indexDot))
+                {
+                    inString = inString.Substring(1);
+                    firstZero = inString.IndexOf('0');
+                }
+                inString = "0," + inString.Substring(1);
             }
-
             int lastZero = inString.LastIndexOf('0');
             while ((lastZero == inString.Length - 1) && (lastZero > indexDot + 1))
             {
